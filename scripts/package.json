@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "copy" : "mkdir -p ./metaplex/assets && cp -r ./hashlips_art_engine/build/images/* ./metaplex/assets && cp -r ./hashlips_art_engine/build/json/* ./metaplex/assets && rm -rf ./metaplex/assets/_metadata.json", 
+    "clean" : "rm -rf ./metaplex/assets"
+  }
+}
