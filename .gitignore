@@ -1,0 +1,10 @@
+
+.anchor
+.DS_Store
+target
+**/*.rs.bk
+node_modules
+assets/
+
+./scripts/metaplex/*
+./scripts/hashlips_art_engine/*
