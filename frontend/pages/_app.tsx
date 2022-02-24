@@ -25,7 +25,7 @@ import { fetcher } from '~/api'
 import 'react-toastify/dist/ReactToastify.css'
 import '../styles/globals.css'
 
-import { DEFAULT_ENDPOINT } from '~/connections/constants'
+import { DEFAULT_ENDPOINT } from '~/workspace/constants'
 import { WorkspaceProvider } from '~/workspace/WorkspaceContext'
 import { NFTProvider } from '~/nft/NFTContext'
 import { AuthProvider } from '~/auth/AuthContext'
@@ -43,14 +43,12 @@ const wallets = [
   new LedgerWalletAdapter(),
 ]
 
-const endpoint = DEFAULT_ENDPOINT
-const network = endpoint.name
-
+// TODO: ALLOW USER TO SWITCH NETWORK
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <ToastContainer />
-      <ConnectionProvider endpoint={endpoint.url}>
+      <ConnectionProvider endpoint={DEFAULT_ENDPOINT.url}>
         <WalletProvider wallets={wallets} autoConnect>
           <SWRConfig value={swrOption}>
             <WorkspaceProvider>

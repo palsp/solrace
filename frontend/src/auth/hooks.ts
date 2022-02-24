@@ -10,7 +10,7 @@ export function useRequireAuth(redirect: string = '/login') {
 
   useEffect(() => {
     if (initialized && !user) {
-      push(`${redirect}`)
+      push(`${redirect}/?from=${encodeURIComponent(pathname)}`)
     }
   }, [initialized, user])
 }

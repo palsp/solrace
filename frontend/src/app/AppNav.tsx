@@ -1,9 +1,6 @@
-import styled from 'styled-components'
-import {
-  WalletDisconnectButton,
-  WalletMultiButton,
-} from '@solana/wallet-adapter-react-ui'
 import '@solana/wallet-adapter-react-ui/styles.css'
+import styled from 'styled-components'
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useAuth } from '~/auth/hooks'
 import Link from 'next/link'
@@ -30,7 +27,7 @@ const AppNav = () => {
   const { user } = useAuth()
   return (
     <NavContainer>
-      <div style={{ width: '10%' }}>MARIO KART</div>
+      <Link href="/">MARIO KART</Link>
       <UserSection>
         {!user ? (
           <div>

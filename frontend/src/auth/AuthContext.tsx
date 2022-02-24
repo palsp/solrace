@@ -74,6 +74,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   // }, [])
 
   useEffect(() => {
+    console.log('userEffect')
     const token = getUserTokenFromStorage()
 
     if (token) {
@@ -81,7 +82,6 @@ export const AuthProvider: React.FC = ({ children }) => {
       getUser()
         .then((user) => {
           setUser({ ...decodedUser, ...user, token })
-          setInitialized(true)
         })
         .catch((error) => {
           if (error.response?.status === 401) {
@@ -89,6 +89,7 @@ export const AuthProvider: React.FC = ({ children }) => {
             setUser(null)
           }
         })
+        .finally(() => setInitialized(true))
     } else {
       setUser(null)
       setInitialized(true)

@@ -6,8 +6,8 @@ import { useForm } from 'react-hook-form'
 import AuthLayout from '~/auth/AuthLayout'
 import { useAuth } from '~/auth/hooks'
 import { login } from '~/auth/services'
-import FormInput from '~/ui/form/FormInput'
 import { toastAPIError } from '~/utils'
+import FormInput from '~/ui/form/FormInput'
 
 interface ILoginForm {
   email: string
@@ -24,7 +24,7 @@ const LoginForm = styled.form`
 
 const LoginPage = () => {
   const { setUser } = useAuth()
-  const router = useRouter()
+  const { push, query } = useRouter()
   const { register, formState, handleSubmit } = useForm<ILoginForm>({
     defaultValues: {
       email: '',
@@ -32,11 +32,19 @@ const LoginPage = () => {
     },
   })
 
+  const redirect = () => {
+    if (query.from) {
+      push(decodeURIComponent(query.from as string))
+    } else {
+      push('/')
+    }
+  }
+
   const onSubmit = async ({ email, password }: ILoginForm) => {
     try {
       const user = await login(email as string, password as string)
       setUser(user)
-      router.push('/')
+      redirect()
     } catch (e) {
       toastAPIError(e as any)
     }

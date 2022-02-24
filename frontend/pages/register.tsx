@@ -1,14 +1,15 @@
 import Link from 'next/link'
+import styled from 'styled-components'
+import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
-import { useRef } from 'react'
 import { useForm } from 'react-hook-form'
+
 import AuthLayout from '~/auth/AuthLayout'
 import { useAuth } from '~/auth/hooks'
 import { signup } from '~/auth/services'
-import styled from 'styled-components'
-import FormInput from '~/ui/form/FormInput'
-import { toast } from 'react-toastify'
 import { toastAPIError } from '~/utils'
+
+import FormInput from '~/ui/form/FormInput'
 
 interface IRegisterForm {
   email: string

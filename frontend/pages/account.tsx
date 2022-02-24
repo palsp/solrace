@@ -15,10 +15,14 @@ import {
   signWallet,
   verifySignature,
 } from '~/wallet/services'
-import { toastAPIError } from '~/utils'
 import { shortenIfAddress } from '~/wallet/utils'
+import { toastAPIError } from '~/utils'
 
 const AccountContainer = styled(Column)`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-evenly;
   align-items: center;
 `
 
