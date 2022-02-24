@@ -8,7 +8,13 @@ import { useAuth, useRequireAuth } from '~/auth/hooks'
 import { Column } from '~/ui'
 import { useLinkedWallet } from '~/wallet/hooks'
 import { useWorkspace } from '~/workspace/hooks'
-import { deleteWallet, linkWallet } from '~/wallet/services'
+import {
+  deleteWallet,
+  linkWallet,
+  requestNonce,
+  signWallet,
+  verifySignature,
+} from '~/wallet/services'
 import { toastAPIError } from '~/utils'
 import { shortenIfAddress } from '~/wallet/utils'
 
@@ -44,6 +50,9 @@ const AccountPage = () => {
       try {
         await linkWallet(wallet)
         await revalidate()
+        toast('Connect wallet success', {
+          type: 'success',
+        })
       } catch (e) {
         toastAPIError(e as any)
       }
@@ -63,9 +72,29 @@ const AccountPage = () => {
       try {
         await deleteWallet(wallet)
         await revalidate()
+        toast('Your wallet has been disconnect', { type: 'success' })
       } catch (e) {
         toastAPIError(e as any)
       }
+    }
+  }
+
+  const verify = async () => {
+    if (!wallet || !wallet.publicKey) {
+      toast('Please Connect Wallet', {
+        type: 'warning',
+      })
+      return
+    }
+    const { nonce } = await requestNonce()
+    const { signature, publicAddress } = await signWallet(wallet, nonce)
+    try {
+      await verifySignature(publicAddress, signature)
+      toast('Signature Verified', {
+        type: 'success',
+      })
+    } catch (e) {
+      toastAPIError(e as any)
     }
   }
 
@@ -94,6 +123,8 @@ const AccountPage = () => {
         <button type="button" style={{ width: '20%' }} onClick={toggle}>
           {getButtonContent()}
         </button>
+
+        <button onClick={verify}>verify</button>
       </AccountContainer>
     </AppLayout>
   )

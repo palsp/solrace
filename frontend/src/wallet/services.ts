@@ -16,7 +16,7 @@ export async function requestNonce(publicAddress?: string) {
 
 export async function verifySignature(
   publicAddress: string,
-  signature: Uint8Array,
+  signature: number[],
 ) {
   const { data } = await api.post('/wallet/verify-signature', {
     publicAddress,
@@ -28,7 +28,7 @@ export async function verifySignature(
 export async function signWallet(
   wallet: WalletContextState,
   nonce: string,
-): Promise<{ signature: Uint8Array; publicAddress: string }> {
+): Promise<{ signature: number[]; publicAddress: string }> {
   const msgUint8 = new TextEncoder().encode(getMessage(nonce))
 
   if (!wallet.signMessage) {
@@ -40,11 +40,10 @@ export async function signWallet(
   }
 
   const signature = await wallet.signMessage(msgUint8)
-  console.log(signature)
 
   return {
     publicAddress: wallet.publicKey.toBase58(),
-    signature,
+    signature: Array.from(signature),
   }
 }
 
