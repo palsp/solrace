@@ -9,7 +9,9 @@ import { TextEncoder } from 'util'
 import bs58 from 'bs58'
 import { UserNonce } from 'entity/UserNonce'
 import { User } from 'entity/User'
-import { unauthorized } from '@hapi/boom'
+import { badRequest, conflict, unauthorized } from '@hapi/boom'
+import { Wallet } from 'entity/Wallet'
+import { PostgresError } from 'pg-error-enum'
 
 export const getMessage = (
   nonce: string,
@@ -45,4 +47,49 @@ export const verifySignature = async (
   }
 
   await UserNonce.refresh(userNonce)
+}
+
+export async function getWallet(user: User) {
+  const wallet = await Wallet.findOne({ user })
+  return wallet
+}
+
+export async function addWallet(
+  user: User,
+  publicAddress: string,
+  signature: number[],
+) {
+  const userNonce = await getOrCreateUserNonce(user)
+  await verifySignature(publicAddress, userNonce, signature)
+
+  const wallet = await Wallet.findOne({ user })
+
+  if (wallet) {
+    throw badRequest('User already has the wallet')
+  }
+
+  try {
+    const newWallet = await Wallet.create({ user, publicAddress }).save()
+    return newWallet
+  } catch (e) {
+    if ((e as any).code === PostgresError.UNIQUE_VIOLATION) {
+      throw conflict('Wallet is already in use by another user')
+    }
+    throw e
+  }
+}
+
+export async function deleteWallet(user: User, signature: number[]) {
+  const wallet = await Wallet.findOne({ user })
+
+  if (!wallet) {
+    throw badRequest('Wallet does not exist')
+  }
+
+  const { publicAddress } = wallet
+  const userNonce = await getOrCreateUserNonce(user)
+
+  await verifySignature(publicAddress, userNonce, signature)
+
+  return Wallet.delete({ user })
 }
