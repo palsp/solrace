@@ -1,4 +1,5 @@
 import '../config/env'
+import {} from '@solana/web3.js'
 
 import { connectDB } from 'database'
 import { app } from 'app'
