@@ -4,7 +4,8 @@ import { CandyMachine } from '../target/types/candy_machine'
 
 describe('candy_machine', () => {
   // Configure the client to use the local cluster.
-  anchor.setProvider(anchor.Provider.env())
+  const provider = anchor.Provider.env()
+  anchor.setProvider(provider)
 
   // @ts-ignore
   const program = anchor.workspace.CandyMachine as Program<CandyMachine>
