@@ -1,6 +1,9 @@
 import express from 'express'
 import _ from 'lodash'
 
+import Joi from 'joi'
+import { validate } from 'utils/validator'
+
 import { passportJwtMiddlewareAuth } from 'auth/middleware'
 import {
   addWallet,
@@ -27,26 +30,6 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.post('/sync', async (req, res, next) => {
-  const { publicAddress, signature } = req.body
-  try {
-    const wallet = await addWallet(req.user!, publicAddress, signature.data)
-    res.send(wallet)
-  } catch (e) {
-    next(e)
-  }
-})
-
-router.post('/un-sync', async (req, res, next) => {
-  const { signature } = req.body
-  try {
-    const wallet = await deleteWallet(req.user!, signature.data)
-    res.send(wallet)
-  } catch (e) {
-    next(e)
-  }
-})
-
 router.get('/nonce', async (req, res, next) => {
   try {
     const userNonce = await getOrCreateUserNonce(req.user!)
@@ -57,16 +40,61 @@ router.get('/nonce', async (req, res, next) => {
   }
 })
 
-router.post('/verify-signature', async (req, res, next) => {
-  try {
-    const { signature, publicAddress } = req.body
+router.post(
+  '/sync',
+  validate.body(
+    Joi.object({
+      publicAddress: Joi.string().required(),
+      signature: Joi.array().items(Joi.number()).required(),
+    }),
+  ),
+  async (req, res, next) => {
+    const { publicAddress, signature } = req.body
+    try {
+      const wallet = await addWallet(req.user!, publicAddress, signature)
+      res.send(wallet)
+    } catch (e) {
+      next(e)
+    }
+  },
+)
 
-    const userNonce = await getOrCreateUserNonce(req.user!)
-    await verifySignature(publicAddress, userNonce, signature.data)
-    res.send(200)
-  } catch (e) {
-    next(e)
-  }
-})
+router.post(
+  '/un-sync',
+  validate.body(
+    Joi.object({
+      signature: Joi.array().items(Joi.number()).required(),
+    }),
+  ),
+  async (req, res, next) => {
+    const { signature } = req.body
+    try {
+      const wallet = await deleteWallet(req.user!, signature)
+      res.send(wallet)
+    } catch (e) {
+      next(e)
+    }
+  },
+)
+router.post(
+  '/verify-signature',
+  validate.body(
+    Joi.object({
+      publicAddress: Joi.string().required(),
+      signature: Joi.array().items(Joi.number()).required(),
+    }),
+  ),
+  async (req, res, next) => {
+    try {
+      const { signature, publicAddress } = req.body
+
+      const userNonce = await getOrCreateUserNonce(req.user!)
+      await verifySignature(publicAddress, userNonce, signature)
+      res.send(200)
+    } catch (e) {
+      next(e)
+    }
+  },
+)
 
 export default router
