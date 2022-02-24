@@ -3,10 +3,13 @@ import { Provider, Program, Idl, Wallet } from '@project-serum/anchor'
 import candyMachineIdl from '~/utils/idl/candy_machine.json'
 
 import {
-  useWallet,
+  AnchorWallet,
+  useAnchorWallet,
   useConnection,
+  useWallet,
   WalletContextState,
 } from '@solana/wallet-adapter-react'
+
 import {
   CANDY_MACHINE_PROGRAM_ID,
   COMMITMENT,
@@ -20,6 +23,8 @@ interface IWorkspaceContext {
 }
 
 const defaultWorkspaceContext: IWorkspaceContext = {}
+
+export type WorkSpace = IWorkspaceContext
 
 export const WorkspaceContext = React.createContext(defaultWorkspaceContext)
 

@@ -20,6 +20,7 @@ import { DEFAULT_ENDPOINT } from '~/connections/constants'
 import { WorkspaceProvider } from '~/workspace/WorkspaceContext'
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
 import { NFTProvider } from '~/nfts/NFTContext'
+import { AuthProvider } from '~/auth/AuthContext'
 
 const wallets = [
   new PhantomWalletAdapter(),
@@ -38,7 +39,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         <WorkspaceProvider>
           <WalletModalProvider>
             <NFTProvider>
-              <Component {...pageProps} />
+              <AuthProvider>
+                <Component {...pageProps} />
+              </AuthProvider>
             </NFTProvider>
           </WalletModalProvider>
         </WorkspaceProvider>

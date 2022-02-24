@@ -11,3 +11,10 @@ interface ENDPOINT {
   url: string
   chainId: number
 }
+
+interface User {
+  id: number
+  email: string
+  createdAt: string
+  updatedAt: string
+}

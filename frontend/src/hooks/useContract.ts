@@ -24,8 +24,6 @@ export const useContract = () => {
     programId: anchor.web3.PublicKey,
   ): Promise<CandyMachineState> => {
     const state: any = await program?.account.candyMachine.fetch(programId)
-
-    console.log(state)
     const itemsAvailable = state.data.itemsAvailable.toNumber()
     const itemsRedeemed = state.itemsRedeemed.toNumber()
     const itemsRemaining = itemsAvailable - itemsRedeemed
