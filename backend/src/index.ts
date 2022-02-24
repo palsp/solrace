@@ -1,10 +1,12 @@
 import '../config/env'
-import {} from '@solana/web3.js'
+import 'solana'
 
 import { connectDB } from 'database'
 import { app } from 'app'
 
 const port = process.env.PORT || 8080
+
+// check env
 
 async function main() {
   await connectDB()

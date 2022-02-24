@@ -27,7 +27,7 @@ import '../styles/globals.css'
 
 import { DEFAULT_ENDPOINT } from '~/connections/constants'
 import { WorkspaceProvider } from '~/workspace/WorkspaceContext'
-import { NFTProvider } from '~/nfts/NFTContext'
+import { NFTProvider } from '~/nft/NFTContext'
 import { AuthProvider } from '~/auth/AuthContext'
 import { LinkedWalletProvider } from '~/wallet/LinkedWalletContext'
 

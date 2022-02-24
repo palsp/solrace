@@ -3,21 +3,25 @@ import { NFTCollection } from 'entity/NFTCollection'
 import { connectDB } from 'database'
 import _ from 'lodash'
 
-import fs from 'fs/promises'
 import path from 'path'
 import { DeepPartial } from 'typeorm'
 
-async function createMetadata(id: number) {
+const collectionPath = path.join(process.cwd(), 'assets', `collection.json`)
+
+const collection = require(collectionPath)
+
+async function createMetadata(id: number, collectionAddress?: string) {
   const filePath = path.join(process.cwd(), 'assets', `${id}.json`)
   const nft = require(filePath)
 
-  const { collection, properties } = _.pick(nft, ['collection', 'properties'])
+  const { properties } = _.pick(nft, ['properties'])
   const meta = _.omit(
     nft,
     'properties',
     'collection',
     'seller_fee_basis_points',
     'external_url',
+    'symbol',
   ) as DeepPartial<NFTMetaData>
 
   let nftCollection = await NFTCollection.findOne({ name: collection.name })
@@ -25,6 +29,8 @@ async function createMetadata(id: number) {
     nftCollection = await NFTCollection.create({
       name: collection.name,
       family: collection.family,
+      symbol: collection.symbol,
+      publicAddress: collectionAddress,
     }).save()
   }
 
@@ -44,6 +50,7 @@ async function main() {
 
   let start = 0
   let end = 0
+  let collectionAddress: string | undefined = undefined
   for (let i = 0; i < args.length; i += 2) {
     const opt = args[i]
     const val = args[i + 1]
@@ -57,6 +64,9 @@ async function main() {
       case '-end':
         end = +val
         break
+      case '-a':
+      case '-address':
+        collectionAddress = val
     }
   }
 
@@ -71,7 +81,7 @@ async function main() {
   const connection = await connectDB()
   for (let i = start; i <= end; i++) {
     console.log(`process ${i}.json`)
-    await createMetadata(i)
+    await createMetadata(i, collectionAddress)
   }
   await connection.close()
 }

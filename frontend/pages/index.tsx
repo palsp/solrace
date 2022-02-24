@@ -13,21 +13,6 @@ import Link from 'next/link'
 import AppLayout from '~/app/AppLayout'
 
 const Home = () => {
-  const { publicKey } = useWallet()
-  const { fetchCollection, fetchNftOfOwner } = useContract()
-  const { connection } = useConnection()
-  const { user } = useAuth()
-
-  useEffect(() => {
-    if (publicKey) {
-      getParsedNFTAccountByOwner({ owner: publicKey, connection }).then(
-        (nfts) => {
-          console.log(nfts)
-        },
-      )
-    }
-  }, [publicKey])
-
   return <AppLayout />
 }
 

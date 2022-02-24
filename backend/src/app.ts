@@ -5,6 +5,7 @@ import metadata from 'metadata/routes'
 import auth from 'auth/routes'
 import user from 'user/routes'
 import wallet from 'wallet/routes'
+import nft from 'nft/routes'
 import { getErrorAndStatusCode } from 'error'
 
 export const app = express()
@@ -25,6 +26,7 @@ routes.use('/meta-data', metadata)
 routes.use('/auth', auth)
 routes.use('/user', user)
 routes.use('/wallet', wallet)
+routes.use('/nft', nft)
 
 app.use(routes)
 
