@@ -1,56 +1,94 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useRef } from 'react'
+import { useForm } from 'react-hook-form'
+import AuthLayout from '~/auth/AuthLayout'
 import { useAuth } from '~/auth/hooks'
-import { login, signup } from '~/auth/services'
+import { signup } from '~/auth/services'
+import styled from 'styled-components'
+import FormInput from '~/ui/form/FormInput'
+import { toast } from 'react-toastify'
+import { toastAPIError } from '~/utils'
+
+interface IRegisterForm {
+  email: string
+  password: string
+  confirmPassword: string
+}
+
+const RegisterForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  height: 30%;
+  justify-content: space-evenly;
+  align-items: center;
+`
 
 const RegisterPage = () => {
   const { setUser } = useAuth()
-  const router = useRouter()
-  const emailRef = useRef(null)
-  const passwordRef = useRef(null)
-  const confirmPasswordRef = useRef(null)
+  const { push } = useRouter()
 
-  const onSubmit = async () => {
-    const { value: email } = emailRef.current!
-    const { value: password } = passwordRef.current!
-    const { value: confirmPassword } = confirmPasswordRef.current!
+  const { register, formState, handleSubmit } = useForm<IRegisterForm>({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  })
 
+  const onSubmit = async ({
+    email,
+    password,
+    confirmPassword,
+  }: IRegisterForm) => {
     if (password !== confirmPassword) {
-      alert('Password mismatch')
+      toast('Password not matching', { type: 'error' })
       return
     }
 
-    const user = await signup(email as string, password as string)
-    setUser(user)
-    router.push('/')
+    try {
+      const user = await signup(email as string, password as string)
+      setUser(user)
+      push('/')
+    } catch (e) {
+      toastAPIError(e as any)
+    }
   }
 
   return (
-    <>
-      <form>
-        <div>
-          <label>Email</label>
-          <input type="text" ref={emailRef} />
-        </div>
+    <AuthLayout>
+      <RegisterForm onSubmit={handleSubmit(onSubmit)}>
+        <FormInput
+          label="Email"
+          name="email"
+          type="text"
+          registerOptions={{ required: true }}
+          register={register}
+          error={formState.errors['email']}
+        />
 
-        <div>
-          <label>Password</label>
-          <input type="password" ref={passwordRef} />
-        </div>
+        <FormInput
+          label="Password"
+          name="password"
+          type="password"
+          registerOptions={{ required: true }}
+          register={register}
+          error={formState.errors['password']}
+        />
 
-        <div>
-          <label>Confirm Password</label>
-          <input type="password" ref={confirmPasswordRef} />
-        </div>
-        <button type="button" onClick={onSubmit}>
-          Register
-        </button>
-      </form>
+        <FormInput
+          label="Confirm Password"
+          name="confirmPassword"
+          type="password"
+          registerOptions={{ required: true }}
+          register={register}
+          error={formState.errors['password']}
+        />
+        <button type="submit">Register</button>
+      </RegisterForm>
       <Link href="/login">
         <a>Login</a>
       </Link>
-    </>
+    </AuthLayout>
   )
 }
 

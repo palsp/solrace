@@ -10,6 +10,7 @@ import {
 import { getParsedNFTAccountByOwner } from '~/api/get-nft-by-owner'
 import { useAuth } from '~/auth/hooks'
 import Link from 'next/link'
+import AppLayout from '~/app/AppLayout'
 
 const Home = () => {
   const { publicKey } = useWallet()
@@ -27,14 +28,7 @@ const Home = () => {
     }
   }, [publicKey])
 
-  return (
-    <div>
-      {!user && <Link href="/login">Login</Link>}
-      {user && <Link href="/game">Game</Link>}
-      <WalletMultiButton />
-      <WalletDisconnectButton />
-    </div>
-  )
+  return <AppLayout />
 }
 
 export default Home

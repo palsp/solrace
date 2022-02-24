@@ -1,26 +1,40 @@
-import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 
+/** solana */
 import {
   WalletProvider,
   ConnectionProvider,
 } from '@solana/wallet-adapter-react'
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 import {
   LedgerWalletAdapter,
   PhantomWalletAdapter,
   SlopeWalletAdapter,
-  SolflareWalletAdapter,
-  SolletExtensionWalletAdapter,
-  SolletWalletAdapter,
   TorusWalletAdapter,
 } from '@solana/wallet-adapter-wallets'
-import { useMemo } from 'react'
+import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
+
+/** react toastify */
+import { ToastContainer } from 'react-toastify'
+
+/** SWR */
+import { SWRConfig } from 'swr'
+import { PublicConfiguration } from 'swr/dist/types'
+import { fetcher } from '~/api'
+
+/** styling */
+import 'react-toastify/dist/ReactToastify.css'
+import '../styles/globals.css'
+
 import { DEFAULT_ENDPOINT } from '~/connections/constants'
 import { WorkspaceProvider } from '~/workspace/WorkspaceContext'
-import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
 import { NFTProvider } from '~/nfts/NFTContext'
 import { AuthProvider } from '~/auth/AuthContext'
+import { LinkedWalletProvider } from '~/wallet/LinkedWalletContext'
+
+const swrOption: Partial<PublicConfiguration> = {
+  fetcher,
+  revalidateOnFocus: false,
+}
 
 const wallets = [
   new PhantomWalletAdapter(),
@@ -34,19 +48,26 @@ const network = endpoint.name
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ConnectionProvider endpoint={endpoint.url}>
-      <WalletProvider wallets={wallets} autoConnect>
-        <WorkspaceProvider>
-          <WalletModalProvider>
-            <NFTProvider>
-              <AuthProvider>
-                <Component {...pageProps} />
-              </AuthProvider>
-            </NFTProvider>
-          </WalletModalProvider>
-        </WorkspaceProvider>
-      </WalletProvider>
-    </ConnectionProvider>
+    <>
+      <ToastContainer />
+      <ConnectionProvider endpoint={endpoint.url}>
+        <WalletProvider wallets={wallets} autoConnect>
+          <SWRConfig value={swrOption}>
+            <WorkspaceProvider>
+              <WalletModalProvider>
+                <NFTProvider>
+                  <AuthProvider>
+                    <LinkedWalletProvider>
+                      <Component {...pageProps} />
+                    </LinkedWalletProvider>
+                  </AuthProvider>
+                </NFTProvider>
+              </WalletModalProvider>
+            </WorkspaceProvider>
+          </SWRConfig>
+        </WalletProvider>
+      </ConnectionProvider>
+    </>
   )
 }
 

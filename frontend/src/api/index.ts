@@ -14,3 +14,7 @@ api.interceptors.request.use((config) => {
 
   return config
 })
+
+export const fetcher = async (url: string) => {
+  return api.get(url).then((res) => res.data)
+}

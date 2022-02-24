@@ -1,7 +1,5 @@
-import { Provider, Wallet } from '@project-serum/anchor'
-import { AnchorWallet } from '@solana/wallet-adapter-react'
+import { WalletContextState } from '@solana/wallet-adapter-react'
 import { api } from '~/api'
-import { WorkSpace } from '~/workspace/WorkspaceContext'
 
 export const getMessage = (
   nonce: string,
@@ -28,24 +26,45 @@ export async function verifySignature(
 }
 
 export async function signWallet(
-  { wallet }: WorkSpace,
+  wallet: WalletContextState,
   nonce: string,
-): Promise<{ signature?: Uint8Array; publicAddress?: string }> {
+): Promise<{ signature: Uint8Array; publicAddress: string }> {
   const msgUint8 = new TextEncoder().encode(getMessage(nonce))
 
-  if (!wallet) {
-    return {}
+  if (!wallet.signMessage) {
+    throw new Error('Unsupported Wallet')
   }
 
-  let signature
-  if (wallet.signMessage) {
-    signature = await wallet.signMessage(msgUint8)
-    console.log(msgUint8)
-    // console.log(signature)
+  if (!wallet.publicKey) {
+    throw new Error('Undetected public key')
   }
+
+  const signature = await wallet.signMessage(msgUint8)
+  console.log(signature)
 
   return {
-    publicAddress: wallet.publicKey?.toBase58(),
+    publicAddress: wallet.publicKey.toBase58(),
     signature,
   }
+}
+
+export async function linkWallet(wallet: WalletContextState) {
+  const { nonce } = await requestNonce()
+  const { publicAddress, signature } = await signWallet(wallet, nonce)
+
+  await api.post('/wallet/sync', {
+    publicAddress,
+    signature,
+  })
+
+  return publicAddress
+}
+
+export async function deleteWallet(wallet: WalletContextState) {
+  const { nonce } = await requestNonce()
+  const { signature } = await signWallet(wallet, nonce)
+
+  await api.post('/wallet/un-sync', {
+    signature,
+  })
 }
