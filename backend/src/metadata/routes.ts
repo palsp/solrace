@@ -11,6 +11,7 @@ router.get('/:collectionId/:tokenId', async (req, res, next) => {
   const nftMetadata = await NFTMetaData.createQueryBuilder('nft')
     .where('nft.id = :tokenId ', { tokenId })
     .andWhere('nft.collectionId = :collectionId', { collectionId })
+    .leftJoinAndSelect('nft.collection', 'symbol')
     .getOne()
 
   if (!nftMetadata) {
@@ -18,9 +19,13 @@ router.get('/:collectionId/:tokenId', async (req, res, next) => {
     return
   }
 
-  const { creators, files } = nftMetadata
-  const cleanNftMetadata = _.omit(nftMetadata, 'creators', 'files')
-  res.send({ ...cleanNftMetadata, properties: { creators, files } })
+  const { creators, files, collection, ...cleanNftMetadata } = nftMetadata
+  res.send({
+    ...cleanNftMetadata,
+    symbol: collection.symbol,
+    properties: { creators, files },
+    collection: { name: collection.name, family: collection.family },
+  })
 })
 
 export default router

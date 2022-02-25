@@ -1,5 +1,6 @@
 import express, { ErrorRequestHandler } from 'express'
 import cors from 'cors'
+import path from 'path'
 
 import metadata from 'metadata/routes'
 import auth from 'auth/routes'
@@ -19,8 +20,12 @@ app.use(
     origin: origin || '*',
   }),
 )
+
+const assetsDir = path.join(__dirname, '..', 'public')
+console.log(assetsDir)
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+app.use('/assets', express.static(assetsDir))
 
 routes.use('/meta-data', metadata)
 routes.use('/auth', auth)
