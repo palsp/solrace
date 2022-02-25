@@ -1,16 +1,8 @@
 import { WalletContextState } from '@solana/wallet-adapter-react'
 import { api } from '~/api'
 
-export const getMessage = (
-  nonce: string,
-) => `Hello! Sign this message to prove your ownership of this wallet so we can proceed with your action. This won't cost you any SOL.
-
-To prevent hackers from using this wallet, here's a unique message ID they can't guess: ${nonce}.`
-
-export async function requestNonce(publicAddress?: string) {
-  const { data } = await api.get(
-    publicAddress ? `/wallet/nonce/${publicAddress}` : `wallet/nonce`,
-  )
+export async function requestSigningMessage() {
+  const { data } = await api.get(`wallet/message`)
   return data
 }
 
@@ -27,9 +19,9 @@ export async function verifySignature(
 
 export async function signWallet(
   wallet: WalletContextState,
-  nonce: string,
+  message: string,
 ): Promise<{ signature: number[]; publicAddress: string }> {
-  const msgUint8 = new TextEncoder().encode(getMessage(nonce))
+  const msgUint8 = new TextEncoder().encode(message)
 
   if (!wallet.signMessage) {
     throw new Error('Unsupported Wallet')
@@ -48,8 +40,8 @@ export async function signWallet(
 }
 
 export async function linkWallet(wallet: WalletContextState) {
-  const { nonce } = await requestNonce()
-  const { publicAddress, signature } = await signWallet(wallet, nonce)
+  const { message } = await requestSigningMessage()
+  const { publicAddress, signature } = await signWallet(wallet, message)
 
   await api.post('/wallet/sync', {
     publicAddress,
@@ -60,8 +52,8 @@ export async function linkWallet(wallet: WalletContextState) {
 }
 
 export async function deleteWallet(wallet: WalletContextState) {
-  const { nonce } = await requestNonce()
-  const { signature } = await signWallet(wallet, nonce)
+  const { message } = await requestSigningMessage()
+  const { signature } = await signWallet(wallet, message)
 
   await api.post('/wallet/un-sync', {
     signature,

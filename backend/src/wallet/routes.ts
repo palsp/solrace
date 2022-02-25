@@ -8,6 +8,7 @@ import { passportJwtMiddlewareAuth } from 'auth/middleware'
 import {
   addWallet,
   deleteWallet,
+  getMessage,
   getOrCreateUserNonce,
   getWallet,
   verifySignature,
@@ -30,11 +31,12 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.get('/nonce', async (req, res, next) => {
+router.get('/message', async (req, res, next) => {
   try {
     const userNonce = await getOrCreateUserNonce(req.user!)
     const cleanUserNonce = _.omit(userNonce, ['id'])
-    res.send(cleanUserNonce)
+    const message = getMessage(userNonce.nonce)
+    res.send({ ...cleanUserNonce, message })
   } catch (e) {
     next(e)
   }

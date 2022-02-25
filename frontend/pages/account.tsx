@@ -11,7 +11,7 @@ import { useWorkspace } from '~/workspace/hooks'
 import {
   deleteWallet,
   linkWallet,
-  requestNonce,
+  requestSigningMessage,
   signWallet,
   verifySignature,
 } from '~/wallet/services'
@@ -90,8 +90,8 @@ const AccountPage = () => {
       })
       return
     }
-    const { nonce } = await requestNonce()
-    const { signature, publicAddress } = await signWallet(wallet, nonce)
+    const { message } = await requestSigningMessage()
+    const { signature, publicAddress } = await signWallet(wallet, message)
     try {
       await verifySignature(publicAddress, signature)
       toast('Signature Verified', {
