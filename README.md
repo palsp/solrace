@@ -7,7 +7,7 @@ Clone the following repository into `scripts` folder
 
 ```
 git clone https://github.com/HashLips/hashlips_art_engine.git ./scripts/hashlips_art_engine
-git clone https://github.com/metaplex-foundation/metaplex.git ./scripts/metaplex
+git clone -b custom-storage https://github.com/palsp/metaplex.git ./scripts/metaplex
 ```
 
 
@@ -40,22 +40,25 @@ yarn copy
 create `config.json` file inside `metaplex` folder. here is a minimal configuration
 ```json
 {
-    "price": 1.0,
-    "number": 10,
-    "gatekeeper": null,
-    "solTreasuryAccount": "<YOUR WALLET ADDRESS>",
-    "splTokenAccount": null,
-    "splToken": null,
-    "goLiveDate": "25 Dec 2021 00:00:00 GMT",
-    "endSettings": null,
-    "whitelistMintSettings": null,
-    "hiddenSettings": null,
-    "storage": "arweave",
-    "ipfsInfuraProjectId": null,
-    "ipfsInfuraSecret": null,
-    "awsS3Bucket": null,
-    "noRetainAuthority": false,
-    "noMutable": false
+  "price": 1.0,
+  "number": 10,
+  "gatekeeper": null,
+  "solTreasuryAccount": "<YOUR_WALLET_ADDRESS>",
+  "splTokenAccount": null,
+  "splToken": null,
+  "goLiveDate": "25 Dec 2021 00:00:00 GMT",
+  "endSettings": null,
+  "whitelistMintSettings": null,
+  "hiddenSettings": null,
+  "storage": "custom",
+  "ipfsInfuraProjectId": null,
+  "ipfsInfuraSecret": null,
+  "awsS3Bucket": null,
+  "noRetainAuthority": false,
+  "noMutable": false,
+  "customUrl" : "https://544b-2001-fb1-a9-e064-a10c-776a-7011-e5a2.ngrok.io",
+  "customImageUrl" : "https://544b-2001-fb1-a9-e064-a10c-776a-7011-e5a2.ngrok.io",
+  "imageType" : "png"
 }
 ```
 
