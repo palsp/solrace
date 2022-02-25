@@ -1,4 +1,4 @@
-# SOLANA HACKATHON NFT GAME
+# SOL RACE
 
 
 ## Setup
