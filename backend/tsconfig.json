@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "rootDirs": [
+      "./src"
+    ],
+    "outDir": "./dist",
+    "target": "ES2019",
+    "module": "commonjs",
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "noImplicitAny": false,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "./src/*",
+        "../@types/*.d.ts"
+      ]
+    },
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "lib": [
+      "ES2019",
+      "ES6",
+    ],
+    "allowSyntheticDefaultImports": true,
+  },
+  "compileOnSave": true
+}

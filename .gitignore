@@ -6,5 +6,5 @@ target
 node_modules
 assets/
 
-scripts/metaplex/*
-scripts/hashlips_art_engine/*
+scripts/metaplex
+scripts/hashlips_art_engine
