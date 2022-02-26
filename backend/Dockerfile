@@ -18,5 +18,6 @@ COPY --from=builder /app/dist dist
 ENV NODE_PATH="dist/src"
 EXPOSE 8080
 COPY start.sh .
+COPY tsconfig.json .
 RUN chmod +x ./start.sh
 ENTRYPOINT  ["sh", "./start.sh"]

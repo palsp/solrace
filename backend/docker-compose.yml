@@ -3,6 +3,7 @@ version: '3.4'
 services:
   app:
     build: .
+    restart: always
     ports:
       - 80:8080
     env_file:
