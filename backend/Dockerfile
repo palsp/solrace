@@ -18,7 +18,5 @@ COPY --from=builder /app/dist dist
 ENV NODE_PATH="dist/src"
 EXPOSE 8080
 COPY start.sh .
-COPY wait-for.sh .
 RUN chmod +x ./start.sh
-RUN chmod +x ./wait-for.sh
 ENTRYPOINT  ["sh", "./start.sh"]

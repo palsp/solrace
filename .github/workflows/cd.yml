@@ -1,7 +1,9 @@
 name: deploy to elastic beanstalk
 
 on:
-  pull_request:
+  push:
+    branches: 
+      - feature/backend
 
 
 jobs:
