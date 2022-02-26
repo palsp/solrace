@@ -1,14 +1,9 @@
 version: '3.1'
 
 services:
-  db:
-    image: postgres:12
+  app:
+    build: .
     ports:
-      - 5432:5432
-    environment:
-      POSTGRES_HOST_AUTH_METHOD: 'trust'
-      POSTGRES_DB: 'solana_hack_nft_dev'
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-volumes:
-  pgdata:
+      - 80:8080
+    env_file:
+      - .env

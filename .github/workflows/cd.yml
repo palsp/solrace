@@ -1,0 +1,34 @@
+name: deploy to elastic beanstalk
+
+on:
+  pull_request:
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: AWS VERSION LABEL
+        run: echo ${{ env.PIPELINE_ID }}
+
+      - run: |
+          REQUEST_BRANCH=$(echo '${{ github.ref }}' | rev | cut -d'/' -f1 | rev)
+          echo "DEPLOYS_ENV=${REQUEST_BRANCH}" >> $GITHUB_ENV
+          echo Deploy To ${REQUEST_BRANCH}
+
+      - name: Generate deployment package
+        run: zip -r deploy.zip ./backend -x '*.git*'
+
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v16
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: sol-race
+          environment_name: Solrace-env-main
+          version_label: app-${{ github.run_id }}-${{ github.run_number }}
+          region: ap-southeast-1
+          deployment_package: deploy.zip

@@ -7,6 +7,7 @@ import auth from 'auth/routes'
 import user from 'user/routes'
 import wallet from 'wallet/routes'
 import nft from 'nft/routes'
+import health from 'health/routes'
 import { getErrorAndStatusCode } from 'error'
 
 export const app = express()
@@ -27,6 +28,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use('/assets', express.static(assetsDir))
 
+routes.use('/health', health)
 routes.use('/meta-data', metadata)
 routes.use('/auth', auth)
 routes.use('/user', user)
