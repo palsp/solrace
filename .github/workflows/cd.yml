@@ -2,27 +2,24 @@ name: deploy to elastic beanstalk
 
 on:
   push:
-    branches: 
-      - feature/backend
+    branches: [main]
+    paths:
+      - 'backend/**'
 
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
 
-      - name: AWS VERSION LABEL
-        run: echo ${{ env.PIPELINE_ID }}
-
-      - run: |
-          REQUEST_BRANCH=$(echo '${{ github.ref }}' | rev | cut -d'/' -f1 | rev)
-          echo "DEPLOYS_ENV=${REQUEST_BRANCH}" >> $GITHUB_ENV
-          echo Deploy To ${REQUEST_BRANCH}
-
       - name: Generate deployment package
-        run: zip -r deploy.zip ./backend -x '*.git*'
+        run: zip -r deploy.zip . -x '*.git*'
 
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v16
@@ -33,4 +30,4 @@ jobs:
           environment_name: Solrace-env-main
           version_label: app-${{ github.run_id }}-${{ github.run_number }}
           region: ap-southeast-1
-          deployment_package: deploy.zip
+          deployment_package: ./backend/deploy.zip
