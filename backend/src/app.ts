@@ -23,7 +23,7 @@ app.use(
 )
 
 const assetsDir = path.join(__dirname, '..', 'public')
-console.log(assetsDir)
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use('/assets', express.static(assetsDir))
