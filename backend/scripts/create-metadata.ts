@@ -9,8 +9,13 @@ import { DeepPartial } from 'typeorm'
 const collectionPath = path.join(process.cwd(), 'assets', `collection.json`)
 
 const collection = require(collectionPath)
+console.log(collection)
 
-async function createMetadata(id: number, collectionAddress?: string) {
+async function createMetadata(
+  id: number,
+  imageBaseURI: string,
+  collectionAddress?: string,
+) {
   const filePath = path.join(process.cwd(), 'assets', `${id}.json`)
   const nft = require(filePath)
 
@@ -22,6 +27,7 @@ async function createMetadata(id: number, collectionAddress?: string) {
     'seller_fee_basis_points',
     'external_url',
     'symbol',
+    'image',
   ) as DeepPartial<NFTMetaData>
 
   let nftCollection = await NFTCollection.findOne({ name: collection.name })
@@ -37,10 +43,14 @@ async function createMetadata(id: number, collectionAddress?: string) {
   await NFTMetaData.create({
     ...meta,
     id,
+    image: `${imageBaseURI}/${nft.image}`,
     sellerFeeBasisPoints: nft.seller_fee_basis_points,
     externalUrl: nft.external_url,
     collection: nftCollection,
-    files: properties.files,
+    files: properties.files.map((file) => ({
+      ...file,
+      uri: `${imageBaseURI}/${file.uri}`,
+    })),
     creators: properties.creators,
   }).save()
 }
@@ -50,6 +60,7 @@ async function main() {
 
   let start = 0
   let end = 0
+  let imageBaseURI = ''
   let collectionAddress: string | undefined = undefined
   for (let i = 0; i < args.length; i += 2) {
     const opt = args[i]
@@ -67,6 +78,10 @@ async function main() {
       case '-a':
       case '-address':
         collectionAddress = val
+        break
+      case '-url':
+        imageBaseURI = val
+        break
     }
   }
 
@@ -78,10 +93,14 @@ async function main() {
     throw new Error('-s must less than -e')
   }
 
+  if (imageBaseURI === '') {
+    throw new Error('-url must be set')
+  }
+
   const connection = await connectDB()
   for (let i = start; i <= end; i++) {
     console.log(`process ${i}.json`)
-    await createMetadata(i, collectionAddress)
+    await createMetadata(i, imageBaseURI, collectionAddress)
   }
   await connection.close()
 }
