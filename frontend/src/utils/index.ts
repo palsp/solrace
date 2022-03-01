@@ -15,11 +15,3 @@ export const toastAPIError = (e: Error | AxiosError) => {
 
   toast(message, { type: 'error' })
 }
-
-export const toDate = (value?: anchor.BN) => {
-  if (!value) {
-    return
-  }
-
-  return new Date(value.toNumber() * 1000)
-}

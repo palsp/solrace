@@ -1,12 +1,12 @@
 import * as anchor from '@project-serum/anchor'
-import { useConnection, useWallet } from '@solana/wallet-adapter-react'
+import { useConnection } from '@solana/wallet-adapter-react'
 import { useAnchorWallet } from '~/wallet/hooks'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { findATAAddress } from '~/api/solana/ata'
-import { CandyMachineAccount, getCandyMachineState } from '~/mint/services'
-import { toDate } from '~/utils'
-import { useWorkspace } from '~/workspace/hooks'
-import { getAtaForMint } from '~/mint/utils'
+import {
+  CandyMachineAccount,
+  getCandyMachineState,
+} from '~/api/solana/candy-machine'
+import { getAtaForMint, toDate } from '~/api/solana/candy-machine/utils'
 
 interface Props {
   candyMachineId?: anchor.web3.PublicKey
@@ -21,7 +21,7 @@ export const useCandyMachine = ({ candyMachineId }: Props) => {
   const [isPresale, setIsPresale] = useState(false)
 
   const [isActive, setIsActive] = useState(false)
-  const { provider } = useWorkspace()
+
   const { connection } = useConnection()
 
   const anchorWallet = useAnchorWallet()
@@ -123,11 +123,11 @@ export const useCandyMachine = ({ candyMachineId }: Props) => {
         console.log(e)
       }
     }
-  }, [anchorWallet, candyMachineId, connection, provider])
+  }, [anchorWallet, candyMachineId, connection])
 
   useEffect(() => {
     revalidate()
-  }, [anchorWallet, candyMachineId, connection, provider, revalidate])
+  }, [anchorWallet, candyMachineId, connection, revalidate])
 
   return {
     candyMachine,

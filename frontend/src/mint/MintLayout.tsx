@@ -6,9 +6,8 @@ import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import { useAnchorWallet } from '~/wallet/hooks'
 import {
   awaitTransactionSignatureConfirmation,
-  CandyMachineAccount,
   mintOneToken,
-} from '~/mint/services'
+} from '~/api/solana/candy-machine'
 import { useCandyMachine } from '~/hooks/useCandyMachine'
 import { PublicKey } from '@solana/web3.js'
 import MintButton from '~/mint/MintButton'
@@ -72,6 +71,8 @@ const MintLayout = () => {
     } catch (e) {
       console.log(e)
       toast('Mint Failed!, please try again')
+    } finally {
+      setIsUserMinting(false)
     }
   }
 
