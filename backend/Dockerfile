@@ -19,6 +19,5 @@ ENV NODE_PATH="dist/src"
 EXPOSE 8080
 COPY start.sh .
 COPY tsconfig.json .
-COPY public/ dist/public
 RUN chmod +x ./start.sh
 ENTRYPOINT  ["sh", "./start.sh"]
