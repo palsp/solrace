@@ -1,3 +1,4 @@
+import * as anchor from '@project-serum/anchor'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
 
@@ -13,4 +14,12 @@ export const toastAPIError = (e: Error | AxiosError) => {
   }
 
   toast(message, { type: 'error' })
+}
+
+export const toDate = (value?: anchor.BN) => {
+  if (!value) {
+    return
+  }
+
+  return new Date(value.toNumber() * 1000)
 }

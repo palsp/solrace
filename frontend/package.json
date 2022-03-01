@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@civic/solana-gateway-react": "^0.4.13",
     "@metaplex/js": "^4.12.0",
     "@project-serum/common": "^0.0.1-beta.3",
     "@project-serum/serum": "^0.13.52",

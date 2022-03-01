@@ -85,7 +85,7 @@ solana airdrop 1
 upload and deploy candy machine. in `scripts/metaplex` folder, run
 ```sh
 yarn --cwd js install
-ts-node js/packages/cli/src/candy-machine-v2-cli.ts upload \
+ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts upload \
     -e devnet \
     -k ~/.config/solana/devnet.json \
     -cp config.json \
@@ -109,7 +109,7 @@ mint one token
 ```
 ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts mint_one_token \
     -e devnet \
-    -k ~/.config/solana/devnet.json \
+    -k  ~/.config/solana/solrace.json \
     -c example
 ```
 
@@ -120,4 +120,12 @@ ts-node js/packages/cli/src/candy-machine-v2-cli.ts mint_multiple_tokens \
     -k ~/.config/solana/devnet.json \
     -c example \
     --number 2
+```
+
+sign your nft
+```
+ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts sign_all \
+    -e devnet \
+    -k ~/.config/solana/devnet.json \
+    -c example
 ```

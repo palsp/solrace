@@ -1,5 +1,5 @@
 import * as anchor from '@project-serum/anchor'
-import { TOKEN_METADATA_PROGRAM_ID } from '~/api/constants'
+import { TOKEN_METADATA_PROGRAM_ID } from '~/contract/addresses'
 
 export const getMetadata = async (
   mint: anchor.web3.PublicKey,

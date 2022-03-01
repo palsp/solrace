@@ -6,7 +6,7 @@ interface Props
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
   > {
-  width: string
+  width?: string
 }
 const Button = styled.button`
   padding: 1rem;
