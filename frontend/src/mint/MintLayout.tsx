@@ -17,6 +17,7 @@ import { toast } from 'react-toastify'
 import { useWorkspace } from '~/workspace/hooks'
 import { CANDY_MACHINE_PROGRAM } from '~/contract/addresses'
 import { getUserBalance, handleMintError } from '~/mint/services'
+import MintCard from '~/mint/MintCard'
 
 const MintContainer = styled.div`
   display: flex;
@@ -38,6 +39,11 @@ const MintLayout = () => {
   const [isValidMint, setIsValidMint] = useState<boolean>(false)
 
   const anchorWallet = useAnchorWallet()
+
+  const { revalidate, ...attributes } = useCandyMachine({
+    candyMachineId,
+  })
+
   const {
     candyMachine,
     discountPrice,
@@ -45,11 +51,8 @@ const MintLayout = () => {
     endDate,
     itemsRemaining,
     isPresale,
-    revalidate,
     isActive,
-  } = useCandyMachine({
-    candyMachineId,
-  })
+  } = attributes
 
   useEffect(() => {
     if (anchorWallet && candyMachine) {
@@ -109,6 +112,7 @@ const MintLayout = () => {
 
   return (
     <MintContainer>
+      {candyMachine && <MintCard {...attributes} candyMachine={candyMachine} />}
       {wallet.signTransaction ? (
         <GatewayProvider
           wallet={{
