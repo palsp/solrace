@@ -129,3 +129,13 @@ ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts sign_all \
     -k ~/.config/solana/devnet.json \
     -c example
 ```
+
+update config 
+```
+ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts update_candy_machine \
+    -e devnet \
+    -k ~/.config/solana/devnet.json \
+    -cp config.json \
+    -c example \
+    --new-authority 7idYCnwadSG8quKNr2qqtt2WVTGy8xwTF5uFvAuHyY1g
+```

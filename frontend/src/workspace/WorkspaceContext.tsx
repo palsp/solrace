@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { Provider, Program, Idl, Wallet } from '@project-serum/anchor'
+import { Provider, Program } from '@project-serum/anchor'
 
 import {
   useConnection,
@@ -24,6 +24,7 @@ export const WorkspaceContext = React.createContext(defaultWorkspaceContext)
 export const WorkspaceProvider: React.FC = ({ children }) => {
   const { connection } = useConnection()
   const wallet = useWallet()
+
   const { current: provider } = useRef(
     // @ts-ignore
     new Provider(connection, wallet, {
