@@ -137,5 +137,6 @@ export const useCandyMachine = ({ candyMachineId }: Props) => {
     itemsRemaining,
     isPresale,
     isActive,
+    revalidate,
   }
 }

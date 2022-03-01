@@ -1,13 +1,13 @@
 import styled from 'styled-components'
-import { CandyMachineAccount } from '~/mint/services'
+import { CandyMachineAccount } from '~/api/solana/candy-machine'
 import { useEffect, useMemo, useState } from 'react'
 import Button from '~/ui/Button'
-import { useCandyMachine } from '~/hooks/useCandyMachine'
 import { GatewayStatus, useGateway } from '@civic/solana-gateway-react'
 
+import Spinner from '~/ui/Spinner'
+
 export const CTAButton = styled(Button)`
-  width: 100%;
-  height: 60px;
+  width: 30%;
   margin-top: 10px;
   margin-bottom: 5px;
   background: linear-gradient(180deg, #604ae5 0%, #813eee 100%);
@@ -54,17 +54,18 @@ const MintButton: React.FC<Props> = ({
   }, [gatewayStatus, clicked, setClicked, onMint])
 
   const buttonContent = useMemo(() => {
+    // return <Spinner />
     if (candyMachine?.state.isSoldOut) {
       return 'SOLD OUT'
     } else if (isMinting) {
-      return '...'
+      return <Spinner />
     } else if (
       candyMachine?.state.isPresale ||
       candyMachine?.state.isWhitelistOnly
     ) {
       return 'WHITELIST MINT'
     } else if (clicked && candyMachine?.state.gatekeeper) {
-      return '...'
+      return <Spinner />
     }
 
     return 'MINT'

@@ -1,4 +1,3 @@
-import * as anchor from '@project-serum/anchor'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
 

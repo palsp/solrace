@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import * as anchor from '@project-serum/anchor'
 
 import { GatewayProvider } from '@civic/solana-gateway-react'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
@@ -15,8 +16,14 @@ import { DEFAULT_ENDPOINT } from '~/workspace/constants'
 import { toast } from 'react-toastify'
 import { useWorkspace } from '~/workspace/hooks'
 import { CANDY_MACHINE_PROGRAM } from '~/contract/addresses'
+import { getUserBalance, handleMintError } from '~/mint/services'
 
-const MintContainer = styled.div`` // add your owns styles here
+const MintContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+` // add your owns styles here
 
 const candyMachineId = process.env.NEXT_PUBLIC_CANDY_MACHINE_ID
   ? new PublicKey(process.env.NEXT_PUBLIC_CANDY_MACHINE_ID)
@@ -27,6 +34,8 @@ const MintLayout = () => {
   const { provider } = useWorkspace()
   const { connection } = useConnection()
   const [isUserMinting, setIsUserMinting] = useState(false)
+  const [userBalance, setUserBalance] = useState<anchor.BN>()
+  const [isValidMint, setIsValidMint] = useState<boolean>(false)
 
   const anchorWallet = useAnchorWallet()
   const {
@@ -36,21 +45,45 @@ const MintLayout = () => {
     endDate,
     itemsRemaining,
     isPresale,
-
+    revalidate,
     isActive,
   } = useCandyMachine({
     candyMachineId,
   })
 
+  useEffect(() => {
+    if (anchorWallet && candyMachine) {
+      getUserBalance(
+        anchorWallet.publicKey,
+        connection,
+        candyMachine?.state.tokenMint,
+      ).then(([balance]) => {
+        const valid = new anchor.BN(balance).gte(candyMachine.state.price)
+        console.log(valid)
+        setIsValidMint(valid)
+      })
+    }
+  }, [anchorWallet, connection, candyMachine])
+
   const handleMint = async () => {
+    if (!isValidMint) {
+      toast('Insufficient Balance', { type: 'error' })
+      return
+    }
     try {
       setIsUserMinting(true)
-      if (!wallet.connected || !candyMachine?.program || !wallet.publicKey) {
+
+      if (
+        !wallet.connected ||
+        !candyMachine?.program ||
+        !wallet.publicKey ||
+        !provider
+      ) {
         toast('Please connect wallet', { type: 'warning' })
         return
       }
 
-      const [mintTxId] = await mintOneToken(candyMachine, wallet.publicKey)
+      const [mintTxId] = await mintOneToken(wallet.publicKey, candyMachine)
       let status: any = { err: true }
       if (mintTxId) {
         status = await awaitTransactionSignatureConfirmation(
@@ -62,15 +95,16 @@ const MintLayout = () => {
       }
 
       if (status && !status.err) {
-        // TODO: update candy machine state
         toast('Congratulations! Mint succeeded!', { type: 'success' })
+        await revalidate()
       } else {
         console.log(status)
         toast('Mint failed! Please try again!', { type: 'error' })
       }
     } catch (e) {
       console.log(e)
-      toast('Mint Failed!, please try again')
+      const message = handleMintError(e)
+      toast(message, { type: 'error' })
     } finally {
       setIsUserMinting(false)
     }
