@@ -59,7 +59,6 @@ const MintLayout = () => {
         candyMachine?.state.tokenMint,
       ).then(([balance]) => {
         const valid = new anchor.BN(balance).gte(candyMachine.state.price)
-        console.log(valid)
         setIsValidMint(valid)
       })
     }
@@ -98,11 +97,9 @@ const MintLayout = () => {
         toast('Congratulations! Mint succeeded!', { type: 'success' })
         await revalidate()
       } else {
-        console.log(status)
         toast('Mint failed! Please try again!', { type: 'error' })
       }
     } catch (e) {
-      console.log(e)
       const message = handleMintError(e)
       toast(message, { type: 'error' })
     } finally {

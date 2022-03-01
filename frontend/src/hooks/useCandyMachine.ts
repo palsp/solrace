@@ -80,8 +80,6 @@ export const useCandyMachine = ({ candyMachineId }: Props) => {
             if (cndy.state.isWhitelistOnly) {
               active = false
             }
-            console.log('There was a problem fetching whitelist token balance')
-            console.log(e)
           }
         }
         // datetime to stop the mint?
@@ -118,10 +116,7 @@ export const useCandyMachine = ({ candyMachineId }: Props) => {
         setIsActive((cndy.state.isActive = active))
         setIsPresale((cndy.state.isPresale = presale))
         setCandyMachine(cndy)
-      } catch (e) {
-        console.log('There was a problem fetching Candy Machine state')
-        console.log(e)
-      }
+      } catch (e) {}
     }
   }, [anchorWallet, candyMachineId, connection])
 

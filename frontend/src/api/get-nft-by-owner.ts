@@ -28,7 +28,6 @@ export const getParsedNFTAccountByOwner = async ({
 
   return splAccounts
     .filter((t) => {
-      console.log(t.account.owner.toString())
       const amount = t.account?.data?.parsed?.info?.tokenAmount?.uiAmount
       const decimals = t.account?.data?.parsed?.info?.tokenAmount?.decimals
       return decimals === 0 && amount >= 1

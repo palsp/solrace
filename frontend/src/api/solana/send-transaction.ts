@@ -85,12 +85,6 @@ export const sendTransactions = async (
 
   const pendingTxns: Promise<{ txid: string; slot: number }>[] = []
 
-  console.log(
-    'Signed txns length',
-    signedTxns.length,
-    'vs handed in length',
-    instructionSet.length,
-  )
   for (let i = 0; i < signedTxns.length; i++) {
     const signedTxnPromise = sendSignedTransaction({
       connection,
@@ -131,8 +125,6 @@ export async function sendSignedTransaction({
     },
   )
 
-  console.log('Started awaiting confirmation for', txid)
-
   let done = false
   ;(async () => {
     while (!done && getUnixTs() - startTime < timeout) {
@@ -142,6 +134,7 @@ export async function sendSignedTransaction({
       await sleep(500)
     }
   })()
+
   try {
     const confirmation = await awaitTransactionSignatureConfirmation(
       txid,
@@ -162,7 +155,7 @@ export async function sendSignedTransaction({
     slot = confirmation?.slot || 0
   } catch (err) {
     console.error('Timeout Error caught', err)
-    if (err.timeout) {
+    if ((err as any).timeout) {
       throw new Error('Timed out awaiting confirmation on transaction')
     }
     let simulateResult: SimulatedTransactionResponse | null = null
@@ -189,7 +182,6 @@ export async function sendSignedTransaction({
     done = true
   }
 
-  console.log('Latency', txid, getUnixTs() - startTime)
   return { txid, slot }
 }
 
@@ -239,7 +231,6 @@ async function awaitTransactionSignatureConfirmation(
         return
       }
       done = true
-      console.log('Rejecting for timeout...')
       reject({ timeout: true })
     }, timeout)
     try {
@@ -253,10 +244,8 @@ async function awaitTransactionSignatureConfirmation(
             confirmations: 0,
           }
           if (result.err) {
-            console.log('Rejected via websocket', result.err)
             reject(status)
           } else {
-            console.log('Resolved via websocket', result)
             resolve(status)
           }
         },
@@ -264,7 +253,6 @@ async function awaitTransactionSignatureConfirmation(
       )
     } catch (e) {
       done = true
-      console.error('WS error in setup', txid, e)
     }
     while (!done && queryStatus) {
       // eslint-disable-next-line no-loop-func
@@ -276,24 +264,18 @@ async function awaitTransactionSignatureConfirmation(
           status = signatureStatuses && signatureStatuses.value[0]
           if (!done) {
             if (!status) {
-              console.log('REST null result for', txid, status)
+              return
             } else if (status.err) {
-              console.log('REST error for', txid, status)
               done = true
               reject(status.err)
             } else if (!status.confirmations) {
-              console.log('REST no confirmations for', txid, status)
+              return
             } else {
-              console.log('REST confirmation for', txid, status)
               done = true
               resolve(status)
             }
           }
-        } catch (e) {
-          if (!done) {
-            console.log('REST connection error: txid', txid, e)
-          }
-        }
+        } catch (e) {}
       })()
       await sleep(2000)
     }
@@ -303,7 +285,6 @@ async function awaitTransactionSignatureConfirmation(
   if (connection._signatureSubscriptions[subId])
     connection.removeSignatureListener(subId)
   done = true
-  console.log('Returning status', status)
   return status
 }
 export function sleep(ms: number): Promise<void> {

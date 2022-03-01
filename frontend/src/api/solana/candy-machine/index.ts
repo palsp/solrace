@@ -78,7 +78,7 @@ export const awaitTransactionSignatureConfirmation = async (
         return
       }
       done = true
-      console.log('Rejecting for timeout...')
+
       reject({ timeout: true })
     }, timeout)
 
@@ -92,24 +92,18 @@ export const awaitTransactionSignatureConfirmation = async (
           status = signatureStatuses && signatureStatuses.value[0]
           if (!done) {
             if (!status) {
-              console.log('REST null result for', txid, status)
+              return
             } else if (status.err) {
-              console.log('REST error for', txid, status)
               done = true
               reject(status.err)
             } else if (!status.confirmations) {
-              console.log('REST no confirmations for', txid, status)
+              return
             } else {
-              console.log('REST confirmation for', txid, status)
               done = true
               resolve(status)
             }
           }
-        } catch (e) {
-          if (!done) {
-            console.log('REST connection error: txid', txid, e)
-          }
-        }
+        } catch (e) {}
       })()
       await sleep(2000)
     }
@@ -120,7 +114,7 @@ export const awaitTransactionSignatureConfirmation = async (
     connection.removeSignatureListener(subId)
   }
   done = true
-  console.log('Returning status', status)
+
   return status
 }
 
@@ -441,9 +435,7 @@ export const mintOneToken = async (
         [signers, []],
       )
     ).txs.map((t) => t.txid)
-  } catch (e) {
-    console.log(e)
-  }
+  } catch (e) {}
 
   return []
 }

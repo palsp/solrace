@@ -74,7 +74,6 @@ export const AuthProvider: React.FC = ({ children }) => {
   // }, [])
 
   useEffect(() => {
-    console.log('userEffect')
     const token = getUserTokenFromStorage()
 
     if (token) {
