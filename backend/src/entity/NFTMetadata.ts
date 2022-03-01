@@ -32,9 +32,6 @@ export class NFTMetaData extends BaseEntity {
   edition?: number
 
   @Column('simple-json')
-  attributes!: { trait_type: string; value: number }[]
-
-  @Column('simple-json')
   files!: { uri: string; type: string }[]
 
   @Column('simple-json')

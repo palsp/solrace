@@ -5,6 +5,7 @@ import _ from 'lodash'
 
 import path from 'path'
 import { DeepPartial } from 'typeorm'
+import { NFTAttributes } from 'entity/NFTAttributes'
 
 const collectionPath = path.join(process.cwd(), 'assets', `collection.json`)
 
@@ -28,6 +29,7 @@ async function createMetadata(
     'external_url',
     'symbol',
     'image',
+    'attributes',
   ) as DeepPartial<NFTMetaData>
 
   let nftCollection = await NFTCollection.findOne({ name: collection.name })
@@ -40,7 +42,7 @@ async function createMetadata(
     }).save()
   }
 
-  await NFTMetaData.create({
+  const token = await NFTMetaData.create({
     ...meta,
     id,
     image: `${imageBaseURI}/${nft.image}`,
@@ -52,6 +54,15 @@ async function createMetadata(
       uri: `${imageBaseURI}/${file.uri}`,
     })),
     creators: properties.creators,
+  }).save()
+
+  await NFTAttributes.create({
+    token,
+    maxSpeed: 50 + Math.floor(Math.random() * 50),
+    acceleration: 50 + Math.floor(Math.random() * 50),
+    driftPowerGenerationRate: 20 + Math.floor(Math.random() * 20),
+    driftPowerConsumptionRate: 10 + Math.floor(Math.random() * 20),
+    handling: 50 + Math.floor(Math.random() * 50),
   }).save()
 }
 
