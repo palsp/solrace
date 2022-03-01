@@ -14,23 +14,6 @@ import {
 
 import { WalletNotConnectedError } from '@solana/wallet-adapter-base'
 
-interface BlockhashAndFeeCalculator {
-  blockhash: Blockhash
-  feeCalculator: FeeCalculator
-}
-
-export enum SequenceType {
-  Sequential,
-  Parallel,
-  StopOnFailure,
-}
-
-export const getUnixTs = () => {
-  return new Date().getTime() / 1000
-}
-
-const DEFAULT_TIMEOUT = 30000
-
 export const getErrorForTransaction = async (
   connection: Connection,
   txid: string,
@@ -61,24 +44,22 @@ export const getErrorForTransaction = async (
   return errors
 }
 
+export enum SequenceType {
+  Sequential,
+  Parallel,
+  StopOnFailure,
+}
+
 export const sendTransactions = async (
   connection: Connection,
   wallet: any,
   instructionSet: TransactionInstruction[][],
   signersSet: Keypair[][],
-  sequenceType: SequenceType = SequenceType.Parallel,
   commitment: Commitment = 'singleGossip',
-  successCallback: (txid: string, ind: number) => void = (txid, ind) => {},
-  failCallback: (reason: string, ind: number) => boolean = (txid, ind) => false,
-  block?: BlockhashAndFeeCalculator,
 ): Promise<{ number: number; txs: { txid: string; slot: number }[] }> => {
   if (!wallet.publicKey) throw new WalletNotConnectedError()
 
   const unsignedTxns: Transaction[] = []
-
-  if (!block) {
-    block = await connection.getRecentBlockhash(commitment)
-  }
 
   for (let i = 0; i < instructionSet.length; i++) {
     const instructions = instructionSet[i]
@@ -88,18 +69,14 @@ export const sendTransactions = async (
       continue
     }
 
-    let transaction = new Transaction()
+    let transaction = new Transaction({ feePayer: wallet.publicKey })
     instructions.forEach((instruction) => transaction.add(instruction))
-    transaction.recentBlockhash = block.blockhash
-    transaction.setSigners(
-      // fee payed by the wallet owner
-      wallet.publicKey,
-      ...signers.map((s) => s.publicKey),
-    )
 
-    if (signers.length > 0) {
-      transaction.partialSign(...signers)
-    }
+    transaction.recentBlockhash = (
+      await connection.getLatestBlockhash(commitment)
+    ).blockhash
+
+    if (signers.length > 0) transaction.partialSign(...signers)
 
     unsignedTxns.push(transaction)
   }
@@ -108,7 +85,6 @@ export const sendTransactions = async (
 
   const pendingTxns: Promise<{ txid: string; slot: number }>[] = []
 
-  let breakEarlyObject = { breakEarly: false, i: 0 }
   console.log(
     'Signed txns length',
     signedTxns.length,
@@ -121,111 +97,17 @@ export const sendTransactions = async (
       signedTransaction: signedTxns[i],
     })
 
-    signedTxnPromise
-      .then(({ txid, slot }) => {
-        successCallback(txid, i)
-      })
-      .catch((reason) => {
-        // @ts-ignore
-        failCallback(signedTxns[i], i)
-        if (sequenceType === SequenceType.StopOnFailure) {
-          breakEarlyObject.breakEarly = true
-          breakEarlyObject.i = i
-        }
-      })
-
-    if (sequenceType !== SequenceType.Parallel) {
-      try {
-        await signedTxnPromise
-      } catch (e) {
-        console.log('Caught failure', e)
-        if (breakEarlyObject.breakEarly) {
-          console.log('Died on ', breakEarlyObject.i)
-          // Return the txn we failed on by index
-          return {
-            number: breakEarlyObject.i,
-            txs: await Promise.all(pendingTxns),
-          }
-        }
-      }
-    } else {
-      pendingTxns.push(signedTxnPromise)
-    }
-  }
-
-  if (sequenceType !== SequenceType.Parallel) {
-    await Promise.all(pendingTxns)
+    pendingTxns.push(signedTxnPromise)
   }
 
   return { number: signedTxns.length, txs: await Promise.all(pendingTxns) }
 }
 
-export const sendTransaction = async (
-  connection: Connection,
-  wallet: any,
-  instructions: TransactionInstruction[],
-  signers: Keypair[],
-  awaitConfirmation = true,
-  commitment: Commitment = 'singleGossip',
-  includesFeePayer: boolean = false,
-  block?: BlockhashAndFeeCalculator,
-) => {
-  if (!wallet.publicKey) throw new WalletNotConnectedError()
-
-  let transaction = new Transaction()
-  instructions.forEach((instruction) => transaction.add(instruction))
-  transaction.recentBlockhash = (
-    block || (await connection.getRecentBlockhash(commitment))
-  ).blockhash
-
-  if (includesFeePayer) {
-    transaction.setSigners(...signers.map((s) => s.publicKey))
-  } else {
-    transaction.setSigners(
-      // fee payed by the wallet owner
-      wallet.publicKey,
-      ...signers.map((s) => s.publicKey),
-    )
-  }
-
-  if (signers.length > 0) {
-    transaction.partialSign(...signers)
-  }
-  if (!includesFeePayer) {
-    transaction = await wallet.signTransaction(transaction)
-  }
-
-  const rawTransaction = transaction.serialize()
-  let options = {
-    skipPreflight: true,
-    commitment,
-  }
-
-  const txid = await connection.sendRawTransaction(rawTransaction, options)
-  let slot = 0
-
-  if (awaitConfirmation) {
-    const confirmation = await awaitTransactionSignatureConfirmation(
-      txid,
-      DEFAULT_TIMEOUT,
-      connection,
-      commitment,
-    )
-
-    if (!confirmation)
-      throw new Error('Timed out awaiting confirmation on transaction')
-    slot = confirmation?.slot || 0
-
-    if (confirmation?.err) {
-      const errors = await getErrorForTransaction(connection, txid)
-
-      console.log(errors)
-      throw new Error(`Raw transaction ${txid} failed`)
-    }
-  }
-
-  return { txid, slot }
+export const getUnixTs = () => {
+  return new Date().getTime() / 1000
 }
+
+const DEFAULT_TIMEOUT = 60000
 
 export async function sendSignedTransaction({
   signedTransaction,
@@ -280,7 +162,7 @@ export async function sendSignedTransaction({
     slot = confirmation?.slot || 0
   } catch (err) {
     console.error('Timeout Error caught', err)
-    if ((err as any).timeout) {
+    if (err.timeout) {
       throw new Error('Timed out awaiting confirmation on transaction')
     }
     let simulateResult: SimulatedTransactionResponse | null = null
@@ -309,6 +191,32 @@ export async function sendSignedTransaction({
 
   console.log('Latency', txid, getUnixTs() - startTime)
   return { txid, slot }
+}
+
+async function simulateTransaction(
+  connection: Connection,
+  transaction: Transaction,
+  commitment: Commitment,
+): Promise<RpcResponseAndContext<SimulatedTransactionResponse>> {
+  // @ts-ignore
+  transaction.recentBlockhash = await connection._recentBlockhash(
+    // @ts-ignore
+    connection._disableBlockhashCaching,
+  )
+
+  const signData = transaction.serializeMessage()
+  // @ts-ignore
+  const wireTransaction = transaction._serialize(signData)
+  const encodedTransaction = wireTransaction.toString('base64')
+  const config: any = { encoding: 'base64', commitment }
+  const args = [encodedTransaction, config]
+
+  // @ts-ignore
+  const res = await connection._rpcRequest('simulateTransaction', args)
+  if (res.error) {
+    throw new Error('failed to simulate transaction: ' + res.error.message)
+  }
+  return res.result
 }
 
 async function awaitTransactionSignatureConfirmation(
@@ -398,33 +306,6 @@ async function awaitTransactionSignatureConfirmation(
   console.log('Returning status', status)
   return status
 }
-
-async function simulateTransaction(
-  connection: Connection,
-  transaction: Transaction,
-  commitment: Commitment,
-): Promise<RpcResponseAndContext<SimulatedTransactionResponse>> {
-  // @ts-ignore
-  transaction.recentBlockhash = await connection._recentBlockhash(
-    // @ts-ignore
-    connection._disableBlockhashCaching,
-  )
-
-  const signData = transaction.serializeMessage()
-  // @ts-ignore
-  const wireTransaction = transaction._serialize(signData)
-  const encodedTransaction = wireTransaction.toString('base64')
-  const config: any = { encoding: 'base64', commitment }
-  const args = [encodedTransaction, config]
-
-  // @ts-ignore
-  const res = await connection._rpcRequest('simulateTransaction', args)
-  if (res.error) {
-    throw new Error('failed to simulate transaction: ' + res.error.message)
-  }
-  return res.result
-}
-
 export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
