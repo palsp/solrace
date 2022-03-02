@@ -1,5 +1,5 @@
 [package]
-name = "staking"
+name = "sol_race_staking"
 version = "0.1.0"
 description = "Created with Anchor"
 edition = "2018"

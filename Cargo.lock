@@ -1124,6 +1124,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "sol_race_staking"
+version = "0.1.0"
+dependencies = [
+ "anchor-lang",
+ "anchor-spl",
+ "arrayref",
+ "mpl-token-metadata",
+ "solana-gateway",
+ "solana-program",
+ "spl-associated-token-account",
+ "spl-token",
+]
+
+[[package]]
 name = "solana-frozen-abi"
 version = "1.9.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1259,20 +1273,6 @@ dependencies = [
  "num_enum",
  "solana-program",
  "thiserror",
-]
-
-[[package]]
-name = "staking"
-version = "0.1.0"
-dependencies = [
- "anchor-lang",
- "anchor-spl",
- "arrayref",
- "mpl-token-metadata",
- "solana-gateway",
- "solana-program",
- "spl-associated-token-account",
- "spl-token",
 ]
 
 [[package]]

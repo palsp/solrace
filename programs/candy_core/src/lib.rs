@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{Mint, TokenAccount};
 
-anchor_lang::declare_id!("cndy3Z4yapfJBmL3ShUp5exZKqR3z33thTzeNMm2gRZ");
+anchor_lang::declare_id!("EZfQMJmBpjDxVYj8x9MK4tQ1rtnJrudsxYahqQVkS2QQ");
 
 #[program]
 pub mod candy_core {

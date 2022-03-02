@@ -9,6 +9,8 @@ pub struct PoolBumps {
 #[account]
 #[derive(Default)]
 pub struct PoolAccount {
+  pub pool_name: [u8; 10],
+
   pub pool_authority: Pubkey,
 
   pub garage_creator: Pubkey,
@@ -23,22 +25,22 @@ pub struct PoolAccount {
 
   pub last_distributed: i64,
 
-  pub distribution_per_time: i64,
-
   pub total_distribution: u64,
 
   pub total_staked: i64,
 
   pub global_reward_index: u64,
 
-  pub start: i64,
+  pub start_time: i64,
 
-  pub end: i64,
+  pub end_time: i64,
 }
 
 #[account]
 #[derive(Default)]
 pub struct StakingAccount {
+  pub bump: u8,
+
   pub latest_claimed: i64,
 
   pub pending_reward: u64,
@@ -52,6 +54,8 @@ pub struct StakingAccount {
   pub garage_metadata_account: Pubkey,
 
   pub success_rate: i8,
+
+  pub is_staked: bool,
 
   pub reward_index: u64,
 }

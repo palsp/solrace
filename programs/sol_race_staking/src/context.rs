@@ -2,14 +2,17 @@ use anchor_lang::prelude::*;
 use anchor_spl::token::{TokenAccount, Mint, Token};
 
 use crate::account::{PoolBumps, PoolAccount, StakingAccount};
+use crate::utils::{ TrimAsciiWhitespace };
 
+
+/// TODO: remove pool name
 #[derive(Accounts)]
-#[instruction(bumps: PoolBumps )]
+#[instruction(pool_name: String, bumps: PoolBumps )]
 pub struct Initialize<'info> {
     pub signer: Signer<'info>,
 
     #[account(init, 
-        seeds = ["pool_account".as_ref()],
+        seeds = [pool_name.as_bytes(),b"pool_account"],
         bump = bumps.pool_account,
         payer = signer)]
     pub pool_account: Account<'info, PoolAccount>,
@@ -23,7 +26,7 @@ pub struct Initialize<'info> {
       )]
     pub pool_authority: Box<Account<'info, TokenAccount>>,
 
-    pub garage_creator: AccountInfo<'info>,
+    // pub garage_creator: AccountInfo<'info>,
     
     #[account(constraint = solr_mint.key() == pool_authority.mint)]
     pub solr_mint : Account<'info, Mint>,
@@ -31,7 +34,7 @@ pub struct Initialize<'info> {
     #[account(init,
         token::mint = solr_mint,
         token::authority = pool_authority,
-        seeds = [b"pool_solr"],
+        seeds = [pool_name.as_bytes(), b"pool_solr"],
         bump = bumps.pool_solr,
         payer = staking_authority)]
     pub pool_solr : Account<'info, TokenAccount>,
@@ -45,45 +48,56 @@ pub struct Initialize<'info> {
 
 
 #[derive(Accounts)]
+#[instruction(bump: u8)]
 pub struct Stake<'info> {
+    #[account(mut)]
     pub user: Signer<'info>,
 
-    #[account(
-      seeds = ["pool_account".as_ref()],
+    #[account(mut,
+      seeds = [
+        pool_account.pool_name.as_ref().trim_ascii_whitespace(),
+        "pool_account".as_ref()
+      ],
       bump = pool_account.bumps.pool_account,
     )]
     pub pool_account: Account<'info, PoolAccount>,
 
-
     #[account(init, 
-        // seeds = [],
-        // bump,
-        payer = user)]
+      seeds = [
+        b"staking_account",
+        user.key().as_ref(),
+        garage_token_account.key().as_ref(),
+      ],
+      bump,
+      payer = user
+    )]
     pub staking_account: Account<'info, StakingAccount>,
 
-
     #[account(constraint = solr_mint.key() == pool_account.solr_mint)]
-    pub solr_mint : Account<'info, TokenAccount>,
+    pub solr_mint : Account<'info, Mint>,
        
-    pub garage_mint: Account<'info, Mint>,
+    // pub garage_mint: Account<'info, Mint>,
 
     pub garage_token_account: Account<'info, TokenAccount>,
 
-    pub garage_metadata_account: AccountInfo<'info>,
+    // pub garage_metadata_account: AccountInfo<'info>,
 
-    #[account(address = mpl_token_metadata::id())]
-    pub token_metadata_program : AccountInfo<'info>,
+    // #[account(address = mpl_token_metadata::id())]
+    // pub token_metadata_program : AccountInfo<'info>,
 
     pub system_program : Program<'info, System>
 }
 
 
 #[derive(Accounts)]
-pub struct Withdraw<'info> {
+pub struct UnStake<'info> {
     pub user: Signer<'info>,
 
     #[account(mut,
-      seeds = ["pool_account".as_ref()],
+      seeds = [
+        pool_account.pool_name.as_ref().trim_ascii_whitespace(),  
+        "pool_account".as_ref()
+      ],
       bump = pool_account.bumps.pool_account,
     )]
     pub pool_account: Account<'info, PoolAccount>,
