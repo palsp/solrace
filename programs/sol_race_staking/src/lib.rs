@@ -105,37 +105,40 @@ pub mod sol_race_staking {
 
     //     Ok(())
     // }
-    pub fn stake(ctx: Context<Stake>, bump: u8) -> ProgramResult {
+    pub fn init_stake(ctx: Context<InitStake>, bump: u8) -> ProgramResult {
+        let staking_account = &mut ctx.accounts.staking_account;
+        staking_account.is_staked = false;
+        staking_account.bump = bump;
+
+        Ok(())
+    }
+
+    pub fn stake(ctx: Context<Stake>) -> ProgramResult {
+        msg!("STAKE");
         let clock = Clock::get()?;
         let current_time = clock.unix_timestamp;
         let pool_account = &mut ctx.accounts.pool_account;
         let staking_account = &mut ctx.accounts.staking_account;
         staking_account.is_staked = true;
-        staking_account.bump = bump;
-
         // Compute global reward & staker reward
         compute_reward(pool_account, current_time);
         compute_staker_reward(staking_account, pool_account);
-
         // Increase staked amount
         pool_account.total_staked += 1;
 
         Ok(())
     }
+
     pub fn un_stake(ctx: Context<UnStake>) -> ProgramResult {
         let clock = Clock::get()?;
         let current_time = clock.unix_timestamp;
         let pool_account = &mut ctx.accounts.pool_account;
         let staking_account = &mut ctx.accounts.staking_account;
-
         // Compute global reward & staker reward
         compute_reward(pool_account, current_time);
-
         compute_staker_reward(staking_account, pool_account);
-
         // Decrease staked amount
         pool_account.total_staked -= 1;
-
         staking_account.is_staked = false;
 
         Ok(())
@@ -156,4 +159,18 @@ pub enum ErrorCode {
     NotVerified,
     #[msg("Invalid time")]
     InvalidTime,
+    #[msg("Already stake")]
+    AlreadyStake,
+    #[msg("Not stake")]
+    NotStake,
+    #[msg("A")]
+    A,
+    #[msg("B")]
+    B,
+    #[msg("C")]
+    C,
+    #[msg("D")]
+    D,
+    #[msg("E")]
+    E,
 }

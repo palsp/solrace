@@ -3,6 +3,7 @@ use anchor_spl::token::{TokenAccount, Mint, Token};
 
 use crate::account::{PoolBumps, PoolAccount, StakingAccount};
 use crate::utils::{ TrimAsciiWhitespace };
+use crate::ErrorCode;
 
 
 /// TODO: remove pool name
@@ -49,7 +50,7 @@ pub struct Initialize<'info> {
 
 #[derive(Accounts)]
 #[instruction(bump: u8)]
-pub struct Stake<'info> {
+pub struct InitStake<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
 
@@ -65,6 +66,7 @@ pub struct Stake<'info> {
     #[account(init, 
       seeds = [
         b"staking_account",
+        pool_account.pool_name.as_ref().trim_ascii_whitespace(),
         user.key().as_ref(),
         garage_token_account.key().as_ref(),
       ],
@@ -90,6 +92,47 @@ pub struct Stake<'info> {
 
 
 #[derive(Accounts)]
+pub struct Stake<'info> {
+    #[account(mut)]
+    pub user: Signer<'info>,
+
+    #[account(mut,
+      seeds = [
+        pool_account.pool_name.as_ref().trim_ascii_whitespace(),
+        "pool_account".as_ref()
+      ],
+      bump = pool_account.bumps.pool_account,
+    )]
+    pub pool_account: Account<'info, PoolAccount>,
+
+    #[account(mut, 
+      seeds = [
+        b"staking_account",
+        pool_account.pool_name.as_ref().trim_ascii_whitespace(),
+        user.key().as_ref(),
+        garage_token_account.key().as_ref(),
+      ],
+      bump = staking_account.bump,
+      constraint = staking_account.is_staked == false @ ErrorCode::AlreadyStake
+    )]
+    pub staking_account: Account<'info, StakingAccount>,
+
+    #[account(constraint = solr_mint.key() == pool_account.solr_mint)]
+    pub solr_mint : Account<'info, Mint>,
+       
+    // pub garage_mint: Account<'info, Mint>,
+
+    pub garage_token_account: Account<'info, TokenAccount>,
+
+    // pub garage_metadata_account: AccountInfo<'info>,
+
+    // #[account(address = mpl_token_metadata::id())]
+    // pub token_metadata_program : AccountInfo<'info>,
+
+    pub system_program : Program<'info, System>
+}
+
+#[derive(Accounts)]
 pub struct UnStake<'info> {
     pub user: Signer<'info>,
 
@@ -103,7 +146,15 @@ pub struct UnStake<'info> {
     pub pool_account: Account<'info, PoolAccount>,
 
 
-    // #[account(constraint = staking_account.owner == user.key())]
+    #[account(mut,
+      seeds = [
+        pool_account.pool_name.as_ref().trim_ascii_whitespace(),  
+        "pool_account".as_ref()
+      ],
+      bump = pool_account.bumps.pool_account,
+      constraint = staking_account.to_account_info().owner.key() == user.key() @ ErrorCode::A,
+      constraint = staking_account.is_staked == true @ ErrorCode::NotStake
+    )]
     pub staking_account: Account<'info, StakingAccount>,
 
 

@@ -16,6 +16,7 @@ const BN = anchor.BN
 import chai from 'chai'
 import CBN from 'chai-bn'
 import CAP from 'chai-as-promised'
+import { stake } from './utils/services'
 
 chai.use(CAP).use(CBN(BN)).should()
 
@@ -36,9 +37,11 @@ describe('sol_race_staking', () => {
 
   // All mints default to 6 decimal places.
   // solr to be distributed
-  const solrAmount = new anchor.BN(5000000)
+  // ~ 0.06 solr pere sec
+  const solrAmount = new anchor.BN(0.9)
 
-  const poolName = faker.company.companyName().slice(0, 10)
+  const poolName = faker.name.firstName().slice(0, 10)
+  console.log(poolName)
 
   let solrMintAccount: Token
   let solrMint: PublicKey
@@ -72,6 +75,11 @@ describe('sol_race_staking', () => {
   let startTime = new anchor.BN(Date.now() / 1000)
   let endTime = startTime.add(new anchor.BN(15))
 
+  const time = endTime.sub(startTime)
+
+  const distributedPerSec = solrAmount.div(time)
+
+  console.log(`distribute ${distributedPerSec} solr per sec`)
   it('initialize pool', async () => {
     let bumps = new PoolBumps()
 
@@ -141,29 +149,23 @@ describe('sol_race_staking', () => {
     expect(poolAccountInfo.endTime).to.be.a.bignumber.equal(endTime)
   })
 
-  let nftMintAccount: Token
-  let nftTokenAccount: PublicKey
-  let staker = anchor.web3.Keypair.generate()
+  const staker = anchor.web3.Keypair.generate()
   it('stake user token', async () => {
+    const startStakingTime = new anchor.BN(Date.now() / 1000)
+    // request sol
     const tx = await provider.connection.requestAirdrop(
       staker.publicKey,
       100000000000,
     )
-
-    const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
-      [Buffer.from(poolName), Buffer.from('pool_account')],
-      program.programId,
-    )
-
     await provider.connection.confirmTransaction(tx)
-    let nftMintAccount = await createMint(provider, 0)
 
+    // create nft
+    let nftMintAccount = await createMint(provider, 0)
     let nftTokenAccount = await createTokenAccount(
       provider,
       nftMintAccount.publicKey,
       staker.publicKey,
     )
-
     await nftMintAccount.mintTo(
       nftTokenAccount,
       provider.wallet.publicKey,
@@ -171,58 +173,40 @@ describe('sol_race_staking', () => {
       1,
     )
 
-    const [
-      stakingAccount,
-      stakingAccountBump,
-    ] = await anchor.web3.PublicKey.findProgramAddress(
-      [
-        Buffer.from('staking_account'),
-        staker.publicKey.toBuffer(),
-        nftTokenAccount.toBuffer(),
-      ],
-      program.programId,
-    )
-
-    await program.rpc.stake(stakingAccountBump, {
-      accounts: {
-        user: staker.publicKey,
-        poolAccount,
-        stakingAccount: stakingAccount,
-        solrMint,
-        garageTokenAccount: nftTokenAccount,
-        systemProgram: anchor.web3.SystemProgram.programId,
-      },
+    const [poolAccount, stakingAccount] = await stake({
+      program,
+      user: staker.publicKey,
+      garageTokenAccount: nftTokenAccount,
+      solrMint,
       signers: [staker],
+      poolName,
     })
 
     const poolAccountInfo = await program.account.poolAccount.fetch(poolAccount)
 
     expect(poolAccountInfo.totalStaked).to.be.bignumber.equals(new BN(1))
-    console.log('starTime:', poolAccountInfo.startTime.toString())
-    console.log('endTime:', poolAccountInfo.endTime.toString())
+
+    expect(poolAccountInfo.lastDistributed).to.be.bignumber.greaterThan(
+      new BN(0),
+    )
   })
 
   let anotherStaker = anchor.web3.Keypair.generate()
   it('stake another user token', async () => {
+    // request airdrop
     const tx = await provider.connection.requestAirdrop(
       anotherStaker.publicKey,
       100000000000,
     )
-
-    const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
-      [Buffer.from(poolName), Buffer.from('pool_account')],
-      program.programId,
-    )
-
     await provider.connection.confirmTransaction(tx)
-    let nftMintAccount = await createMint(provider, 0)
 
+    // create nft
+    let nftMintAccount = await createMint(provider, 0)
     let nftTokenAccount = await createTokenAccount(
       provider,
       nftMintAccount.publicKey,
       anotherStaker.publicKey,
     )
-
     await nftMintAccount.mintTo(
       nftTokenAccount,
       provider.wallet.publicKey,
@@ -230,42 +214,23 @@ describe('sol_race_staking', () => {
       1,
     )
 
-    const [
-      anotherStakingAccount,
-      anotherStakingAccountBump,
-    ] = await anchor.web3.PublicKey.findProgramAddress(
-      [
-        Buffer.from('staking_account'),
-        anotherStaker.publicKey.toBuffer(),
-        nftTokenAccount.toBuffer(),
-      ],
+    const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(poolName), Buffer.from('pool_account')],
       program.programId,
     )
 
-    await program.rpc.stake(anotherStakingAccountBump, {
-      accounts: {
-        user: anotherStaker.publicKey,
-        poolAccount,
-        stakingAccount: anotherStakingAccount,
-        solrMint,
-        garageTokenAccount: nftTokenAccount,
-        systemProgram: anchor.web3.SystemProgram.programId,
-      },
+    const [anotherStakingAccount] = await stake({
+      program,
+      user: anotherStaker.publicKey,
+      garageTokenAccount: nftTokenAccount,
+      solrMint,
       signers: [anotherStaker],
+      poolName,
     })
 
     const poolAccountInfo = await program.account.poolAccount.fetch(poolAccount)
 
-    // console.log(poolAccountInfo)
     expect(poolAccountInfo.totalStaked).to.be.bignumber.equals(new BN(2))
-    console.log(
-      'totalDistribution: ',
-      poolAccountInfo.totalDistribution.toString(),
-    )
-    console.log(
-      'globalRewardIndex: ',
-      poolAccountInfo.globalRewardIndex.toString(),
-    )
 
     const anotherStakerAccountInfo = await program.account.stakingAccount.fetch(
       anotherStakingAccount,
@@ -274,5 +239,19 @@ describe('sol_race_staking', () => {
     expect(poolAccountInfo.globalRewardIndex).to.be.bignumber.equals(
       anotherStakerAccountInfo.rewardIndex,
     )
+
+    // distribution amount matter
+    expect(anotherStakerAccountInfo.pendingReward).to.be.a.bignumber.equals(
+      new BN(0),
+    )
+
+    // it's update latest distribution time
+    // expect(poolAccountInfo.lastDistributed).to.be.bignumber.greaterThan(
+    //   prevLatestDistribution,
+    // )
+    // it's update global reward index
+    // expect(poolAccountInfo.globalRewardIndex).to.be.bignumber.greaterThan(
+    //   prevGlobalRewardIndex,
+    // )
   })
 })

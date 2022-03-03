@@ -8,26 +8,24 @@ pub fn compute_reward(pool_account: &mut PoolAccount, current_time: i64) {
     pool_account.last_distributed = current_time;
     return;
   }
-  msg!("CURRENT TIME {}", current_time);
+
   let mut distributed_amount: u128 = 0;
   if pool_account.start_time <= current_time
     && pool_account.end_time >= pool_account.last_distributed
   {
-    let passed_time = std::cmp::min(pool_account.end_time, current_time)
-      - std::cmp::max(pool_account.start_time, pool_account.last_distributed);
-
     let time = pool_account.end_time - pool_account.start_time;
 
     let distributed_amount_per_sec = (pool_account.total_distribution as u128)
       .checked_div(time as u128)
       .unwrap();
 
+    let passed_time = std::cmp::min(pool_account.end_time, current_time)
+      - std::cmp::max(pool_account.start_time, pool_account.last_distributed);
+
     distributed_amount = distributed_amount_per_sec
       .checked_mul(passed_time as u128)
       .unwrap();
   }
-
-  msg!("GLOBAL TOTAL DISTRIBUTED {}", distributed_amount);
 
   pool_account.last_distributed = current_time;
   pool_account.global_reward_index += (distributed_amount as u128)
