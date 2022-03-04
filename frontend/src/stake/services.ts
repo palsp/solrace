@@ -18,12 +18,14 @@ type Verify = {
   creator: anchor.web3.PublicKey
   wallet: AnchorWallet
   nftMint: anchor.web3.PublicKey
+  nftTokenAccount: anchor.web3.PublicKey
 }
 export const verifyNFT = async ({
   provider,
   creator,
   wallet,
   nftMint,
+  nftTokenAccount,
 }: Verify) => {
   const program = new anchor.Program(
     idl as anchor.Idl,
@@ -31,31 +33,29 @@ export const verifyNFT = async ({
     provider,
   )
 
-  const [nftTokenAccount] = await getAtaForMint(nftMint, wallet.publicKey)
   const nftMetadataAccount = await getMetadata(nftMint)
-  const mInfo = await provider.connection.getAccountInfo(nftMetadataAccount)
-  const metaData = MetadataData.deserialize(mInfo!.data)
-  console.log('metadata', metaData)
+  // const mInfo = await provider.connection.getAccountInfo(nftMetadataAccount)
+  // const metaData = MetadataData.deserialize(mInfo!.data)
+  // console.log('metadata', metaData)
 
   const creatureEdition = await getMasterEdition(nftMint)
-  console.log('token', nftTokenAccount.toString())
-  console.log('metadata', nftMetadataAccount.toString())
-  console.log('edition', creatureEdition.toString())
+  // console.log('token', nftTokenAccount.toString())
+  // console.log('metadata', nftMetadataAccount.toString())
+  // console.log('edition', creatureEdition.toString())
 
-  const info = await provider.connection.getAccountInfo(creatureEdition)
-  // console.log(info)
-  const meta = MasterEditionV1Data.deserialize(info!.data)
-  console.log('master ', meta)
+  // const info = await provider.connection.getAccountInfo(creatureEdition)
+  // const meta = MasterEditionV1Data.deserialize(info!.data)
+  // console.log('master ', meta)
 
-  // return program.rpc.verifyNft({
-  //   accounts: {
-  //     user: wallet.publicKey,
-  //     nftMint,
-  //     nftTokenAccount,
-  //     nftMetadataAccount,
-  //     creatureEdition,
-  //     tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
-  //     creator,
-  //   },
-  // })
+  return program.rpc.verifyNft({
+    accounts: {
+      user: wallet.publicKey,
+      nftMint,
+      nftTokenAccount,
+      nftMetadataAccount,
+      creatureEdition,
+      tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
+      creator,
+    },
+  })
 }

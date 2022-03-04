@@ -24,6 +24,7 @@ const MintContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 100%;
 ` // add your owns styles here
 
 const candyMachineId = process.env.NEXT_PUBLIC_CANDY_MACHINE_ID

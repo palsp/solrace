@@ -51,3 +51,10 @@ interface CandyMachineState {
     hash: Uint8Array
   }
 }
+
+interface Collection {
+  id: string
+  name: string
+  publicAddress?: string
+  symbol: string
+}

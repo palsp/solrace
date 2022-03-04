@@ -95,7 +95,7 @@ ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts upload \
 
 verify upload
 ```
-ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts verify_upload \
+ts-node  js/packages/cli/src/candy-machine-v2-cli.ts verify_upload \
     -e devnet \
     -k ~/.config/solana/devnet.json \
     -c example
@@ -108,8 +108,8 @@ in `scripts/metaplex`
 mint one token
 ```
 ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts mint_one_token \
-    -e devnet \
-    -k  ~/.config/solana/solrace.json \
+    -e testnet \
+    -k  ~/.config/solana/testnet.json \
     -c example
 ```
 
@@ -138,4 +138,12 @@ ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts update_cand
     -cp config.json \
     -c example \
     --new-authority 7idYCnwadSG8quKNr2qqtt2WVTGy8xwTF5uFvAuHyY1g
+```
+
+show config 
+```
+ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts show \
+    -e testnet \
+    -k ~/.config/solana/testnet.json \
+    -c example
 ```
