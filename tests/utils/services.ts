@@ -2,7 +2,7 @@ import * as anchor from '@project-serum/anchor'
 import { SystemProgram } from '@solana/web3.js'
 import { SolRaceStaking } from '../../target/types/sol_race_staking'
 
-type Stake = {
+type Bond = {
   user: anchor.web3.PublicKey
   program: anchor.Program<SolRaceStaking>
   garageTokenAccount: anchor.web3.PublicKey
@@ -12,7 +12,16 @@ type Stake = {
   initialize?: boolean
 }
 
-export async function stake({
+type UnBond = {
+  user: anchor.web3.PublicKey
+  program: anchor.Program<SolRaceStaking>
+  garageTokenAccount: anchor.web3.PublicKey
+  solrMint: anchor.web3.PublicKey
+  signers: anchor.web3.Signer[]
+  poolName: string
+}
+
+export async function bond({
   program,
   poolName,
   user,
@@ -20,7 +29,7 @@ export async function stake({
   solrMint,
   signers,
   initialize = true,
-}: Stake): Promise<[anchor.web3.PublicKey, anchor.web3.PublicKey]> {
+}: Bond): Promise<[anchor.web3.PublicKey, anchor.web3.PublicKey]> {
   const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
     [Buffer.from(poolName), Buffer.from('pool_account')],
     program.programId,
@@ -58,7 +67,7 @@ export async function stake({
     )
   }
 
-  await program.rpc.stake({
+  await program.rpc.bond({
     accounts: {
       user,
       poolAccount,
@@ -69,6 +78,48 @@ export async function stake({
     },
     signers,
     preInstructions,
+  })
+
+  return [poolAccount, stakingAccount]
+}
+
+export async function unbond({
+  program,
+  poolName,
+  user,
+  garageTokenAccount,
+  solrMint,
+  signers,
+}: UnBond): Promise<[anchor.web3.PublicKey, anchor.web3.PublicKey]> {
+  const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
+    [Buffer.from(poolName), Buffer.from('pool_account')],
+    program.programId,
+  )
+
+  const [
+    stakingAccount,
+    stakingAccountBump,
+  ] = await anchor.web3.PublicKey.findProgramAddress(
+    [
+      Buffer.from('staking_account'),
+      // TODO: delete poolName
+      Buffer.from(poolName),
+      user.toBuffer(),
+      garageTokenAccount.toBuffer(),
+    ],
+    program.programId,
+  )
+
+  await program.rpc.unBond({
+    accounts: {
+      user,
+      poolAccount,
+      stakingAccount,
+      solrMint,
+      garageTokenAccount,
+      systemProgram: SystemProgram.programId,
+    },
+    signers,
   })
 
   return [poolAccount, stakingAccount]
