@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { api } from '~/api'
 import { Column } from '~/ui'
-import { shortenIfAddress } from '~/wallet/utils'
 import Image from '~/ui/Image'
 import Button from '~/ui/Button'
 import { useWorkspace } from '~/workspace/hooks'
@@ -10,8 +9,10 @@ import { toast } from 'react-toastify'
 import { bond, getStakingAccount, verifyNFT } from '~/stake/services'
 import { PublicKey } from '@solana/web3.js'
 
-import { SOLR_MINT_ADDRESS } from '~/api/addresses'
-import { useStakingAccount } from '~/stake/hooks'
+import { SOLR_MINT_ADDRESS, SOL_RACE_STAKING_PROGRAM_ID } from '~/api/addresses'
+import { useStakeAccount } from '~/hooks/useAccount'
+import * as anchor from '@project-serum/anchor'
+import { toEther } from '~/api/utils/parse-ether'
 
 const Card = styled(Column)`
   width: 20vw;
@@ -38,17 +39,25 @@ const CTAButton = styled(Button)`
 
 interface Props {
   account: any
+  poolAccountInfo: any
   candyMachineID?: string
+  revalidatePool: () => Promise<void>
 }
 
-const StakingCard: React.FC<Props> = ({ account, candyMachineID }) => {
+const StakingCard: React.FC<Props> = ({
+  account,
+  candyMachineID,
+  poolAccountInfo,
+  revalidatePool,
+}) => {
   const { tokenAccountAddress, data, mint } = account
   const { provider, wallet } = useWorkspace()
   const { uri } = data
   const [imageURI, setImageURI] = useState<string>()
 
-  const { stakingAccountInfo, isStaked, revalidate } = useStakingAccount(
-    tokenAccountAddress,
+  const { stakingAccountInfo, isStaked, revalidate } = useStakeAccount(
+    SOL_RACE_STAKING_PROGRAM_ID,
+    new PublicKey(tokenAccountAddress),
   )
 
   const loadMetadata = async (targetUri: string) => {
@@ -87,6 +96,7 @@ const StakingCard: React.FC<Props> = ({ account, candyMachineID }) => {
       }
 
       await revalidate()
+      await revalidatePool()
     } catch (e) {
       console.log(e)
       toast('Verification Failed', { type: 'error' })
@@ -110,7 +120,6 @@ const StakingCard: React.FC<Props> = ({ account, candyMachineID }) => {
           initialize,
         })
         const resp = await provider.connection.confirmTransaction(tx)
-        console.log(resp)
         if (resp.value.err) {
           toast('staked Failed', { type: 'error' })
         } else {
@@ -136,6 +145,21 @@ const StakingCard: React.FC<Props> = ({ account, candyMachineID }) => {
     }
   }, [isStaked])
 
+  const pendingReward = useMemo(() => {
+    if (!stakingAccountInfo || !poolAccountInfo) return undefined
+    const { pendingReward, rewardIndex, isBond } = stakingAccountInfo
+    const { globalRewardIndex } = poolAccountInfo
+
+    let bondAmount = new anchor.BN(0)
+    if (isBond) {
+      bondAmount = new anchor.BN(1)
+    }
+
+    const a = globalRewardIndex.mul(bondAmount)
+    const b = rewardIndex.mul(bondAmount)
+    return toEther(pendingReward.add(a.sub(b)), 6).toNumber()
+  }, [stakingAccountInfo, poolAccountInfo])
+
   return (
     <Card>
       <h3>{data.name}</h3>
@@ -148,6 +172,7 @@ const StakingCard: React.FC<Props> = ({ account, candyMachineID }) => {
           }}
         />
       ) : null}
+      {pendingReward !== undefined && <p>reward: {pendingReward} SOLR </p>}
       <CTAButton disabled={!candyMachineID} onClick={stake}>
         {buttonContent}
       </CTAButton>

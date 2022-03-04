@@ -4,7 +4,7 @@ import { getStakingAccount } from '~/stake/services'
 import { useWorkspace } from '~/workspace/hooks'
 
 export const useStakingAccount = (tokenAccountAddress: string) => {
-  const [stakingAccountInfo, setStakingaccountInfo] = useState<any>({})
+  const [stakingAccountInfo, setStakingAccountInfo] = useState<any>({})
   const { provider, wallet } = useWorkspace()
   const [isStaked, setIsStaked] = useState<boolean>()
 
@@ -23,6 +23,7 @@ export const useStakingAccount = (tokenAccountAddress: string) => {
       setIsStaked(false)
     } else {
       setIsStaked((accountInfo as any).isBond)
+      setStakingAccountInfo(accountInfo)
     }
   }, [provider, wallet, tokenAccountAddress])
 

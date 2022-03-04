@@ -10,9 +10,13 @@ import {
 import { PublicKey, SystemProgram } from '@solana/web3.js'
 import { AnchorWallet } from '@solana/wallet-adapter-react'
 import { programs } from '@metaplex/js'
+import {
+  SolRaceStaking,
+  IDL as SolRaceStakingIDL,
+} from '~/api/types/sol_race_staking'
 
 // TODO: delete
-const poolName = 'hi'
+export const poolName = 'hi'
 
 const {
   metadata: { MasterEditionV1Data, MetadataData },
@@ -52,8 +56,8 @@ export const verifyNFT = async ({
   //   new PublicKey(idl.metadata.address),
   //   provider,
   // )
-  const program = new anchor.Program(
-    stakingIDL as anchor.Idl,
+  const program = new anchor.Program<SolRaceStaking>(
+    SolRaceStakingIDL,
     SOL_RACE_STAKING_PROGRAM_ID,
     provider,
   )
@@ -84,7 +88,6 @@ export const verifyNFT = async ({
       garageMetadataAccount: nftMetadataAccount,
       creatureEdition,
       tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
-      creator,
       poolAccount,
     },
   })
@@ -95,8 +98,8 @@ export const getStakingAccount = async ({
   user,
   garageTokenAccount,
 }: StakingAccountParams) => {
-  const program = new anchor.Program(
-    stakingIDL as anchor.Idl,
+  const program = new anchor.Program<SolRaceStaking>(
+    SolRaceStakingIDL,
     SOL_RACE_STAKING_PROGRAM_ID,
     provider,
   )
@@ -121,7 +124,6 @@ export const getStakingAccount = async ({
     accountInfo = await program.account.stakingAccount.fetch(stakingAccount)
     isInitialized = true
   } catch (e) {
-    console.log(e)
     isInitialized = false
   }
 
@@ -135,8 +137,8 @@ export async function bond({
   garageMint,
   garageTokenAccount,
 }: Bond) {
-  const program = new anchor.Program(
-    stakingIDL as anchor.Idl,
+  const program = new anchor.Program<SolRaceStaking>(
+    SolRaceStakingIDL,
     SOL_RACE_STAKING_PROGRAM_ID,
     provider,
   )
