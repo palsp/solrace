@@ -1,8 +1,4 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{Mint, Token, TokenAccount};
-use mpl_token_metadata::state::{get_master_edition, Metadata, EDITION, PREFIX};
-
-use std::str::FromStr;
 
 anchor_lang::declare_id!("A1oZYpTH1fzuJQcEpFNUUuNA2Poe43TgZrQRWexcmaw");
 
@@ -52,76 +48,14 @@ pub mod sol_race_staking {
         Ok(())
     }
 
-    pub fn verify_nft(ctx: Context<VerifyNFT>) -> ProgramResult {
-        let nft_token_account = &ctx.accounts.nft_token_account;
-        let user = &ctx.accounts.user;
-        let nft_mint_account = &ctx.accounts.nft_mint;
-
-        // Check the owner or the token account
-        assert_eq!(nft_token_account.owner, user.key());
-
-        // Check the mint on the token account
-        assert_eq!(nft_token_account.mint, nft_mint_account.key());
-
-        // Check the amount on the token account
-        assert_eq!(nft_token_account.amount, 1);
-
-        let master_edition_seed = &[
-            PREFIX.as_bytes(),
-            ctx.accounts.token_metadata_program.key.as_ref(),
-            nft_token_account.mint.as_ref(),
-            EDITION.as_bytes(),
-        ];
-
-        let (master_edition_key, _bump_seed) = Pubkey::find_program_address(
-            master_edition_seed,
-            ctx.accounts.token_metadata_program.key,
-        );
-
-        assert_eq!(master_edition_key, ctx.accounts.creature_edition.key());
-
-        if ctx.accounts.creature_edition.data_is_empty() {
-            return Err(ErrorCode::NotInitialize.into());
-        }
-
-        let nft_metadata_account = &ctx.accounts.nft_metadata_account;
-
-        let nft_mint_account_pubkey = ctx.accounts.nft_mint.key();
-
-        // Seeds for PDS
-        let metadata_seed = &[
-            "metadata".as_bytes(),
-            ctx.accounts.token_metadata_program.key.as_ref(),
-            nft_mint_account_pubkey.as_ref(),
-        ];
-
-        let (metadata_derived_key, _bump_seed) =
-            Pubkey::find_program_address(metadata_seed, ctx.accounts.token_metadata_program.key);
-
-        // Check that the derived key is the current metadata account
-        assert_eq!(metadata_derived_key, nft_metadata_account.key());
-
-        if ctx.accounts.nft_metadata_account.data_is_empty() {
-            return Err(ErrorCode::NotInitialize.into());
-        }
-
-        let metadata_full_account =
-            &mut Metadata::from_account_info(&ctx.accounts.nft_metadata_account)?;
-
-        let full_metadata_clone = metadata_full_account.clone();
-
-        assert_eq!(
-            full_metadata_clone.data.creators.as_ref().unwrap()[0].address,
-            ctx.accounts.pool_account.garage_creator
-        );
-
-        if !full_metadata_clone.data.creators.unwrap()[0].verified {
-            return Err(ErrorCode::NotVerified.into());
-        }
-
-        Ok(())
-    }
-
+    #[access_control(verify_nft(
+        &ctx.accounts.pool_account,
+        &ctx.accounts.garage_token_account,
+        &ctx.accounts.garage_metadata_account,
+        &ctx.accounts.garage_mint,
+        &ctx.accounts.creature_edition,
+        &ctx.accounts.token_metadata_program,
+    ))]
     pub fn init_stake(ctx: Context<InitStake>, bump: u8) -> ProgramResult {
         let staking_account = &mut ctx.accounts.staking_account;
         staking_account.is_bond = false;
@@ -130,6 +64,14 @@ pub mod sol_race_staking {
         Ok(())
     }
 
+    #[access_control(verify_nft(
+        &ctx.accounts.pool_account,
+        &ctx.accounts.garage_token_account,
+        &ctx.accounts.garage_metadata_account,
+        &ctx.accounts.garage_mint,
+        &ctx.accounts.creature_edition,
+        &ctx.accounts.token_metadata_program,
+    ))]
     pub fn bond(ctx: Context<Bond>) -> ProgramResult {
         msg!("BOND");
         let clock = Clock::get()?;
@@ -145,6 +87,14 @@ pub mod sol_race_staking {
         Ok(())
     }
 
+    #[access_control(verify_nft(
+        &ctx.accounts.pool_account,
+        &ctx.accounts.garage_token_account,
+        &ctx.accounts.garage_metadata_account,
+        &ctx.accounts.garage_mint,
+        &ctx.accounts.creature_edition,
+        &ctx.accounts.token_metadata_program,
+    ))]
     pub fn un_bond(ctx: Context<Unbond>) -> ProgramResult {
         msg!("UNBOND");
         let clock = Clock::get()?;
@@ -181,12 +131,4 @@ pub enum ErrorCode {
     AlreadyStake,
     #[msg("Not stake")]
     NotStake,
-    #[msg("B")]
-    B,
-    #[msg("C")]
-    C,
-    #[msg("D")]
-    D,
-    #[msg("E")]
-    E,
 }

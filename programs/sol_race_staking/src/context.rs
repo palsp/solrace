@@ -53,7 +53,6 @@ pub struct Initialize<'info> {
 pub struct InitStake<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
-
     #[account(mut,
       seeds = [
         pool_account.pool_name.as_ref().trim_ascii_whitespace(),
@@ -62,7 +61,6 @@ pub struct InitStake<'info> {
       bump = pool_account.bumps.pool_account,
     )]
     pub pool_account: Account<'info, PoolAccount>,
-
     #[account(init, 
       seeds = [
         b"staking_account",
@@ -74,19 +72,23 @@ pub struct InitStake<'info> {
       payer = user
     )]
     pub staking_account: Account<'info, StakingAccount>,
-
     #[account(constraint = solr_mint.key() == pool_account.solr_mint)]
     pub solr_mint : Account<'info, Mint>,
-       
-    // pub garage_mint: Account<'info, Mint>,
-
+    ///  Verify NFT
+    pub garage_mint: Account<'info, Mint>,
+    // The token account ie. account that user uses to hold the NFT
+    #[account(
+      constraint = garage_token_account.owner == user.key(),
+      constraint = garage_token_account.mint == garage_mint.key(),
+      constraint = garage_token_account.amount == 1
+    )]
     pub garage_token_account: Account<'info, TokenAccount>,
-
-    // pub garage_metadata_account: AccountInfo<'info>,
-
-    // #[account(address = mpl_token_metadata::id())]
-    // pub token_metadata_program : AccountInfo<'info>,
-
+    // The metadata account of the NFT
+    pub garage_metadata_account: AccountInfo<'info>,
+    // nft master edition
+    pub creature_edition: AccountInfo<'info>,
+    #[account(address = mpl_token_metadata::id())]
+    pub token_metadata_program: AccountInfo<'info>,
     pub system_program : Program<'info, System>
 }
 
@@ -95,7 +97,6 @@ pub struct InitStake<'info> {
 pub struct Bond<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
-
     #[account(mut,
       seeds = [
         pool_account.pool_name.as_ref().trim_ascii_whitespace(),
@@ -104,7 +105,6 @@ pub struct Bond<'info> {
       bump = pool_account.bumps.pool_account,
     )]
     pub pool_account: Account<'info, PoolAccount>,
-
     #[account(mut, 
       seeds = [
         b"staking_account",
@@ -116,26 +116,29 @@ pub struct Bond<'info> {
       constraint = staking_account.is_bond == false @ ErrorCode::AlreadyStake
     )]
     pub staking_account: Account<'info, StakingAccount>,
-
     #[account(constraint = solr_mint.key() == pool_account.solr_mint)]
     pub solr_mint : Account<'info, Mint>,
-       
-    // pub garage_mint: Account<'info, Mint>,
-
+    ///  Verify NFT
+    pub garage_mint: Account<'info, Mint>,
+    // The token account ie. account that user uses to hold the NFT
+    #[account(
+      constraint = garage_token_account.owner == user.key(),
+      constraint = garage_token_account.mint == garage_mint.key(),
+      constraint = garage_token_account.amount == 1
+    )]
     pub garage_token_account: Account<'info, TokenAccount>,
-
-    // pub garage_metadata_account: AccountInfo<'info>,
-
-    // #[account(address = mpl_token_metadata::id())]
-    // pub token_metadata_program : AccountInfo<'info>,
-
+    // The metadata account of the NFT
+    pub garage_metadata_account: AccountInfo<'info>,
+    // nft master edition
+    pub creature_edition: AccountInfo<'info>,
+    #[account(address = mpl_token_metadata::id())]
+    pub token_metadata_program: AccountInfo<'info>,
     pub system_program : Program<'info, System>
 }
 
 #[derive(Accounts)]
 pub struct Unbond<'info> {
     pub user: Signer<'info>,
-
     #[account(mut,
       seeds = [
         pool_account.pool_name.as_ref().trim_ascii_whitespace(),  
@@ -144,8 +147,6 @@ pub struct Unbond<'info> {
       bump = pool_account.bumps.pool_account,
     )]
     pub pool_account: Account<'info, PoolAccount>,
-
-
     #[account(mut,
       seeds = [
         b"staking_account",
@@ -157,52 +158,24 @@ pub struct Unbond<'info> {
       constraint = staking_account.is_bond == true @ ErrorCode::NotStake 
     )]
     pub staking_account: Account<'info, StakingAccount>,
-
-
     #[account(constraint = solr_mint.key() == pool_account.solr_mint)]
     pub solr_mint : Account<'info, Mint>,
-       
-    // pub garage_mint: Account<'info, Mint>,
-
+    ///  Verify NFT
+    pub garage_mint: Account<'info, Mint>,
+    // The token account ie. account that user uses to hold the NFT
+    #[account(
+      constraint = garage_token_account.owner == user.key(),
+      constraint = garage_token_account.mint == garage_mint.key(),
+      constraint = garage_token_account.amount == 1
+    )]
     pub garage_token_account: Account<'info, TokenAccount>,
-
-    // pub garage_metadata_account: AccountInfo<'info>,
-
-    // #[account(address = mpl_token_metadata::id())]
-    // pub token_metadata_program : AccountInfo<'info>,
-
+    // The metadata account of the NFT
+    pub garage_metadata_account: AccountInfo<'info>,
+    // nft master edition
+    pub creature_edition: AccountInfo<'info>,
+    #[account(address = mpl_token_metadata::id())]
+    pub token_metadata_program: AccountInfo<'info>,
     pub system_program : Program<'info, System>
 }
 
 
-#[derive(Accounts)]
-pub struct VerifyNFT<'info> {
-  // The owner of the NFT
-  pub user: Signer<'info>,
-
-  // The mint account of the NFT
-  pub nft_mint: Account<'info, Mint>,
-
-  // The token account ie. account that user uses to hold the NFT
-  pub nft_token_account: Account<'info, TokenAccount>,
-
-  // The metadata account of the NFT
-  pub nft_metadata_account: AccountInfo<'info>,
-
-  #[account(address = mpl_token_metadata::id())]
-  pub token_metadata_program: AccountInfo<'info>,
-
-
-  pub creature_edition: AccountInfo<'info>,
-
-  #[account(mut,
-    seeds = [
-      pool_account.pool_name.as_ref().trim_ascii_whitespace(),
-      "pool_account".as_ref()
-    ],
-    bump = pool_account.bumps.pool_account,
-  )]
-  pub pool_account: Account<'info, PoolAccount>,
-
-
-}
