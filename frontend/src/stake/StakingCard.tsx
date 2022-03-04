@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { api } from '~/api'
 import { Column } from '~/ui'
@@ -7,8 +7,11 @@ import Image from '~/ui/Image'
 import Button from '~/ui/Button'
 import { useWorkspace } from '~/workspace/hooks'
 import { toast } from 'react-toastify'
-import { verifyNFT } from '~/stake/services'
+import { bond, getStakingAccount, verifyNFT } from '~/stake/services'
 import { PublicKey } from '@solana/web3.js'
+
+import { SOLR_MINT_ADDRESS } from '~/api/addresses'
+import { useStakingAccount } from '~/stake/hooks'
 
 const Card = styled(Column)`
   width: 20vw;
@@ -44,6 +47,10 @@ const StakingCard: React.FC<Props> = ({ account, candyMachineID }) => {
   const { uri } = data
   const [imageURI, setImageURI] = useState<string>()
 
+  const { stakingAccountInfo, isStaked, revalidate } = useStakingAccount(
+    tokenAccountAddress,
+  )
+
   const loadMetadata = async (targetUri: string) => {
     const { data: metadata } = await api.get(targetUri)
 
@@ -54,7 +61,7 @@ const StakingCard: React.FC<Props> = ({ account, candyMachineID }) => {
     loadMetadata(uri)
   }, [uri])
 
-  const stake = useCallback(async () => {
+  const verify = async () => {
     if (!provider || !wallet) {
       toast('Please connect your wallet', { type: 'warning' })
       return
@@ -67,10 +74,10 @@ const StakingCard: React.FC<Props> = ({ account, candyMachineID }) => {
     try {
       const tx = await verifyNFT({
         provider,
-        wallet,
-        nftMint: new PublicKey(mint),
+        wallet: wallet,
         creator: new PublicKey(candyMachineID),
-        nftTokenAccount: tokenAccountAddress,
+        nftMint: new PublicKey(mint),
+        nftTokenAccount: new PublicKey(tokenAccountAddress),
       })
       const resp = await provider.connection.confirmTransaction(tx)
       if (resp.value.err) {
@@ -78,10 +85,56 @@ const StakingCard: React.FC<Props> = ({ account, candyMachineID }) => {
       } else {
         toast('Your NFT is verified', { type: 'success' })
       }
+
+      await revalidate()
     } catch (e) {
+      console.log(e)
       toast('Verification Failed', { type: 'error' })
     }
-  }, [provider, wallet, candyMachineID, mint, tokenAccountAddress])
+  }
+
+  const stake = useCallback(
+    async (initialize = true) => {
+      if (!provider || !wallet) {
+        toast('Please connect your wallet', { type: 'warning' })
+        return
+      }
+
+      try {
+        const tx = await bond({
+          provider,
+          user: wallet.publicKey,
+          solrMint: SOLR_MINT_ADDRESS,
+          garageTokenAccount: new PublicKey(tokenAccountAddress),
+          garageMint: new PublicKey(mint),
+          initialize,
+        })
+        const resp = await provider.connection.confirmTransaction(tx)
+        console.log(resp)
+        if (resp.value.err) {
+          toast('staked Failed', { type: 'error' })
+        } else {
+          toast('staked', { type: 'success' })
+        }
+        await revalidate()
+      } catch (e) {
+        toast('Stake Failed', { type: 'error' })
+      }
+    },
+    [provider, wallet, tokenAccountAddress, mint],
+  )
+
+  const buttonContent = useMemo(() => {
+    if (isStaked === undefined) {
+      return 'isLoading'
+    }
+
+    if (isStaked) {
+      return 'UNSTAKE'
+    } else {
+      return 'STAKE'
+    }
+  }, [isStaked])
 
   return (
     <Card>
@@ -96,7 +149,10 @@ const StakingCard: React.FC<Props> = ({ account, candyMachineID }) => {
         />
       ) : null}
       <CTAButton disabled={!candyMachineID} onClick={stake}>
-        STAKE
+        {buttonContent}
+      </CTAButton>
+      <CTAButton disabled={!candyMachineID} onClick={verify}>
+        VERIFY
       </CTAButton>
     </Card>
   )

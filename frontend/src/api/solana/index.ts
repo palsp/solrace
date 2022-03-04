@@ -1,6 +1,6 @@
 import * as anchor from '@project-serum/anchor'
 
-import { CIVIC } from '~/contract/addresses'
+import { CIVIC } from '~/api/addresses'
 
 export const getNetworkToken = async (
   wallet: anchor.web3.PublicKey,
