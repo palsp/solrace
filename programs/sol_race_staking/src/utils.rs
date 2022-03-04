@@ -34,13 +34,33 @@ pub fn compute_reward(pool_account: &mut PoolAccount, current_time: i64) {
 }
 
 pub fn compute_staker_reward(staking_account: &mut StakingAccount, pool_account: &PoolAccount) {
-  let pending_reward = (pool_account.global_reward_index as u128)
-    .checked_sub(staking_account.reward_index as u128)
+  let bond_amount: u128 = match staking_account.is_bond {
+    true => 1,
+    false => 0,
+  };
+
+  let a = (pool_account.global_reward_index as u128)
+    .checked_mul(bond_amount)
     .unwrap();
+  let b = (staking_account.reward_index as u128)
+    .checked_mul(bond_amount)
+    .unwrap();
+
+  let pending_reward = a.checked_sub(b).unwrap();
 
   staking_account.reward_index = pool_account.global_reward_index;
 
   staking_account.pending_reward += pending_reward as u64;
+}
+
+pub fn increase_bond_amount(staking_account: &mut StakingAccount, pool_account: &mut PoolAccount) {
+  pool_account.total_staked += 1;
+  staking_account.is_bond = true;
+}
+
+pub fn decrease_bond_amount(staking_account: &mut StakingAccount, pool_account: &mut PoolAccount) {
+  pool_account.total_staked += 1;
+  staking_account.is_bond = false;
 }
 
 pub trait TrimAsciiWhitespace {

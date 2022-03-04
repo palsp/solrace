@@ -29,6 +29,7 @@ pub struct PoolAccount {
 
   pub total_staked: i64,
 
+  // TODO: should be f64 but anchor is not support decimals
   pub global_reward_index: u64,
 
   pub start_time: i64,
@@ -53,9 +54,7 @@ pub struct StakingAccount {
 
   pub garage_metadata_account: Pubkey,
 
-  pub success_rate: i8,
-
-  pub is_staked: bool,
-
   pub reward_index: u64,
+
+  pub is_bond: bool,
 }
