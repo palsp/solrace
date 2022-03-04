@@ -58,7 +58,6 @@ export const getNFTAccountByCollection = async (owner: string) => {
   const userNFTAccountIndexMap: { [key: string]: number } = {}
 
   const nftAccounts = await getParsedNFTAccountByOwner(ownerPubkey)
-
   for (const nftAccount of nftAccounts) {
     const meta = await getMetadata(nftAccount)
 

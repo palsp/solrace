@@ -1,10 +1,12 @@
 [programs.localnet]
 sol_race_staking = "A1oZYpTH1fzuJQcEpFNUUuNA2Poe43TgZrQRWexcmaw"
+verify_nft="HuP1D9qVpK61WJc5WoCxkYGGbY1s8wGPXaDM2Rq6pBN"
 candy_machine = "72jjPUnGRbx1uSQr9z7RVdUsAaDXgQrPz8Ji8wq5MH4x"
 candy_core = "EZfQMJmBpjDxVYj8x9MK4tQ1rtnJrudsxYahqQVkS2QQ"
 
 [programs.devnet]
 sol_race_staking = "A1oZYpTH1fzuJQcEpFNUUuNA2Poe43TgZrQRWexcmaw"
+verify_nft="HuP1D9qVpK61WJc5WoCxkYGGbY1s8wGPXaDM2Rq6pBN"
 candy_machine = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
 
 [registry]

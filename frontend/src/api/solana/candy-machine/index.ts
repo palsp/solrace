@@ -16,6 +16,7 @@ export const CANDY_MACHINE_PROGRAM = new anchor.web3.PublicKey(
   'cndy3Z4yapfJBmL3ShUp5exZKqR3z33thTzeNMm2gRZ',
 )
 
+export const VERIFY_NFT_PROGRAM = 'HuP1D9qVpK61WJc5WoCxkYGGbY1s8wGPXaDM2Rq6pBN'
 const TOKEN_METADATA_PROGRAM_ID = new anchor.web3.PublicKey(
   'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s',
 )
@@ -162,6 +163,7 @@ export const getCandyMachineState = async (
   const program = new anchor.Program(idl!, CANDY_MACHINE_PROGRAM, provider)
 
   const state: any = await program.account.candyMachine.fetch(candyMachineId)
+  console.log('state', state)
   const itemsAvailable = state.data.itemsAvailable.toNumber()
   const itemsRedeemed = state.itemsRedeemed.toNumber()
   const itemsRemaining = itemsAvailable - itemsRedeemed
@@ -189,7 +191,7 @@ export const getCandyMachineState = async (
   }
 }
 
-const getMasterEdition = async (
+export const getMasterEdition = async (
   mint: anchor.web3.PublicKey,
 ): Promise<anchor.web3.PublicKey> => {
   return (

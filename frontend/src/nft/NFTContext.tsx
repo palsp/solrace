@@ -18,6 +18,7 @@ export const NFTProvider: React.FC = ({ children }) => {
   const { data: collections } = useSWR(
     owner ? `/nft/${owner.toBase58()}` : null,
   )
+  console.log(collections)
 
   return (
     <NFTContext.Provider value={{ collections: collections || [] }}>
