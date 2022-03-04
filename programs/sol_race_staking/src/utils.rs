@@ -23,7 +23,10 @@ pub fn verify_nft<'info>(
   let (master_edition_key, _bump_seed) =
     Pubkey::find_program_address(master_edition_seed, token_metadata_program.key);
 
-  assert_eq!(master_edition_key, creature_edition.key());
+  require!(
+    master_edition_key == creature_edition.key(),
+    ErrorCode::NotMasterEdition
+  );
 
   if creature_edition.data_is_empty() {
     return Err(ErrorCode::NotInitialize.into());
@@ -42,7 +45,10 @@ pub fn verify_nft<'info>(
     Pubkey::find_program_address(metadata_seed, token_metadata_program.key);
 
   // Check that the derived key is the current metadata account
-  assert_eq!(metadata_derived_key, nft_metadata_account.key());
+  require!(
+    metadata_derived_key == nft_metadata_account.key(),
+    ErrorCode::InvalidMetadata
+  );
 
   if nft_metadata_account.data_is_empty() {
     return Err(ErrorCode::NotInitialize.into());
@@ -52,9 +58,9 @@ pub fn verify_nft<'info>(
 
   let full_metadata_clone = metadata_full_account.clone();
 
-  assert_eq!(
-    full_metadata_clone.data.creators.as_ref().unwrap()[0].address,
-    pool_account.garage_creator
+  require!(
+    full_metadata_clone.data.creators.as_ref().unwrap()[0].address == pool_account.garage_creator,
+    ErrorCode::InvalidCreator
   );
 
   if !full_metadata_clone.data.creators.unwrap()[0].verified {

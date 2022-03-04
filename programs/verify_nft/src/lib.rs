@@ -2,24 +2,13 @@ use anchor_lang::prelude::*;
 use anchor_spl::token::{Mint, TokenAccount};
 use mpl_token_metadata::state::{Metadata, EDITION, PREFIX};
 
-anchor_lang::declare_id!("HuP1D9qVpK61WJc5WoCxkYGGbY1s8wGPXaDM2Rq6pBN");
+anchor_lang::declare_id!("DxAKuEXYPyTJDoN1qMtLEf8Gf9R2cs3z4aH9MJijsp77");
 
 #[program]
 pub mod verify_nft {
     use super::*;
     pub fn verify_nft(ctx: Context<VerifyNFT>) -> ProgramResult {
         let nft_token_account = &ctx.accounts.nft_token_account;
-        let user = &ctx.accounts.user;
-        let nft_mint_account = &ctx.accounts.nft_mint;
-
-        // Check the owner or the token account
-        assert_eq!(nft_token_account.owner, user.key());
-
-        // Check the mint on the token account
-        assert_eq!(nft_token_account.mint, nft_mint_account.key());
-
-        // Check the amount on the token account
-        assert_eq!(nft_token_account.amount, 1);
 
         let master_edition_seed = &[
             PREFIX.as_bytes(),
@@ -89,6 +78,11 @@ pub struct VerifyNFT<'info> {
     pub nft_mint: Account<'info, Mint>,
 
     // The token account ie. account that user uses to hold the NFT
+    #[account(
+        constraint = nft_token_account.owner == user.key(),
+        constraint = nft_token_account.mint == nft_mint.key(),
+        constraint = nft_token_account.amount == 1
+      )]
     pub nft_token_account: Account<'info, TokenAccount>,
 
     // The metadata account of the NFT

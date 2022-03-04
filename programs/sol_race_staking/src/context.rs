@@ -49,6 +49,42 @@ pub struct Initialize<'info> {
 
 
 #[derive(Accounts)]
+pub struct VerifyNFT<'info> {
+    // The owner of the NFT
+    pub user: Signer<'info>,
+
+    // The mint account of the NFT
+    pub garage_mint: Account<'info, Mint>,
+
+    // The token account ie. account that user uses to hold the NFT
+    #[account(
+        constraint = garage_token_account.owner == user.key(),
+        constraint = garage_token_account.mint == garage_mint.key(),
+        constraint = garage_token_account.amount == 1
+      )]
+    pub garage_token_account: Account<'info, TokenAccount>,
+
+    // The metadata account of the NFT
+    pub garage_metadata_account: AccountInfo<'info>,
+
+    #[account(address = mpl_token_metadata::id())]
+    pub token_metadata_program: AccountInfo<'info>,
+
+    pub creature_edition: AccountInfo<'info>,
+
+    #[account(
+      seeds = [
+        pool_account.pool_name.as_ref().trim_ascii_whitespace(),
+        "pool_account".as_ref()
+      ],
+      bump = pool_account.bumps.pool_account,
+    )]
+    pub pool_account: Account<'info, PoolAccount>
+}
+
+
+
+#[derive(Accounts)]
 #[instruction(bump: u8)]
 pub struct InitStake<'info> {
     #[account(mut)]
@@ -78,9 +114,9 @@ pub struct InitStake<'info> {
     pub garage_mint: Account<'info, Mint>,
     // The token account ie. account that user uses to hold the NFT
     #[account(
-      constraint = garage_token_account.owner == user.key(),
-      constraint = garage_token_account.mint == garage_mint.key(),
-      constraint = garage_token_account.amount == 1
+      constraint = garage_token_account.owner == user.key() @ ErrorCode::InvalidOwner,
+      constraint = garage_token_account.mint == garage_mint.key() @ ErrorCode::InvalidMint,
+      constraint = garage_token_account.amount == 1 @ ErrorCode::InvalidAmount
     )]
     pub garage_token_account: Account<'info, TokenAccount>,
     // The metadata account of the NFT

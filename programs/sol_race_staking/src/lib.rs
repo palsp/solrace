@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-anchor_lang::declare_id!("A1oZYpTH1fzuJQcEpFNUUuNA2Poe43TgZrQRWexcmaw");
+anchor_lang::declare_id!("u9vRU6Cb4kogHgVGofQKdSSsrCyhjHKKtQ7Uf7NX498");
 
 mod account;
 mod context;
@@ -23,6 +23,7 @@ pub mod sol_race_staking {
         start_time: i64,
         end_time: i64,
     ) -> ProgramResult {
+        msg!("INITIALIZE");
         if start_time >= end_time {
             return Err(ErrorCode::InvalidTime.into());
         }
@@ -45,6 +46,21 @@ pub mod sol_race_staking {
         pool_account.start_time = start_time;
         pool_account.end_time = end_time;
 
+        // TODO: transfer ownership of pool authority
+
+        Ok(())
+    }
+
+    #[access_control(verify_nft(
+        &ctx.accounts.pool_account,
+        &ctx.accounts.garage_token_account,
+        &ctx.accounts.garage_metadata_account,
+        &ctx.accounts.garage_mint,
+        &ctx.accounts.creature_edition,
+        &ctx.accounts.token_metadata_program,
+    ))]
+    pub fn verify(ctx: Context<VerifyNFT>) -> ProgramResult {
+        msg!("VERIFY");
         Ok(())
     }
 
@@ -60,6 +76,9 @@ pub mod sol_race_staking {
         let staking_account = &mut ctx.accounts.staking_account;
         staking_account.is_bond = false;
         staking_account.bump = bump;
+        staking_account.garage_mint = ctx.accounts.garage_mint.key();
+        staking_account.garage_token_account = ctx.accounts.garage_token_account.key();
+        staking_account.garage_metadata_account = ctx.accounts.garage_metadata_account.key();
 
         Ok(())
     }
@@ -74,6 +93,7 @@ pub mod sol_race_staking {
     ))]
     pub fn bond(ctx: Context<Bond>) -> ProgramResult {
         msg!("BOND");
+
         let clock = Clock::get()?;
         let current_time = clock.unix_timestamp;
         let pool_account = &mut ctx.accounts.pool_account;
@@ -131,4 +151,10 @@ pub enum ErrorCode {
     AlreadyStake,
     #[msg("Not stake")]
     NotStake,
+    #[msg("Not master edition")]
+    NotMasterEdition,
+    #[msg("Invalid Creator")]
+    InvalidCreator,
+    #[msg("Invalid Metadata")]
+    InvalidMetadata,
 }

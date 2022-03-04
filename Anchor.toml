@@ -1,20 +1,22 @@
 [programs.localnet]
-sol_race_staking = "A1oZYpTH1fzuJQcEpFNUUuNA2Poe43TgZrQRWexcmaw"
-verify_nft="HuP1D9qVpK61WJc5WoCxkYGGbY1s8wGPXaDM2Rq6pBN"
+sol_race_staking = "u9vRU6Cb4kogHgVGofQKdSSsrCyhjHKKtQ7Uf7NX498"
+verify_nft="DxAKuEXYPyTJDoN1qMtLEf8Gf9R2cs3z4aH9MJijsp77"
 candy_machine = "72jjPUnGRbx1uSQr9z7RVdUsAaDXgQrPz8Ji8wq5MH4x"
 candy_core = "EZfQMJmBpjDxVYj8x9MK4tQ1rtnJrudsxYahqQVkS2QQ"
 
 [programs.devnet]
-sol_race_staking = "A1oZYpTH1fzuJQcEpFNUUuNA2Poe43TgZrQRWexcmaw"
+sol_race_staking = "u9vRU6Cb4kogHgVGofQKdSSsrCyhjHKKtQ7Uf7NX498"
 verify_nft="HuP1D9qVpK61WJc5WoCxkYGGbY1s8wGPXaDM2Rq6pBN"
 candy_machine = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+verify_nft="DxAKuEXYPyTJDoN1qMtLEf8Gf9R2cs3z4aH9MJijsp77"
 
 [registry]
 url = "https://anchor.projectserum.com"
 
 [provider]
 cluster = "devnet"
-wallet = "/Users/supasinliulaks/.config/solana/id.json"
+wallet = "/Users/supasinliulaks/.config/solana/devnet.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
+copy_idl = "rm -rf frontend/src/api/idl && mkdir -p frontend/src/api/idl && cp -r target/idl/ frontend/src/api/idl"
