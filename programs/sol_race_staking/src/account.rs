@@ -12,6 +12,7 @@ pub struct PoolAccount {
   pub pool_name: [u8; 10],
   pub pool_authority: Pubkey,
   pub garage_creator: Pubkey,
+  pub kart_creator: Pubkey,
   pub staking_authority: Pubkey,
   pub solr_mint: Pubkey,
   pub pool_solr: Pubkey,
@@ -31,8 +32,25 @@ pub struct StakingAccount {
   pub garage_mint: Pubkey,
   pub garage_token_account: Pubkey,
   pub garage_metadata_account: Pubkey,
+  pub garage_master_edition: Pubkey,
   pub bump: u8,
   pub is_bond: bool,
   pub pending_reward: u128,
   pub reward_index: f64,
+}
+
+#[account]
+#[derive(Default)]
+pub struct KartAccount {
+  pub owner: Pubkey,
+  pub bump: u8,
+  pub kart_mint: Pubkey,
+  pub kart_token_account: Pubkey,
+  pub kart_metadata_account: Pubkey,
+  pub kart_master_edition: Pubkey,
+  pub max_speed: u64,
+  pub acceleration: u64,
+  pub drift_power_generation_rate: u64,
+  pub drift_power_consumption_rate: u64,
+  pub handling: u64,
 }

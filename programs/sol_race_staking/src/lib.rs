@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-anchor_lang::declare_id!("FkqkswBdMknF3NFxjBFTyVXuCRqBxQMoyLizhPfYebYX");
+anchor_lang::declare_id!("9zCDvzC5e3QStC6ijSivcNvngRA2huaZsgER9GfPdGdD");
 
 mod account;
 mod context;
@@ -37,6 +37,7 @@ pub mod sol_race_staking {
 
         pool_account.pool_authority = ctx.accounts.pool_authority.key();
         pool_account.garage_creator = ctx.accounts.garage_creator.key();
+        pool_account.kart_creator = ctx.accounts.kart_creator.key();
         pool_account.staking_authority = ctx.accounts.staking_authority.key();
         pool_account.solr_mint = ctx.accounts.solr_mint.key();
         pool_account.pool_solr = ctx.accounts.pool_solr.key();
@@ -50,7 +51,7 @@ pub mod sol_race_staking {
     }
 
     #[access_control(verify_nft(
-        &ctx.accounts.pool_account,
+        &ctx.accounts.pool_account.garage_creator,
         &ctx.accounts.garage_token_account,
         &ctx.accounts.garage_metadata_account,
         &ctx.accounts.garage_mint,
@@ -62,33 +63,47 @@ pub mod sol_race_staking {
         Ok(())
     }
 
-    #[access_control(verify_nft(
-        &ctx.accounts.pool_account,
-        &ctx.accounts.garage_token_account,
-        &ctx.accounts.garage_metadata_account,
-        &ctx.accounts.garage_mint,
-        &ctx.accounts.creature_edition,
-        &ctx.accounts.token_metadata_program,
-    ))]
+    // #[access_control(verify_nft(
+    //     &ctx.accounts.pool_account.garage_creator,
+    //     &ctx.accounts.garage_token_account,
+    //     &ctx.accounts.garage_metadata_account,
+    //     &ctx.accounts.garage_mint,
+    //     &ctx.accounts.creature_edition,
+    //     &ctx.accounts.token_metadata_program,
+    // ))]
     pub fn init_stake(ctx: Context<InitStake>, bump: u8) -> Result<()> {
+        msg!("INIT STAKE");
         let staking_account = &mut ctx.accounts.staking_account;
         staking_account.is_bond = false;
         staking_account.bump = bump;
         staking_account.garage_mint = ctx.accounts.garage_mint.key();
         staking_account.garage_token_account = ctx.accounts.garage_token_account.key();
         staking_account.garage_metadata_account = ctx.accounts.garage_metadata_account.key();
+        staking_account.garage_master_edition = ctx.accounts.creature_edition.key();
 
         Ok(())
     }
 
-    #[access_control(verify_nft(
-        &ctx.accounts.pool_account,
-        &ctx.accounts.garage_token_account,
-        &ctx.accounts.garage_metadata_account,
-        &ctx.accounts.garage_mint,
-        &ctx.accounts.creature_edition,
-        &ctx.accounts.token_metadata_program,
-    ))]
+    // #[access_control(verify_nft(
+    //     &ctx.accounts.pool_account.kart_creator,
+    //     &ctx.accounts.kart_token_account,
+    //     &ctx.accounts.kart_metadata_account,
+    //     &ctx.accounts.kart_mint,
+    //     &ctx.accounts.creature_edition,
+    //     &ctx.accounts.token_metadata_program,
+    // ))]
+    pub fn init_kart(ctx: Context<InitKart>, bump: u8) -> Result<()> {
+        let kart_account = &mut ctx.accounts.kart_account;
+        kart_account.bump = bump;
+        kart_account.owner = ctx.accounts.user.key();
+        kart_account.kart_mint = ctx.accounts.kart_mint.key();
+        kart_account.kart_token_account = ctx.accounts.kart_token_account.key();
+        kart_account.kart_metadata_account = ctx.accounts.kart_metadata_account.key();
+        kart_account.kart_master_edition = ctx.accounts.creature_edition.key();
+
+        Ok(())
+    }
+
     pub fn bond(ctx: Context<Bond>) -> Result<()> {
         msg!("BOND");
 
@@ -105,14 +120,6 @@ pub mod sol_race_staking {
         Ok(())
     }
 
-    #[access_control(verify_nft(
-        &ctx.accounts.pool_account,
-        &ctx.accounts.garage_token_account,
-        &ctx.accounts.garage_metadata_account,
-        &ctx.accounts.garage_mint,
-        &ctx.accounts.creature_edition,
-        &ctx.accounts.token_metadata_program,
-    ))]
     pub fn un_bond(ctx: Context<Unbond>) -> Result<()> {
         msg!("UNBOND");
         let clock = Clock::get()?;
@@ -124,6 +131,20 @@ pub mod sol_race_staking {
         compute_staker_reward(staking_account, pool_account);
         // Decrease staked amount
         decrease_bond_amount(staking_account, pool_account);
+
+        Ok(())
+    }
+
+    pub fn upgrade_kart(ctx: Context<UpgradeKart>) -> Result<()> {
+        // we can let user stake even if the distribution period is end,
+        // they will only receive fee from upgrading
+        let kart_account = &mut ctx.accounts.kart_account;
+        // TODO: random
+        kart_account.max_speed += 1;
+        kart_account.acceleration += 1;
+        kart_account.drift_power_consumption_rate += 1;
+        kart_account.drift_power_generation_rate += 1;
+        kart_account.handling += 1;
 
         Ok(())
     }

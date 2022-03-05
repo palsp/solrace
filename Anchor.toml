@@ -1,27 +1,21 @@
 [programs.localnet]
-sol_race_staking = "FkqkswBdMknF3NFxjBFTyVXuCRqBxQMoyLizhPfYebYX"
-verify_nft="DxAKuEXYPyTJDoN1qMtLEf8Gf9R2cs3z4aH9MJijsp77"
-candy_machine = "72jjPUnGRbx1uSQr9z7RVdUsAaDXgQrPz8Ji8wq5MH4x"
-candy_core = "EZfQMJmBpjDxVYj8x9MK4tQ1rtnJrudsxYahqQVkS2QQ"
+sol_race_staking = "9zCDvzC5e3QStC6ijSivcNvngRA2huaZsgER9GfPdGdD"
+staking_gov="DrkYUKUUrdgznKjh6mFmM8dyXaMuhRqgi2F9u9QGxzf5"
 
 [programs.devnet]
-sol_race_staking = "FkqkswBdMknF3NFxjBFTyVXuCRqBxQMoyLizhPfYebYX"
-candy_machine = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
-verify_nft="DxAKuEXYPyTJDoN1qMtLEf8Gf9R2cs3z4aH9MJijsp77"
-candy_core = "EZfQMJmBpjDxVYj8x9MK4tQ1rtnJrudsxYahqQVkS2QQ"
+sol_race_staking = "9zCDvzC5e3QStC6ijSivcNvngRA2huaZsgER9GfPdGdD"
+staking_gov="DrkYUKUUrdgznKjh6mFmM8dyXaMuhRqgi2F9u9QGxzf5"
 
 [programs.testnet]
-sol_race_staking = "FkqkswBdMknF3NFxjBFTyVXuCRqBxQMoyLizhPfYebYX"
-candy_machine = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
-verify_nft="DxAKuEXYPyTJDoN1qMtLEf8Gf9R2cs3z4aH9MJijsp77"
-candy_core = "EZfQMJmBpjDxVYj8x9MK4tQ1rtnJrudsxYahqQVkS2QQ"
+sol_race_staking = "9zCDvzC5e3QStC6ijSivcNvngRA2huaZsgER9GfPdGdD"
+staking_gov="DrkYUKUUrdgznKjh6mFmM8dyXaMuhRqgi2F9u9QGxzf5"
 
 [registry]
 url = "https://anchor.projectserum.com"
 
 [provider]
-cluster = "testnet"
-wallet = "/Users/supasinliulaks/.config/solana/testnet.json"
+cluster = "localnet"
+wallet = "/Users/supasinliulaks/.config/solana/localnet.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
