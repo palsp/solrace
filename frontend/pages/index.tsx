@@ -16,6 +16,8 @@ const Home = () => {
       <NAV>
         <Link href="/mint">MINT</Link>
         <Link href="/stake">STAKE</Link>
+        <Link href="/gov">GOV</Link>
+        <Link href="/upgrade">UPGRADE</Link>
       </NAV>
     </AppLayout>
   )

@@ -20,6 +20,11 @@ export const SOL_RACE_STAKING_PROGRAM_ID = new PublicKey(
   'u9vRU6Cb4kogHgVGofQKdSSsrCyhjHKKtQ7Uf7NX498',
 )
 
+// TESTNET: test only
+export const SOL_RACE_STAKING_GOV_PROGRAM_ID = new PublicKey(
+  'DrkYUKUUrdgznKjh6mFmM8dyXaMuhRqgi2F9u9QGxzf5',
+)
+
 export const SOLR_MINT_ADDRESS = new PublicKey(
-  '5j2kM5FbtZvi9nCadmU4pnheQaUqQm7QpTJSYKMUwzRp',
+  'DDReUyV4BW4r5Din9ojNfs746hhXFiq3YiwNKLS35GYn',
 )

@@ -28,4 +28,4 @@ export const ENDPOINTS: Array<ENDPOINT> = [
   },
 ]
 
-export const DEFAULT_ENDPOINT = ENDPOINTS[2]
+export const DEFAULT_ENDPOINT = ENDPOINTS[1]

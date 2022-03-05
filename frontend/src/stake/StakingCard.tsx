@@ -54,7 +54,6 @@ const StakingCard: React.FC<Props> = ({
   const { provider, wallet } = useWorkspace()
   const { uri } = data
   const [imageURI, setImageURI] = useState<string>()
-
   const { stakingAccountInfo, isStaked, revalidate } = useStakeAccount(
     SOL_RACE_STAKING_PROGRAM_ID,
     new PublicKey(tokenAccountAddress),
