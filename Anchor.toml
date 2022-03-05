@@ -14,9 +14,11 @@ staking_gov="DrkYUKUUrdgznKjh6mFmM8dyXaMuhRqgi2F9u9QGxzf5"
 url = "https://anchor.projectserum.com"
 
 [provider]
-cluster = "localnet"
-wallet = "/Users/supasinliulaks/.config/solana/localnet.json"
+cluster = "testnet"
+wallet = "/Users/supasinliulaks/.config/solana/testnet.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
 copy_idl = "rm -rf frontend/src/api/idl && mkdir -p frontend/src/api/idl && cp -r target/idl/ frontend/src/api/idl"
+copy_types = "rm -rf frontend/src/api/types && mkdir -p frontend/src/api/types && cp -r target/types/ frontend/src/api/types"
+copy_types_cli = "rm -rf scripts/cli/src/types && mkdir -p scripts/cli/src/types && cp -r target/types/ scripts/cli/src/types"

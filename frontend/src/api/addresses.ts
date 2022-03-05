@@ -17,14 +17,22 @@ export const CIVIC = new PublicKey(
 )
 
 export const SOL_RACE_STAKING_PROGRAM_ID = new PublicKey(
-  'u9vRU6Cb4kogHgVGofQKdSSsrCyhjHKKtQ7Uf7NX498',
+  '9zCDvzC5e3QStC6ijSivcNvngRA2huaZsgER9GfPdGdD',
+)
+
+export const SOLR_MINT_ADDRESS = new PublicKey(
+  '3MW7gNXKkgHuraK92E4j9uhRBZZQm71VR9utVd4FzPSV',
 )
 
 // TESTNET: test only
 export const SOL_RACE_STAKING_GOV_PROGRAM_ID = new PublicKey(
-  'DrkYUKUUrdgznKjh6mFmM8dyXaMuhRqgi2F9u9QGxzf5',
+  '9zCDvzC5e3QStC6ijSivcNvngRA2huaZsgER9GfPdGdD',
 )
 
-export const SOLR_MINT_ADDRESS = new PublicKey(
-  'DDReUyV4BW4r5Din9ojNfs746hhXFiq3YiwNKLS35GYn',
+export const GARAGE_CREATOR = new PublicKey(
+  'E4ZLGyZ8ADN13KsdGxeKP93rkPTrZUkT4yG99bcaUXh4',
+)
+
+export const KART_CREATOR = new PublicKey(
+  'HzDeFzmNx3cvtQP2GnJAwwzjDGBzRTQMADLdhBLXG2y5',
 )

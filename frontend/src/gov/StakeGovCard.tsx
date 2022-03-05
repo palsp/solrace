@@ -4,8 +4,10 @@ import styled from 'styled-components'
 import { SOLR_MINT_ADDRESS, SOL_RACE_STAKING_PROGRAM_ID } from '~/api/addresses'
 import { NFTAccount, useStakeAccount } from '~/gov/hooks'
 import { bond } from '~/gov/services'
+import { useStaker } from '~/stake/hooks'
 import { Column } from '~/ui'
 import Button from '~/ui/Button'
+import UpgradeCard from '~/upgrade/UpgradeCard'
 import { shortenIfAddress } from '~/wallet/utils'
 import { useWorkspace } from '~/workspace/hooks'
 
@@ -34,19 +36,16 @@ const CTAButton = styled(Button)`
 interface Props {
   nft: NFTAccount
   revalidatePool: () => Promise<void>
-  poolAccountInfo: any
+  poolInfo: any
 }
-const StakeGovCard: React.FC<Props> = ({
-  nft,
-  revalidatePool,
-  poolAccountInfo,
-}) => {
+const StakeGovCard: React.FC<Props> = ({ nft, revalidatePool, poolInfo }) => {
   const { mint, tokenAccountAddress } = nft
   const {
-    stakingAccountInfo,
+    stakeInfo,
     isStaked,
+    isInitialize,
     revalidate: revalidateStakeAccount,
-  } = useStakeAccount(SOL_RACE_STAKING_PROGRAM_ID, nft.tokenAccountAddress)
+  } = useStakeAccount(SOL_RACE_STAKING_PROGRAM_ID, nft.mint)
 
   const { provider, wallet } = useWorkspace()
 
@@ -79,6 +78,8 @@ const StakeGovCard: React.FC<Props> = ({
     }
   }
 
+  const handleUpgrade = async () => {}
+
   const buttonContent = useMemo(() => {
     if (isStaked === undefined) return '...'
 
@@ -88,8 +89,8 @@ const StakeGovCard: React.FC<Props> = ({
       return 'STAKE'
     }
   }, [isStaked])
-  const { globalRewardIndex } = poolAccountInfo
-  const { pendingReward, rewardIndex, isBond } = stakingAccountInfo
+  const { globalRewardIndex } = poolInfo
+  const { pendingReward, rewardIndex, isBond } = stakeInfo
 
   const displayReward = useMemo(() => {
     if (
@@ -114,6 +115,9 @@ const StakeGovCard: React.FC<Props> = ({
       <p>ata: {shortenIfAddress(nft.tokenAccountAddress.toBase58())}</p>
       {displayReward !== undefined && <p>reward: {displayReward} SOLR </p>}
       <CTAButton onClick={handleStake}>{buttonContent}</CTAButton>
+      {!isStaked && !isInitialize && (
+        <UpgradeCard kartMint={mint} kartTokenAccount={tokenAccountAddress} />
+      )}
     </Card>
   )
 }

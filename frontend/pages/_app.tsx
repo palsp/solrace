@@ -30,6 +30,7 @@ import { WorkspaceProvider } from '~/workspace/WorkspaceContext'
 import { NFTProvider } from '~/nft/NFTContext'
 import { AuthProvider } from '~/auth/AuthContext'
 import { LinkedWalletProvider } from '~/wallet/LinkedWalletContext'
+import { StakerProvider } from '~/stake/StakerContext'
 
 const swrOption: Partial<PublicConfiguration> = {
   fetcher,
@@ -53,13 +54,15 @@ function MyApp({ Component, pageProps }: AppProps) {
           <SWRConfig value={swrOption}>
             <WorkspaceProvider>
               <WalletModalProvider>
-                <NFTProvider>
-                  <AuthProvider>
-                    <LinkedWalletProvider>
-                      <Component {...pageProps} />
-                    </LinkedWalletProvider>
-                  </AuthProvider>
-                </NFTProvider>
+                <StakerProvider>
+                  <NFTProvider>
+                    <AuthProvider>
+                      <LinkedWalletProvider>
+                        <Component {...pageProps} />
+                      </LinkedWalletProvider>
+                    </AuthProvider>
+                  </NFTProvider>
+                </StakerProvider>
               </WalletModalProvider>
             </WorkspaceProvider>
           </SWRConfig>

@@ -1,11 +1,21 @@
 import * as anchor from '@project-serum/anchor'
+
 import { MintLayout, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
-import { Connection, PublicKey, SystemProgram } from '@solana/web3.js'
-import { SOL_RACE_STAKING_GOV_PROGRAM_ID } from '~/api/addresses'
+import {
+  Connection,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+} from '@solana/web3.js'
+import {
+  SOL_RACE_STAKING_GOV_PROGRAM_ID,
+  TOKEN_METADATA_PROGRAM_ID,
+} from '~/api/addresses'
 import {
   createAssociatedTokenAccountInstruction,
   getAtaForMint,
 } from '~/api/solana/candy-machine/utils'
+import { SolRaceStaking, IDL } from '~/api/types/sol_race_staking'
 import { StakingGov, IDL as StakingGovIDL } from '~/api/types/staking_gov'
 import { POOL_NAME } from '~/gov/hooks'
 
@@ -73,8 +83,8 @@ export const bond = async ({
   nftMint,
   nftTokenAccount,
 }: Bond) => {
-  const program = new anchor.Program<StakingGov>(
-    StakingGovIDL,
+  const program = new anchor.Program<SolRaceStaking>(
+    IDL,
     SOL_RACE_STAKING_GOV_PROGRAM_ID,
     provider,
   )
@@ -90,7 +100,7 @@ export const bond = async ({
     isInitialized,
   } = await getStakingAccount({
     provider,
-    nftTokenAccount,
+    nftMintAccount: nftMint,
     user,
     poolName: POOL_NAME,
   })
@@ -98,6 +108,8 @@ export const bond = async ({
   const transaction = new anchor.web3.Transaction()
 
   if (!isInitialized) {
+    const garageMetadataAccount = anchor.web3.Keypair.generate().publicKey
+    const creatureEdition = anchor.web3.Keypair.generate().publicKey
     transaction.add(
       program.instruction.initStake(stakingAccountBump, {
         accounts: {
@@ -107,6 +119,9 @@ export const bond = async ({
           solrMint,
           garageMint: nftMint,
           garageTokenAccount: nftTokenAccount,
+          garageMetadataAccount,
+          creatureEdition,
+          tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
           systemProgram: SystemProgram.programId,
         },
       }),
@@ -122,8 +137,6 @@ export const bond = async ({
         poolAccount,
         stakingAccount: stakingAccount,
         solrMint,
-        garageMint: nftMint,
-        garageTokenAccount: nftTokenAccount,
         systemProgram: SystemProgram.programId,
       },
     }),
@@ -159,7 +172,7 @@ const getNFTToken = async (
 
 export type StakingAccountParams = {
   user: anchor.web3.PublicKey
-  nftTokenAccount: anchor.web3.PublicKey
+  nftMintAccount: anchor.web3.PublicKey
   provider: anchor.Provider
   poolName: string
 }
@@ -167,7 +180,7 @@ export type StakingAccountParams = {
 export const getStakingAccount = async ({
   provider,
   user,
-  nftTokenAccount,
+  nftMintAccount,
   poolName,
 }: StakingAccountParams) => {
   const program = new anchor.Program<StakingGov>(
@@ -185,7 +198,7 @@ export const getStakingAccount = async ({
       // TODO: delete poolName
       Buffer.from(poolName),
       user.toBuffer(),
-      nftTokenAccount.toBuffer(),
+      nftMintAccount.toBuffer(),
     ],
     program.programId,
   )
@@ -200,4 +213,69 @@ export const getStakingAccount = async ({
   }
 
   return { stakingAccount, stakingAccountBump, isInitialized, accountInfo }
+}
+
+type UpgradeKart = {
+  user: PublicKey
+  poolAccount: PublicKey
+  kartAccount: PublicKey
+  kartAccountBump: number
+  kartTokenAccount: PublicKey
+  kartMint: PublicKey
+  // kartMetadataAccount: PublicKey
+  // kartMasterEdition: PublicKey
+  stakingAccount: PublicKey
+  isInitialized: boolean
+  program: anchor.Program<SolRaceStaking>
+  provider: anchor.Provider
+}
+export const upgradeKart = async ({
+  user,
+  poolAccount,
+  kartAccount,
+  kartAccountBump,
+  kartTokenAccount,
+  kartMint,
+  stakingAccount,
+  isInitialized,
+  program,
+  provider,
+}: UpgradeKart) => {
+  const transaction = new Transaction()
+  if (!isInitialized) {
+    // TODO: use real metadata
+    const kartMetadataAccount = anchor.web3.Keypair.generate().publicKey
+    const creatureEdition = anchor.web3.Keypair.generate().publicKey
+    if (!kartAccountBump) return
+    transaction.add(
+      program.instruction.initKart(kartAccountBump, {
+        accounts: {
+          user,
+          poolAccount,
+          kartAccount,
+          kartMint,
+          kartTokenAccount,
+          kartMetadataAccount,
+          creatureEdition,
+          tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
+          systemProgram: anchor.web3.SystemProgram.programId,
+        },
+      }),
+    )
+  }
+
+  transaction.add(
+    program.instruction.upgradeKart({
+      accounts: {
+        user,
+        poolAccount,
+        kartAccount,
+        stakingAccount,
+        tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      },
+    }),
+  )
+
+  return provider.send(transaction)
 }

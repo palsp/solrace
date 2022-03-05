@@ -5,6 +5,10 @@ import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { useConnection } from '@solana/wallet-adapter-react'
 import { useWorkspace } from '~/workspace/hooks'
 import { StakingGov, IDL as StakingGovIDL } from '~/api/types/staking_gov'
+import {
+  SolRaceStaking,
+  IDL as SolRaceStakingIDL,
+} from '~/api/types/sol_race_staking'
 import { getStakingAccount } from '~/gov/services'
 
 export interface NFTAccount {
@@ -12,12 +16,14 @@ export interface NFTAccount {
   mint: PublicKey
 }
 
-export const POOL_NAME = 'gov'
+export const POOL_NAME = 'solkart'
+
 export const useNFT = (owner?: PublicKey) => {
   const [nfts, setNFTs] = useState<NFTAccount[]>([])
   const { connection } = useConnection()
 
   const revalidate = useCallback(async () => {
+    console.log('revalidate nft')
     if (!owner) {
       setNFTs([])
       return
@@ -58,7 +64,12 @@ const useContract = (programId: anchor.web3.PublicKey) => {
   const { provider } = useWorkspace()
 
   const program = useMemo(() => {
-    return new anchor.Program<StakingGov>(StakingGovIDL, programId, provider)
+    if (!provider) return undefined
+    return new anchor.Program<SolRaceStaking>(
+      SolRaceStakingIDL,
+      programId,
+      provider,
+    )
   }, [programId, provider])
 
   return { program }
@@ -69,9 +80,12 @@ export const usePoolAccount = (
   poolName: string,
 ) => {
   const { program } = useContract(programId)
-  const [poolAccountInfo, setPoolAccountInfo] = useState<any>({})
+  const [poolInfo, setPoolInfo] = useState<any>({})
+  const [publicAddress, setPublicAddress] = useState<PublicKey>()
 
   const revalidate = useCallback(async () => {
+    console.log('revalidate pool account')
+    if (!program) return
     try {
       const [
         poolAccountAddress,
@@ -80,12 +94,14 @@ export const usePoolAccount = (
         program.programId,
       )
 
+      setPublicAddress(poolAccountAddress)
+
       const accountInfo = await program.account.poolAccount.fetch(
         poolAccountAddress,
       )
-      setPoolAccountInfo(accountInfo)
+      setPoolInfo(accountInfo)
     } catch (e) {
-      setPoolAccountInfo({})
+      setPoolInfo({})
     }
   }, [program, poolName])
 
@@ -93,39 +109,50 @@ export const usePoolAccount = (
     revalidate()
   }, [revalidate])
 
-  return { poolAccountInfo, revalidate }
+  return { poolInfo, revalidate }
 }
 
 export const useStakeAccount = (
   programId: anchor.web3.PublicKey,
-  tokenAccountAddress: anchor.web3.PublicKey,
+  garageMint: anchor.web3.PublicKey,
 ) => {
   const { program } = useContract(programId)
+  const { wallet } = useWorkspace()
 
-  const [stakingAccountInfo, setStakingAccountInfo] = useState<any>({})
+  const [stakeInfo, setStakeInfo] = useState<any>({})
   const [isStaked, setIsStaked] = useState<boolean>()
+  const [isInitialize, setIsInitialize] = useState<boolean>()
 
   const revalidate = useCallback(async () => {
-    const { isInitialized, accountInfo } = await getStakingAccount({
-      provider: program.provider,
-      user: program.provider.wallet.publicKey,
-      nftTokenAccount: tokenAccountAddress,
-      poolName: POOL_NAME,
-    })
+    if (!program || !wallet) return
 
-    if (!isInitialized) {
+    const [stakingAccount] = await anchor.web3.PublicKey.findProgramAddress(
+      [
+        Buffer.from('staking_account'),
+        // TODO: delete poolName
+        Buffer.from(POOL_NAME),
+        wallet.publicKey.toBuffer(),
+        garageMint.toBuffer(),
+      ],
+      program.programId,
+    )
+    try {
+      const accountInfo = await program.account.stakingAccount.fetch(
+        stakingAccount,
+      )
+      setIsInitialize(true)
+      setIsStaked(accountInfo.isBond)
+      setStakeInfo(accountInfo)
+    } catch (e) {
+      setIsInitialize(false)
       setIsStaked(false)
-      setStakingAccountInfo({})
-    } else {
-      setIsStaked((accountInfo as any).isBond)
-      // @ts-ignore
-      setStakingAccountInfo(accountInfo)
+      setStakeInfo({})
     }
-  }, [program])
+  }, [program, wallet])
 
   useEffect(() => {
     revalidate()
   }, [revalidate])
 
-  return { stakingAccountInfo, isStaked, revalidate }
+  return { stakeInfo, isStaked, isInitialize, revalidate }
 }

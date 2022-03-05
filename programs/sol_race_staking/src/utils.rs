@@ -6,7 +6,7 @@ use mpl_token_metadata::state::{Metadata, EDITION, PREFIX};
 use std::ops::Deref;
 
 pub fn verify_nft<'info>(
-  pool_account: &PoolAccount,
+  expected_creator_pubkey: &Pubkey,
   nft_token_account: &Account<'info, TokenAccount>,
   nft_metadata_account: &AccountInfo<'info>,
   nft_mint: &Account<'info, Mint>,
@@ -59,7 +59,7 @@ pub fn verify_nft<'info>(
   let full_metadata_clone = metadata_full_account.clone();
 
   require!(
-    full_metadata_clone.data.creators.as_ref().unwrap()[0].address == pool_account.garage_creator,
+    full_metadata_clone.data.creators.as_ref().unwrap()[0].address == *expected_creator_pubkey,
     ErrorCode::InvalidCreator
   );
 
@@ -114,7 +114,7 @@ pub fn increase_bond_amount(staking_account: &mut StakingAccount, pool_account: 
 }
 
 pub fn decrease_bond_amount(staking_account: &mut StakingAccount, pool_account: &mut PoolAccount) {
-  pool_account.total_staked += 1;
+  pool_account.total_staked -= 1;
   staking_account.is_bond = false;
 }
 

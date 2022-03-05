@@ -1,7 +1,10 @@
 import { PublicKey } from '@solana/web3.js'
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useContext } from 'react'
 import { getStakingAccount } from '~/stake/services'
+import { StakerContext } from '~/stake/StakerContext'
 import { useWorkspace } from '~/workspace/hooks'
+
+export const useStaker = () => useContext(StakerContext)
 
 export const useStakingAccount = (tokenAccountAddress: string) => {
   const [stakingAccountInfo, setStakingAccountInfo] = useState<any>({})

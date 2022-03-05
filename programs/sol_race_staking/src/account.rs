@@ -33,10 +33,10 @@ pub struct StakingAccount {
   pub garage_token_account: Pubkey,
   pub garage_metadata_account: Pubkey,
   pub garage_master_edition: Pubkey,
-  pub bump: u8,
   pub is_bond: bool,
-  pub pending_reward: u128,
+  pub bump: u8,
   pub reward_index: f64,
+  pub pending_reward: u128,
 }
 
 #[account]

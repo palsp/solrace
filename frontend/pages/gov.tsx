@@ -1,6 +1,3 @@
-import { PublicKey } from '@solana/web3.js'
-import { verifyNFT } from '~/stake/services'
-
 import AppLayout from '~/app/AppLayout'
 
 import { useWorkspace } from '~/workspace/hooks'
@@ -15,6 +12,7 @@ import { toast } from 'react-toastify'
 import StakeGovCard from '~/gov/StakeGovCard'
 import { POOL_NAME } from '~/gov/hooks'
 import { SOL_RACE_STAKING_GOV_PROGRAM_ID } from '~/api/addresses'
+import { useStaker } from '~/stake/hooks'
 
 const StakeArea = styled(Row)`
   justify-content: space-around;
@@ -23,7 +21,8 @@ const StakeArea = styled(Row)`
 const GovPage = () => {
   const { provider, wallet } = useWorkspace()
   const { nfts, revalidate: revalidateNFTs } = useNFT(wallet?.publicKey)
-  const { poolAccountInfo, revalidate } = usePoolAccount(
+  const { stakerInfos } = useStaker()
+  const { poolInfo, revalidate } = usePoolAccount(
     SOL_RACE_STAKING_GOV_PROGRAM_ID,
     POOL_NAME,
   )
@@ -59,7 +58,7 @@ const GovPage = () => {
             key={nft.tokenAccountAddress.toBase58()}
             nft={nft}
             revalidatePool={revalidate}
-            poolAccountInfo={poolAccountInfo}
+            poolInfo={poolInfo}
           />
         ))}
       </StakeArea>
