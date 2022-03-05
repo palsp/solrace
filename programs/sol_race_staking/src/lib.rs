@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-anchor_lang::declare_id!("u9vRU6Cb4kogHgVGofQKdSSsrCyhjHKKtQ7Uf7NX498");
+anchor_lang::declare_id!("FkqkswBdMknF3NFxjBFTyVXuCRqBxQMoyLizhPfYebYX");
 
 mod account;
 mod context;
@@ -19,10 +19,10 @@ pub mod sol_race_staking {
         ctx: Context<Initialize>,
         pool_name: String,
         bumps: PoolBumps,
-        total_distribution: u64,
+        total_distribution: u128,
         start_time: i64,
         end_time: i64,
-    ) -> ProgramResult {
+    ) -> Result<()> {
         msg!("INITIALIZE");
         if start_time >= end_time {
             return Err(ErrorCode::InvalidTime.into());
@@ -46,8 +46,6 @@ pub mod sol_race_staking {
         pool_account.start_time = start_time;
         pool_account.end_time = end_time;
 
-        // TODO: transfer ownership of pool authority
-
         Ok(())
     }
 
@@ -59,7 +57,7 @@ pub mod sol_race_staking {
         &ctx.accounts.creature_edition,
         &ctx.accounts.token_metadata_program,
     ))]
-    pub fn verify(ctx: Context<VerifyNFT>) -> ProgramResult {
+    pub fn verify(ctx: Context<VerifyNFT>) -> Result<()> {
         msg!("VERIFY");
         Ok(())
     }
@@ -72,7 +70,7 @@ pub mod sol_race_staking {
         &ctx.accounts.creature_edition,
         &ctx.accounts.token_metadata_program,
     ))]
-    pub fn init_stake(ctx: Context<InitStake>, bump: u8) -> ProgramResult {
+    pub fn init_stake(ctx: Context<InitStake>, bump: u8) -> Result<()> {
         let staking_account = &mut ctx.accounts.staking_account;
         staking_account.is_bond = false;
         staking_account.bump = bump;
@@ -91,7 +89,7 @@ pub mod sol_race_staking {
         &ctx.accounts.creature_edition,
         &ctx.accounts.token_metadata_program,
     ))]
-    pub fn bond(ctx: Context<Bond>) -> ProgramResult {
+    pub fn bond(ctx: Context<Bond>) -> Result<()> {
         msg!("BOND");
 
         let clock = Clock::get()?;
@@ -115,7 +113,7 @@ pub mod sol_race_staking {
         &ctx.accounts.creature_edition,
         &ctx.accounts.token_metadata_program,
     ))]
-    pub fn un_bond(ctx: Context<Unbond>) -> ProgramResult {
+    pub fn un_bond(ctx: Context<Unbond>) -> Result<()> {
         msg!("UNBOND");
         let clock = Clock::get()?;
         let current_time = clock.unix_timestamp;
@@ -131,7 +129,7 @@ pub mod sol_race_staking {
     }
 }
 
-#[error]
+#[error_code]
 pub enum ErrorCode {
     #[msg("Not Initialize")]
     NotInitialize,

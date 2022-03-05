@@ -10,40 +10,34 @@ use crate::ErrorCode;
 #[derive(Accounts)]
 #[instruction(pool_name: String, bumps: PoolBumps )]
 pub struct Initialize<'info> {
+    #[account(mut)]
     pub signer: Signer<'info>,
-
     #[account(init, 
         seeds = [pool_name.as_bytes(),b"pool_account"],
-        bump = bumps.pool_account,
+        bump,
         payer = signer)]
     pub pool_account: Account<'info, PoolAccount>,
-
     #[account(mut)]
+    /// CHECK
     pub staking_authority: AccountInfo<'info>,
-
     #[account(mut,
         constraint = pool_authority.owner == *staking_authority.to_account_info().key,
         constraint = pool_authority.mint == *solr_mint.to_account_info().key
       )]
     pub pool_authority: Box<Account<'info, TokenAccount>>,
-
+    /// CHECK
     pub garage_creator: AccountInfo<'info>,
-    
     #[account(constraint = solr_mint.key() == pool_authority.mint)]
     pub solr_mint : Account<'info, Mint>,
-    
     #[account(init,
         token::mint = solr_mint,
         token::authority = pool_authority,
         seeds = [pool_name.as_bytes(), b"pool_solr"],
-        bump = bumps.pool_solr,
+        bump,
         payer = staking_authority)]
     pub pool_solr : Account<'info, TokenAccount>,
-
     pub system_program : Program<'info, System>,
-
     pub token_program: Program<'info, Token>,
-
     pub rent: Sysvar<'info, Rent>,
 }
 
@@ -64,12 +58,12 @@ pub struct VerifyNFT<'info> {
       )]
     pub garage_token_account: Account<'info, TokenAccount>,
 
-    // The metadata account of the NFT
+    /// CHECK The metadata account of the NFT
     pub garage_metadata_account: AccountInfo<'info>,
 
     #[account(address = mpl_token_metadata::id())]
     pub token_metadata_program: AccountInfo<'info>,
-
+    
     pub creature_edition: AccountInfo<'info>,
 
     #[account(
@@ -121,8 +115,10 @@ pub struct InitStake<'info> {
     pub garage_token_account: Account<'info, TokenAccount>,
     // The metadata account of the NFT
     pub garage_metadata_account: AccountInfo<'info>,
+    // pub garage_metadata_account : UncheckedAccount<'info>,
     // nft master edition
     pub creature_edition: AccountInfo<'info>,
+    // pub creature_edition : UncheckedAccount<'info>,
     #[account(address = mpl_token_metadata::id())]
     pub token_metadata_program: AccountInfo<'info>,
     pub system_program : Program<'info, System>

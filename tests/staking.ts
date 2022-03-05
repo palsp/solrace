@@ -16,7 +16,7 @@ const BN = anchor.BN
 import chai from 'chai'
 import CBN from 'chai-bn'
 import CAP from 'chai-as-promised'
-import { bond, unbond } from './utils/services'
+import { bond, getMasterEdition, getMetadata, unbond } from './utils/services'
 
 chai.use(CAP).use(CBN(BN)).should()
 
@@ -32,13 +32,13 @@ describe('sol_race_staking', () => {
   const provider = anchor.Provider.env()
   anchor.setProvider(provider)
 
-  // @ts-ignore
   const program = anchor.workspace.SolRaceStaking as Program<SolRaceStaking>
 
   // All mints default to 6 decimal places.
   // solr to be distributed
   // ~ 0.06 solr pere sec
-  const solrAmount = new anchor.BN(90000)
+  // const solrAmount = new anchor.BN(90000)
+  const solrAmount = new anchor.BN(96666)
 
   const poolName = faker.name.firstName().slice(0, 10)
   console.log(poolName)
@@ -73,6 +73,7 @@ describe('sol_race_staking', () => {
   })
 
   let startTime = new anchor.BN(Date.now() / 1000)
+  let elapseTime = startTime.add(new anchor.BN(5))
   let endTime = startTime.add(new anchor.BN(15))
 
   const time = endTime.sub(startTime)
@@ -102,6 +103,9 @@ describe('sol_race_staking', () => {
     bumps.poolAccount = poolAccountBump
     bumps.poolSolr = poolSolrBump
 
+    // TODO: not mock garage creator
+    const garageCreator = anchor.web3.Keypair.generate()
+
     await program.rpc.initialize(
       poolName,
       bumps,
@@ -116,6 +120,7 @@ describe('sol_race_staking', () => {
           poolAuthority,
           solrMint,
           poolSolr,
+          garageCreator: garageCreator.publicKey,
           systemProgram: anchor.web3.SystemProgram.programId,
           tokenProgram: TOKEN_PROGRAM_ID,
           rent: anchor.web3.SYSVAR_RENT_PUBKEY,
@@ -124,6 +129,7 @@ describe('sol_race_staking', () => {
     )
 
     const poolAccountInfo = await program.account.poolAccount.fetch(poolAccount)
+
     expect(poolAccountInfo.poolAuthority.equals(poolAuthority)).to.be.true
     // TODO: check nft creator
     expect(poolAccountInfo.stakingAuthority.equals(provider.wallet.publicKey))
@@ -141,9 +147,7 @@ describe('sol_race_staking', () => {
     expect(poolAccountInfo.totalStaked).to.be.a.bignumber.equal(
       new anchor.BN(0),
     )
-    expect(poolAccountInfo.globalRewardIndex).to.be.a.bignumber.equal(
-      new anchor.BN(0),
-    )
+    expect(poolAccountInfo.globalRewardIndex).to.equal(0)
 
     expect(poolAccountInfo.startTime).to.be.a.bignumber.equal(startTime)
     expect(poolAccountInfo.endTime).to.be.a.bignumber.equal(endTime)
@@ -186,27 +190,23 @@ describe('sol_race_staking', () => {
       program.programId,
     )
 
-    // try {
-    //   let stakingAccInfo = await provider.connection.getAccountInfo(
-    //     stakingAccount,
-    //   )
+    //   // try {
+    //   //   let stakingAccInfo = await provider.connection.getAccountInfo(
+    //   //     stakingAccount,
+    //   //   )
 
-    //   console.log('before Initialize ', stakingAccInfo.data)
-    // } catch (e) {}
+    //   //   console.log('before Initialize ', stakingAccInfo.data)
+    //   // } catch (e) {}
 
     const [poolAccount] = await bond({
       program,
       user: staker.publicKey,
-      garageTokenAccount: nftTokenAccount,
       solrMint,
       signers: [staker],
       poolName,
+      garageMint: nftMintAccount.publicKey,
+      garageTokenAccount: nftTokenAccount,
     })
-
-    // let stakingAccInfo = await provider.connection.getAccountInfo(
-    //   stakingAccount,
-    // )
-    // console.log('after Initialize ', stakingAccInfo.data)
 
     const poolAccountInfo = await program.account.poolAccount.fetch(poolAccount)
     const stakingAccountInfo = await program.account.stakingAccount.fetch(
@@ -226,6 +226,9 @@ describe('sol_race_staking', () => {
   let anotherNftTokenAccount: anchor.web3.PublicKey
   let anotherStaker = anchor.web3.Keypair.generate()
   it('stake another user token', async () => {
+    if (Date.now() < elapseTime.toNumber() * 1000 + 1000) {
+      await sleep(elapseTime.toNumber() * 1000 - Date.now() + 4000)
+    }
     // request airdrop
     const tx = await provider.connection.requestAirdrop(
       anotherStaker.publicKey,
@@ -251,29 +254,32 @@ describe('sol_race_staking', () => {
       [Buffer.from(poolName), Buffer.from('pool_account')],
       program.programId,
     )
-    // const {
-    //   lastDistributed: prevLatestDistribution,
-    //   globalRewardIndex: prevGlobalRewardIndex,
-    // } = await program.account.poolAccount.fetch(poolAccount)
+    const {
+      lastDistributed: prevLatestDistribution,
+      globalRewardIndex: prevGlobalRewardIndex,
+    } = await program.account.poolAccount.fetch(poolAccount)
 
     const [_, anotherStakingAccount] = await bond({
       program,
       user: anotherStaker.publicKey,
-      garageTokenAccount: anotherNftTokenAccount,
       solrMint,
+      garageMint: anotherNftMintAccount.publicKey,
+      garageTokenAccount: anotherNftTokenAccount,
       signers: [anotherStaker],
       poolName,
     })
 
-    // const poolAccountInfo = await program.account.poolAccount.fetch(poolAccount)
+    const poolAccountInfo = await program.account.poolAccount.fetch(poolAccount)
 
-    // expect(poolAccountInfo.totalStaked).to.be.bignumber.equals(new BN(2))
+    expect(poolAccountInfo.totalStaked).to.be.bignumber.equals(new BN(2))
 
     const anotherStakerAccountInfo = await program.account.stakingAccount.fetch(
       anotherStakingAccount,
     )
 
     expect(anotherStakerAccountInfo.isBond).to.be.true
+
+    console.log(poolAccountInfo)
 
     // expect(poolAccountInfo.globalRewardIndex).to.be.bignumber.equals(
     //   anotherStakerAccountInfo.rewardIndex,
@@ -296,89 +302,89 @@ describe('sol_race_staking', () => {
     // ).to.be.bignumber.greaterThanOrEqual(prevGlobalRewardIndex)
   })
 
-  it('unstake user token', async () => {
-    if (Date.now() < endTime.toNumber() * 1000 + 1000) {
-      await sleep(endTime.toNumber() * 1000 - Date.now() + 4000)
-    }
+  // it('unstake user token', async () => {
+  //   if (Date.now() < endTime.toNumber() * 1000 + 1000) {
+  //     await sleep(endTime.toNumber() * 1000 - Date.now() + 4000)
+  //   }
 
-    await unbond({
-      program,
-      poolName,
-      user: staker.publicKey,
-      garageTokenAccount: nftTokenAccount,
-      solrMint,
-      signers: [staker],
-    })
-  })
+  //   await unbond({
+  //     program,
+  //     poolName,
+  //     user: staker.publicKey,
+  //     garageTokenAccount: nftTokenAccount,
+  //     solrMint,
+  //     signers: [staker],
+  //   })
+  // })
 
-  it('unstake another user token', async () => {
-    if (Date.now() < endTime.toNumber() * 1000 + 1000) {
-      await sleep(endTime.toNumber() * 1000 - Date.now() + 4000)
-    }
+  // it('unstake another user token', async () => {
+  //   if (Date.now() < endTime.toNumber() * 1000 + 1000) {
+  //     await sleep(endTime.toNumber() * 1000 - Date.now() + 4000)
+  //   }
 
-    await unbond({
-      program,
-      poolName,
-      user: anotherStaker.publicKey,
-      garageTokenAccount: anotherNftTokenAccount,
-      solrMint,
-      signers: [anotherStaker],
-    })
-  })
+  //   await unbond({
+  //     program,
+  //     poolName,
+  //     user: anotherStaker.publicKey,
+  //     garageTokenAccount: anotherNftTokenAccount,
+  //     solrMint,
+  //     signers: [anotherStaker],
+  //   })
+  // })
 
-  // it('update pool account correctly', async () => {})
+  // // it('update pool account correctly', async () => {})
 
-  const lateStaker = anchor.web3.Keypair.generate()
-  it('not distribute reward if distribution period is end', async () => {
-    const startStakingTime = new anchor.BN(Date.now() / 1000)
-    // request sol
-    const tx = await provider.connection.requestAirdrop(
-      lateStaker.publicKey,
-      100000000000,
-    )
-    await provider.connection.confirmTransaction(tx)
+  // const lateStaker = anchor.web3.Keypair.generate()
+  // it('not distribute reward if distribution period is end', async () => {
+  //   const startStakingTime = new anchor.BN(Date.now() / 1000)
+  //   // request sol
+  //   const tx = await provider.connection.requestAirdrop(
+  //     lateStaker.publicKey,
+  //     100000000000,
+  //   )
+  //   await provider.connection.confirmTransaction(tx)
 
-    // create nft
-    const lateStakerNftMintAccount = await createMint(provider, 0)
-    const lateStakerNftTokenAccount = await createTokenAccount(
-      provider,
-      lateStakerNftMintAccount.publicKey,
-      lateStaker.publicKey,
-    )
-    await lateStakerNftMintAccount.mintTo(
-      lateStakerNftTokenAccount,
-      provider.wallet.publicKey,
-      [],
-      1,
-    )
-    const [poolAccount, lateStakerStakingAccount] = await bond({
-      program,
-      user: lateStaker.publicKey,
-      garageTokenAccount: lateStakerNftTokenAccount,
-      solrMint,
-      signers: [lateStaker],
-      poolName,
-    })
+  //   // create nft
+  //   const lateStakerNftMintAccount = await createMint(provider, 0)
+  //   const lateStakerNftTokenAccount = await createTokenAccount(
+  //     provider,
+  //     lateStakerNftMintAccount.publicKey,
+  //     lateStaker.publicKey,
+  //   )
+  //   await lateStakerNftMintAccount.mintTo(
+  //     lateStakerNftTokenAccount,
+  //     provider.wallet.publicKey,
+  //     [],
+  //     1,
+  //   )
+  //   const [poolAccount, lateStakerStakingAccount] = await bond({
+  //     program,
+  //     user: lateStaker.publicKey,
+  //     garageTokenAccount: lateStakerNftTokenAccount,
+  //     solrMint,
+  //     signers: [lateStaker],
+  //     poolName,
+  //   })
 
-    const poolAccountInfo = await program.account.poolAccount.fetch(poolAccount)
+  //   const poolAccountInfo = await program.account.poolAccount.fetch(poolAccount)
 
-    const lateStakerStakingAccountInfo = await program.account.stakingAccount.fetch(
-      lateStakerStakingAccount,
-    )
+  //   const lateStakerStakingAccountInfo = await program.account.stakingAccount.fetch(
+  //     lateStakerStakingAccount,
+  //   )
 
-    expect(lateStakerStakingAccountInfo.isBond).to.be.true
+  //   expect(lateStakerStakingAccountInfo.isBond).to.be.true
 
-    expect(lateStakerStakingAccountInfo.pendingReward).to.be.bignumber.equals(
-      new BN(0),
-    )
+  //   expect(lateStakerStakingAccountInfo.pendingReward).to.be.bignumber.equals(
+  //     new BN(0),
+  //   )
 
-    expect(lateStakerStakingAccountInfo.rewardIndex).to.be.bignumber.equals(
-      poolAccountInfo.globalRewardIndex,
-    )
+  //   expect(lateStakerStakingAccountInfo.rewardIndex).to.be.bignumber.equals(
+  //     poolAccountInfo.globalRewardIndex,
+  //   )
 
-    console.log(
-      'global reward Index : ',
-      poolAccountInfo.globalRewardIndex.toString(),
-    )
-  })
+  //   console.log(
+  //     'global reward Index : ',
+  //     poolAccountInfo.globalRewardIndex.toString(),
+  //   )
+  // })
 })

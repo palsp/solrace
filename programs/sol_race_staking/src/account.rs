@@ -10,51 +10,29 @@ pub struct PoolBumps {
 #[derive(Default)]
 pub struct PoolAccount {
   pub pool_name: [u8; 10],
-
   pub pool_authority: Pubkey,
-
   pub garage_creator: Pubkey,
-
   pub staking_authority: Pubkey,
-
   pub solr_mint: Pubkey,
-
   pub pool_solr: Pubkey,
-
   pub bumps: PoolBumps,
-
-  pub last_distributed: i64,
-
-  pub total_distribution: u64,
-
-  pub total_staked: i64,
-
-  // TODO: should be f64 but anchor is not support decimals
-  pub global_reward_index: u64,
-
+  pub total_distribution: u128,
+  pub total_staked: u128,
   pub start_time: i64,
-
   pub end_time: i64,
+  pub last_distributed: i64,
+  pub global_reward_index: f64,
 }
 
 #[account]
 #[derive(Default)]
 pub struct StakingAccount {
-  pub bump: u8,
-
-  pub latest_claimed: i64,
-
-  pub pending_reward: u64,
-
   pub staker: Pubkey,
-
   pub garage_mint: Pubkey,
-
   pub garage_token_account: Pubkey,
-
   pub garage_metadata_account: Pubkey,
-
-  pub reward_index: u64,
-
+  pub bump: u8,
   pub is_bond: bool,
+  pub pending_reward: u128,
+  pub reward_index: f64,
 }

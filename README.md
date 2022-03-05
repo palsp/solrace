@@ -86,7 +86,7 @@ upload and deploy candy machine. in `scripts/metaplex` folder, run
 ```sh
 yarn --cwd js install
 ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts upload \
-    -e devnet \
+    -e testnet \
     -k ~/.config/solana/devnet.json \
     -cp config.json \
     -c example \
@@ -95,8 +95,8 @@ ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts upload \
 
 verify upload
 ```
-ts-node  js/packages/cli/src/candy-machine-v2-cli.ts verify_upload \
-    -e devnet \
+ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts verify_upload \
+    -e testnet \
     -k ~/.config/solana/devnet.json \
     -c example
 ```
@@ -107,9 +107,9 @@ in `scripts/metaplex`
 
 mint one token
 ```
-ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts mint_one_token \
+ts-node  --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts mint_one_token \
     -e testnet \
-    -k  ~/.config/solana/testnet.json \
+    -k  ~/.config/solana/devnet.json \
     -c example
 ```
 
@@ -125,7 +125,7 @@ ts-node js/packages/cli/src/candy-machine-v2-cli.ts mint_multiple_tokens \
 sign your nft
 ```
 ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts sign_all \
-    -e devnet \
+    -e testnet \
     -k ~/.config/solana/devnet.json \
     -c example
 ```
@@ -144,6 +144,6 @@ show config
 ```
 ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts show \
     -e testnet \
-    -k ~/.config/solana/testnet.json \
+    -k ~/.config/solana/devnet.json \
     -c example
 ```

@@ -12,7 +12,7 @@ pub fn verify_nft<'info>(
   nft_mint: &Account<'info, Mint>,
   creature_edition: &AccountInfo<'info>,
   token_metadata_program: &AccountInfo<'info>,
-) -> ProgramResult {
+) -> Result<()> {
   let master_edition_seed = &[
     PREFIX.as_bytes(),
     token_metadata_program.key.as_ref(),
@@ -82,22 +82,16 @@ pub fn compute_reward(pool_account: &mut PoolAccount, current_time: i64) {
   {
     let time = pool_account.end_time - pool_account.start_time;
 
-    let distributed_amount_per_sec = (pool_account.total_distribution as u128)
-      .checked_div(time as u128)
-      .unwrap();
+    let distributed_amount_per_sec: f64 = pool_account.total_distribution as f64 / time as f64;
 
     let passed_time = std::cmp::min(pool_account.end_time, current_time)
       - std::cmp::max(pool_account.start_time, pool_account.last_distributed);
 
-    distributed_amount = distributed_amount_per_sec
-      .checked_mul(passed_time as u128)
-      .unwrap();
+    distributed_amount = (distributed_amount_per_sec * passed_time as f64) as u128
   }
-
   pool_account.last_distributed = current_time;
-  pool_account.global_reward_index += (distributed_amount as u128)
-    .checked_div(pool_account.total_staked as u128)
-    .unwrap() as u64;
+  pool_account.global_reward_index = pool_account.global_reward_index
+    + (distributed_amount as f64 / pool_account.total_staked as f64)
 }
 
 pub fn compute_staker_reward(staking_account: &mut StakingAccount, pool_account: &PoolAccount) {
@@ -105,19 +99,13 @@ pub fn compute_staker_reward(staking_account: &mut StakingAccount, pool_account:
     true => 1,
     false => 0,
   };
-
-  let a = (pool_account.global_reward_index as u128)
-    .checked_mul(bond_amount)
+  let pending_reward = (bond_amount * pool_account.global_reward_index as u128)
+    .checked_sub(bond_amount * pool_account.global_reward_index as u128)
     .unwrap();
-  let b = (staking_account.reward_index as u128)
-    .checked_mul(bond_amount)
-    .unwrap();
-
-  let pending_reward = a.checked_sub(b).unwrap();
 
   staking_account.reward_index = pool_account.global_reward_index;
 
-  staking_account.pending_reward += pending_reward as u64;
+  staking_account.pending_reward += pending_reward;
 }
 
 pub fn increase_bond_amount(staking_account: &mut StakingAccount, pool_account: &mut PoolAccount) {

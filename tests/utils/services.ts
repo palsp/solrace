@@ -26,7 +26,7 @@ const TOKEN_METADATA_PROGRAM_ID = new anchor.web3.PublicKey(
   'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s',
 )
 
-const getMasterEdition = async (
+export const getMasterEdition = async (
   mint: anchor.web3.PublicKey,
 ): Promise<anchor.web3.PublicKey> => {
   return (
@@ -42,7 +42,7 @@ const getMasterEdition = async (
   )[0]
 }
 
-const getMetadata = async (
+export const getMetadata = async (
   mint: anchor.web3.PublicKey,
 ): Promise<anchor.web3.PublicKey> => {
   return (
@@ -132,44 +132,46 @@ export async function bond({
   return [poolAccount, stakingAccount]
 }
 
-export async function unbond({
-  program,
-  poolName,
-  user,
-  garageTokenAccount,
-  solrMint,
-  signers,
-}: UnBond): Promise<[anchor.web3.PublicKey, anchor.web3.PublicKey]> {
-  const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
-    [Buffer.from(poolName), Buffer.from('pool_account')],
-    program.programId,
-  )
+// export async function unbond({
+//   program,
+//   poolName,
+//   user,
+//   garageTokenAccount,
+//   solrMint,
+//   signers,
+// }: UnBond): Promise<[anchor.web3.PublicKey, anchor.web3.PublicKey]> {
+//   const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
+//     [Buffer.from(poolName), Buffer.from('pool_account')],
+//     program.programId,
+//   )
 
-  const [
-    stakingAccount,
-    stakingAccountBump,
-  ] = await anchor.web3.PublicKey.findProgramAddress(
-    [
-      Buffer.from('staking_account'),
-      // TODO: delete poolName
-      Buffer.from(poolName),
-      user.toBuffer(),
-      garageTokenAccount.toBuffer(),
-    ],
-    program.programId,
-  )
+//   const [
+//     stakingAccount,
+//     stakingAccountBump,
+//   ] = await anchor.web3.PublicKey.findProgramAddress(
+//     [
+//       Buffer.from('staking_account'),
+//       // TODO: delete poolName
+//       Buffer.from(poolName),
+//       user.toBuffer(),
+//       garageTokenAccount.toBuffer(),
+//     ],
+//     program.programId,
+//   )
 
-  await program.rpc.unBond({
-    accounts: {
-      user,
-      poolAccount,
-      stakingAccount,
-      solrMint,
-      garageTokenAccount,
-      systemProgram: SystemProgram.programId,
-    },
-    signers,
-  })
+//   await program.rpc.unBond({
+//     accounts: {
+//       user,
+//       poolAccount,
+//       stakingAccount,
+//       solrMint,
+//       garageMint,
+//       garageTokenAccount,
+//       garageMetadataAccount,
+//       systemProgram: SystemProgram.programId,
+//     },
+//     signers,
+//   })
 
-  return [poolAccount, stakingAccount]
-}
+//   return [poolAccount, stakingAccount]
+// }

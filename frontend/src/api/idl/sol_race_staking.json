@@ -7,7 +7,7 @@
       "accounts": [
         {
           "name": "signer",
-          "isMut": false,
+          "isMut": true,
           "isSigner": true
         },
         {
@@ -69,7 +69,7 @@
         },
         {
           "name": "totalDistribution",
-          "type": "u64"
+          "type": "u128"
         },
         {
           "name": "startTime",
@@ -338,20 +338,12 @@
             }
           },
           {
-            "name": "lastDistributed",
-            "type": "i64"
-          },
-          {
             "name": "totalDistribution",
-            "type": "u64"
+            "type": "u128"
           },
           {
             "name": "totalStaked",
-            "type": "i64"
-          },
-          {
-            "name": "globalRewardIndex",
-            "type": "u64"
+            "type": "u128"
           },
           {
             "name": "startTime",
@@ -360,6 +352,14 @@
           {
             "name": "endTime",
             "type": "i64"
+          },
+          {
+            "name": "lastDistributed",
+            "type": "i64"
+          },
+          {
+            "name": "globalRewardIndex",
+            "type": "f64"
           }
         ]
       }
@@ -369,18 +369,6 @@
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "bump",
-            "type": "u8"
-          },
-          {
-            "name": "latestClaimed",
-            "type": "i64"
-          },
-          {
-            "name": "pendingReward",
-            "type": "u64"
-          },
           {
             "name": "staker",
             "type": "publicKey"
@@ -398,12 +386,20 @@
             "type": "publicKey"
           },
           {
-            "name": "rewardIndex",
-            "type": "u64"
+            "name": "bump",
+            "type": "u8"
           },
           {
             "name": "isBond",
             "type": "bool"
+          },
+          {
+            "name": "pendingReward",
+            "type": "u128"
+          },
+          {
+            "name": "rewardIndex",
+            "type": "f64"
           }
         ]
       }
