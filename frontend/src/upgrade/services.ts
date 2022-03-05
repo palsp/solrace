@@ -9,7 +9,7 @@ interface UpgradeKart {
   provider: anchor.Provider
   kartMint: PublicKey
   kartAccount: PublicKey
-  kartAccountBump?: number
+  kartAccountBump: number
   kartTokenAccount: PublicKey
   stakingAccount: PublicKey
   // kartMetadataAccount: PublicKey,
@@ -35,7 +35,6 @@ export const upgradeKart = async ({
   )
 
   if (!isInitialize) {
-    if (!kartAccountBump) return
     // TODO: fetch real meta
     const kartMetadataAccount = anchor.web3.Keypair.generate().publicKey
     const creatureEdition = anchor.web3.Keypair.generate().publicKey

@@ -25,14 +25,13 @@ async function createMint(
   if (authority === undefined) {
     authority = provider.wallet.publicKey
   }
-  const mint = await spl.Token.createMint(
+  const mint = await spl.createMint(
     provider.connection,
     // @ts-ignore
     provider.wallet.payer,
     authority,
     freezeAuthority,
     decimals,
-    TOKEN_PROGRAM_ID,
   )
   return mint
 }
@@ -42,13 +41,13 @@ async function createTokenAccount(
   mint: anchor.web3.PublicKey,
   owner: anchor.web3.PublicKey,
 ) {
-  const token = new spl.Token(
+  let vault = await spl.createAccount(
     provider.connection,
-    mint,
-    TOKEN_PROGRAM_ID,
     provider.wallet.payer,
+    mint,
+    owner,
   )
-  let vault = await token.createAccount(owner)
+
   return vault
 }
 
