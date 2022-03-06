@@ -1097,7 +1097,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "sol_race_staking"
+name = "sol_race_core"
 version = "0.1.0"
 dependencies = [
  "anchor-lang",

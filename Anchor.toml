@@ -1,9 +1,9 @@
 [programs.localnet]
-sol_race_staking = "9zCDvzC5e3QStC6ijSivcNvngRA2huaZsgER9GfPdGdD"
+sol_race_core = "4tcD8pgdaSn4yzWQybKuKzSXpW3uoDugFY6owNUhhexd"
 staking_gov="DrkYUKUUrdgznKjh6mFmM8dyXaMuhRqgi2F9u9QGxzf5"
 
 [programs.devnet]
-sol_race_staking = "9zCDvzC5e3QStC6ijSivcNvngRA2huaZsgER9GfPdGdD"
+sol_race_core = "4tcD8pgdaSn4yzWQybKuKzSXpW3uoDugFY6owNUhhexd"
 staking_gov="DrkYUKUUrdgznKjh6mFmM8dyXaMuhRqgi2F9u9QGxzf5"
 
 [programs.testnet]
@@ -20,5 +20,5 @@ wallet = "/Users/supasinliulaks/.config/solana/testnet.json"
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
 copy_idl = "rm -rf frontend/src/api/idl && mkdir -p frontend/src/api/idl && cp -r target/idl/ frontend/src/api/idl"
-copy_types = "rm -rf frontend/src/api/types && mkdir -p frontend/src/api/types && cp -r target/types/ frontend/src/api/types"
+copy_types = "rm -rf frontend/src/api/solana/types && mkdir -p frontend/src/api/solana/types && cp -r target/types/ frontend/src/api/solana/types"
 copy_types_cli = "rm -rf scripts/cli/src/types && mkdir -p scripts/cli/src/types && cp -r target/types/ scripts/cli/src/types"

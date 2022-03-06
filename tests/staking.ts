@@ -1,6 +1,6 @@
 import * as anchor from '@project-serum/anchor'
 import { Program } from '@project-serum/anchor'
-import { SolRaceStaking } from '../target/types/sol_race_staking'
+import { SolRaceCore } from '../target/types/sol_race_core'
 import { createMint, createTokenAccount, getTokenAccount, sleep } from './utils'
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { expect } from 'chai'
@@ -26,12 +26,12 @@ function PoolBumps() {
   this.poolSolr
 }
 
-describe('sol_race_staking', () => {
+describe('Sol Race Core Program', () => {
   // Configure the client to use the local cluster.
   const provider = anchor.Provider.env()
   anchor.setProvider(provider)
 
-  const program = anchor.workspace.SolRaceStaking as Program<SolRaceStaking>
+  const program = anchor.workspace.SolRaceCore as Program<SolRaceCore>
 
   // All mints default to 6 decimal places.
   // solr to be distributed

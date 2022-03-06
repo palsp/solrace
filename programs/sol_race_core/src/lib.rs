@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-anchor_lang::declare_id!("9zCDvzC5e3QStC6ijSivcNvngRA2huaZsgER9GfPdGdD");
+anchor_lang::declare_id!("4tcD8pgdaSn4yzWQybKuKzSXpW3uoDugFY6owNUhhexd");
 
 mod account;
 mod context;
@@ -12,7 +12,7 @@ use context::*;
 use utils::*;
 
 #[program]
-pub mod sol_race_staking {
+pub mod sol_race_core {
     use super::*;
 
     pub fn initialize(

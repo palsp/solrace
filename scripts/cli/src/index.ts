@@ -1,6 +1,7 @@
 import '../config/env'
 
 import * as anchor from '@project-serum/anchor'
+import * as spl from '@solana/spl-token'
 import { TOKEN_PROGRAM_ID } from '@project-serum/anchor/dist/cjs/utils/token'
 import { Connection, clusterApiUrl, Cluster, PublicKey } from '@solana/web3.js'
 import { loadStakingProgram, loadWalletKey } from './account'
@@ -16,20 +17,17 @@ export const initialize = async () => {
   }
 
   const walletKeypair = loadWalletKey(
-    '/Users/supasinliulaks/.config/solana/devnet.json',
+    '/Users/supasinliulaks/.config/solana/testnet.json',
   )
   const program = await loadStakingProgram(walletKeypair, env)
 
-  // let ans = await prompt('Do you want to deploy new Token (y/N) >')
-  // while (ans.toLowerCase() !== 'y' && ans.toLowerCase() !== 'n') {
-  //   ans = await prompt('Please enter either y or N > ')
-  // }
+  const garageCreator = new PublicKey(
+    'E4ZLGyZ8ADN13KsdGxeKP93rkPTrZUkT4yG99bcaUXh4',
+  )
+  const kartCreator = new PublicKey(
+    'HzDeFzmNx3cvtQP2GnJAwwzjDGBzRTQMADLdhBLXG2y5',
+  )
 
-  // let solrMint: anchor.web3.PublicKey
-  // if (ans.toLowerCase() === 'y') {
-
-  // } else {
-  // }
   const connection = new Connection(clusterApiUrl(env as Cluster), {
     commitment: 'processed',
   })
@@ -38,8 +36,7 @@ export const initialize = async () => {
   const provider = new anchor.Provider(connection, wallet, {
     commitment: 'processed',
   })
-  const solrMintAccount = await createMint(provider)
-  const solrMint = solrMintAccount.publicKey
+  const solrMint = await createMint(provider)
   console.log(`solr mint address : ${solrMint.toBase58()}`)
   // 20k per 7 days => 1m per years
   // default to 6 decimals places
@@ -52,12 +49,17 @@ export const initialize = async () => {
   )
   console.log(`pool authority: ${poolAuthority.toBase58()}`)
 
-  await solrMintAccount.mintTo(
+  spl.mintTo(
+    provider.connection,
+    // @ts-ignore
+    provider.wallet.payer,
+    solrMint,
     poolAuthority,
     provider.wallet.publicKey,
-    [],
     solrAmount.toNumber(),
+    [],
   )
+
   console.log('mint to pool authority')
 
   // distribute for one year
@@ -107,9 +109,8 @@ export const initialize = async () => {
         stakingAuthority: provider.wallet.publicKey,
         poolAuthority,
         solrMint,
-        garageCreator: new PublicKey(
-          'HzDeFzmNx3cvtQP2GnJAwwzjDGBzRTQMADLdhBLXG2y5',
-        ),
+        garageCreator,
+        kartCreator,
         poolSolr,
         systemProgram: anchor.web3.SystemProgram.programId,
         tokenProgram: TOKEN_PROGRAM_ID,
