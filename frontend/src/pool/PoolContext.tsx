@@ -4,7 +4,8 @@ import { PoolInfo } from '~/api/solana/account/pool-account'
 import { POOL_NAME } from '~/api/solana/constants'
 import { usePoolAccount } from '~/hooks/useAccount'
 import { BN } from '@project-serum/anchor'
-
+import { useMintInfo } from '~/hooks/useMintInfo'
+import { toEther } from '~/api/solana/utils/parse-ether'
 interface IPoolContext {
   poolInfo?: PoolInfo
   publicAddress?: PublicKey
@@ -25,21 +26,27 @@ export const PoolProvider: React.FC = ({ children }) => {
     POOL_NAME,
   )
 
+  const solrMintInfo = useMintInfo(poolInfo?.solrMint)
   const apr = useMemo(() => {
-    if (!poolInfo) return '...'
+    if (!poolInfo || !solrMintInfo) return '...'
 
-    if (poolInfo.totalStaked.eq(new BN('0'))) {
-      return poolInfo.totalDistribution
-        .div(new BN(10 ** 6))
-        .div(new BN('1').mul(new BN(100)))
-        .toString()
+    let totalPoolShare = poolInfo.totalStaked
+
+    if (totalPoolShare.eq(new BN('0'))) {
+      totalPoolShare = new BN('1')
     }
 
-    return poolInfo.totalDistribution
-      .div(new BN(10 ** 6))
-      .div(poolInfo.totalStaked.mul(new BN(100)))
+    const time = poolInfo.endTime.sub(poolInfo.startTime)
+
+    const secPerYear = new BN(365 * 24 * 60 * 60)
+
+    return toEther(poolInfo.totalDistribution, solrMintInfo.decimals)
+      .mul(secPerYear)
+      .mul(new BN('100'))
+      .div(time)
+      .div(totalPoolShare)
       .toString()
-  }, [poolInfo])
+  }, [poolInfo, solrMintInfo])
 
   return (
     <PoolContext.Provider
