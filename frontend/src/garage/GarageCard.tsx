@@ -14,7 +14,7 @@ import Image from '~/ui/Image'
 import { NFTAccount } from '~/nft/hooks'
 import { POOL_NAME } from '~/api/solana/constants'
 import { usePool } from '~/pool/hooks'
-import { useStaker } from '~/stake-nft/hooks'
+import { useStaker } from '~/staker/hooks'
 import { toastAPIError } from '~/utils'
 import Card from '~/ui/Card'
 

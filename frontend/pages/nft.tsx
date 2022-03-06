@@ -1,12 +1,12 @@
 import { PublicKey } from '@solana/web3.js'
-import { verifyNFT } from '~/stake-nft/services'
+import { verifyNFT } from '~/staker/services'
 
 import AppLayout from '~/app/AppLayout'
 
 import { useWorkspace } from '~/workspace/hooks'
 import { useNFT } from '~/nft/hooks'
 import { Row } from '~/ui'
-import CollectionCard from '~/stake-nft/CollectionCard'
+import CollectionCard from '~/staker/CollectionCard'
 import Title from '~/ui/Title'
 
 const StakePage = () => {

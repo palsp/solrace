@@ -1,8 +1,6 @@
 import styled from 'styled-components'
-import { SOL_RACE_STAKING_PROGRAM_ID } from '~/api/solana/addresses'
 import { POOL_NAME } from '~/api/solana/constants'
 import { usePoolAccount } from '~/hooks/useAccount'
-import { poolName } from '~/stake-nft/services'
 import { Column, Row } from '~/ui'
 import StakingCard from './StakingCard'
 

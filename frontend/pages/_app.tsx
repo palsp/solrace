@@ -33,7 +33,7 @@ import { WorkspaceProvider } from '~/workspace/WorkspaceContext'
 import { NFTProvider } from '~/nft/NFTContext'
 import { AuthProvider } from '~/auth/AuthContext'
 import { LinkedWalletProvider } from '~/wallet/LinkedWalletContext'
-import { StakerProvider } from '~/stake-nft/StakerContext'
+import { StakerProvider } from '~/staker/StakerContext'
 import { PoolProvider } from '~/pool/PoolContext'
 
 const swrOption: Partial<PublicConfiguration> = {

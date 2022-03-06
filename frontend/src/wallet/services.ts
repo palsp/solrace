@@ -1,4 +1,4 @@
-import { WalletContextState } from '@solana/wallet-adapter-react'
+import { AnchorWallet, WalletContextState } from '@solana/wallet-adapter-react'
 import { api } from '~/api'
 
 export async function requestSigningMessage() {

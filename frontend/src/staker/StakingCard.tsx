@@ -6,7 +6,7 @@ import Image from '~/ui/Image'
 import Button from '~/ui/Button'
 import { useWorkspace } from '~/workspace/hooks'
 import { toast } from 'react-toastify'
-import { bond, verifyNFT } from '~/stake-nft/services'
+import { bond, verifyNFT } from '~/staker/services'
 import { PublicKey } from '@solana/web3.js'
 
 import { SOLR_MINT_ADDRESS } from '~/api/solana/addresses'
