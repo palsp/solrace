@@ -1,13 +1,11 @@
-import '@solana/wallet-adapter-react-ui/styles.css'
 import styled from 'styled-components'
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
-import { useWallet } from '@solana/wallet-adapter-react'
 import { useAuth } from '~/auth/hooks'
 import Link from 'next/link'
 import { Row } from '~/ui'
+import ConnectWalletButton from '~/wallet/ConnectWalletButton'
 
 const UserSection = styled(Row)`
-  width: 25%;
+  width: 60%;
   justify-content: space-evenly;
 `
 
@@ -23,12 +21,16 @@ const NavContainer = styled.div`
   padding: 2em;
 `
 const AppNav = () => {
-  const { connected } = useWallet()
   const { user } = useAuth()
   return (
     <NavContainer>
       <Link href="/">MARIO KART</Link>
+
       <UserSection>
+        <Link href="/mint">MINT</Link>
+
+        <Link href="/garage">GARAGE</Link>
+        <Link href="/kart">KART</Link>
         {!user ? (
           <div>
             <>
@@ -43,7 +45,7 @@ const AppNav = () => {
           </div>
         )}
 
-        <WalletMultiButton />
+        <ConnectWalletButton />
       </UserSection>
     </NavContainer>
   )

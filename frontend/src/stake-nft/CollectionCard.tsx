@@ -1,7 +1,8 @@
 import styled from 'styled-components'
-import { SOL_RACE_STAKING_PROGRAM_ID } from '~/api/addresses'
+import { SOL_RACE_STAKING_PROGRAM_ID } from '~/api/solana/addresses'
+import { POOL_NAME } from '~/api/solana/constants'
 import { usePoolAccount } from '~/hooks/useAccount'
-import { poolName } from '~/stake/services'
+import { poolName } from '~/stake-nft/services'
 import { Column, Row } from '~/ui'
 import StakingCard from './StakingCard'
 
@@ -19,10 +20,7 @@ interface Props {
   accounts: any[]
 }
 const CollectionCard: React.FC<Props> = ({ collection, accounts }) => {
-  const { poolAccountInfo, revalidate } = usePoolAccount(
-    SOL_RACE_STAKING_PROGRAM_ID,
-    poolName,
-  )
+  const { poolInfo, revalidate } = usePoolAccount(POOL_NAME)
 
   return (
     <Collection>
@@ -31,7 +29,7 @@ const CollectionCard: React.FC<Props> = ({ collection, accounts }) => {
         {accounts.map((account) => (
           <StakingCard
             key={account.tokenAccountAddress}
-            poolAccountInfo={poolAccountInfo}
+            poolAccountInfo={poolInfo}
             revalidatePool={revalidate}
             account={account}
             candyMachineID={collection.publicAddress}

@@ -1,88 +1,148 @@
-import { useMemo, useState, useCallback, useEffect } from 'react'
-import { SolRaceStaking, IDL } from '~/api/types/sol_race_staking'
-import stakingIDL from '~/api/idl/sol_race_staking.json'
+import { useState, useCallback, useEffect, useMemo } from 'react'
+import { SolRaceStaking, IDL } from '~/api/solana/types/sol_race_staking'
 
-import * as anchor from '@project-serum/anchor'
-import { Program } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
 import { useWorkspace } from '~/workspace/hooks'
-import { getStakingAccount } from '~/stake/services'
+import { useProgram } from '~/hooks/useProgram'
+import { fetchPoolInfo } from '~/api/solana/account/pool-account'
+import { fetchStakeInfo } from '~/api/solana/account/stake-account'
+import { SOL_RACE_STAKING_PROGRAM_ID } from '~/api/solana/addresses'
+import { fetchKartInfo } from '~/api/solana/account/kart-account'
 
 export type PoolAccount = typeof IDL.accounts[0]
 export type StakingAccount = typeof IDL.accounts[1]
 
-const useContract = (programId: anchor.web3.PublicKey) => {
-  const { provider } = useWorkspace()
-
-  const program = useMemo(() => {
-    return new anchor.Program<SolRaceStaking>(IDL, programId, provider)
-  }, [programId, provider])
-
-  return { program }
-}
-
-export const usePoolAccount = (
-  programId: anchor.web3.PublicKey,
-  poolName: string,
-) => {
-  const { program } = useContract(programId)
-  const [poolAccountInfo, setPoolAccountInfo] = useState<any>()
+const useAccount = <T>(fetchInfo: () => Promise<T>) => {
+  const [accountInfo, setAccountInfo] = useState<T>()
 
   const revalidate = useCallback(async () => {
     try {
-      const [
-        poolAccountAddress,
-      ] = await anchor.web3.PublicKey.findProgramAddress(
-        [Buffer.from(poolName), Buffer.from('pool_account')],
-        program.programId,
-      )
-
-      const accountInfo = await program.account.poolAccount.fetch(
-        poolAccountAddress,
-      )
-
-      // @ts-ignore
-      setPoolAccountInfo(accountInfo)
+      setAccountInfo(await fetchInfo())
     } catch (e) {
-      setPoolAccountInfo(undefined)
+      setAccountInfo(undefined)
     }
-  }, [program, poolName])
+  }, [fetchInfo])
 
   useEffect(() => {
     revalidate()
   }, [revalidate])
 
-  return { poolAccountInfo, revalidate }
+  return { accountInfo, revalidate }
+}
+
+// use isInitialize to determine loading is finish or not, if isInitialize = undefined then loading else finish
+
+export const usePoolAccount = (poolName: string) => {
+  const program = useProgram<SolRaceStaking>(IDL, SOL_RACE_STAKING_PROGRAM_ID)
+  const [publicAddress, setPublicAddress] = useState<PublicKey>()
+  const [bump, setBump] = useState<number>()
+
+  const fetchInfo = useCallback(async () => {
+    const [poolAccount, poolAccountBump, poolInfo] = await fetchPoolInfo({
+      program,
+      poolName,
+    })
+
+    setPublicAddress(poolAccount)
+    setBump(poolAccountBump)
+    return poolInfo
+  }, [program, poolName])
+
+  const { accountInfo, revalidate } = useAccount(fetchInfo)
+
+  return { poolInfo: accountInfo, publicAddress, bump, revalidate }
 }
 
 export const useStakeAccount = (
-  programId: anchor.web3.PublicKey,
-  tokenAccountAddress: anchor.web3.PublicKey,
+  poolName: string,
+  garageMintAccount: PublicKey,
 ) => {
-  const { program } = useContract(programId)
-
-  const [stakingAccountInfo, setStakingAccountInfo] = useState<any>()
+  const program = useProgram<SolRaceStaking>(IDL, SOL_RACE_STAKING_PROGRAM_ID)
+  const { wallet } = useWorkspace()
   const [isStaked, setIsStaked] = useState<boolean>()
+  const [publicAddress, setPublicAddress] = useState<PublicKey>()
+  const [bump, setBump] = useState<number>()
+  const [isInitialize, setIsInitialize] = useState<boolean>()
 
-  const revalidate = useCallback(async () => {
-    const { isInitialized, accountInfo } = await getStakingAccount({
-      provider: program.provider,
-      user: program.provider.wallet.publicKey,
-      garageTokenAccount: tokenAccountAddress,
+  const fetchInfo = useCallback(async () => {
+    if (!wallet) return undefined
+    const [stakingAccount, stakingAccountBump, info] = await fetchStakeInfo({
+      program,
+      poolName,
+      user: wallet.publicKey,
+      garageMintAccount,
     })
-
-    if (!isInitialized) {
+    setPublicAddress(stakingAccount)
+    setBump(stakingAccountBump)
+    if (!info) {
+      setIsInitialize(false)
       setIsStaked(false)
     } else {
-      setIsStaked((accountInfo as any).isBond)
-      // @ts-ignore
-      setStakingAccountInfo(accountInfo)
+      setIsInitialize(true)
+      setIsStaked(info.isBond)
     }
-  }, [program])
 
-  useEffect(() => {
-    revalidate()
-  }, [revalidate])
+    return info
+  }, [program, poolName, garageMintAccount, wallet])
 
-  return { stakingAccountInfo, isStaked, revalidate }
+  const { accountInfo, revalidate } = useAccount(fetchInfo)
+
+  const isLoading = useMemo(() => {
+    return bump === undefined || !publicAddress || isInitialize === undefined
+  }, [bump, publicAddress, isInitialize])
+
+  return {
+    stakeInfo: accountInfo,
+    isInitialize,
+    isStaked,
+    publicAddress,
+    bump,
+    isLoading,
+    revalidate,
+  }
+}
+
+export const useKartAccount = (poolName: string, kartMint: PublicKey) => {
+  const program = useProgram<SolRaceStaking>(IDL, SOL_RACE_STAKING_PROGRAM_ID)
+  const { wallet } = useWorkspace()
+
+  const [publicAddress, setPublicAddress] = useState<PublicKey>()
+  const [isInitialize, setIsInitialize] = useState<boolean>()
+  const [bump, setBump] = useState<number>()
+
+  const fetchInfo = useCallback(async () => {
+    if (!wallet) return undefined
+    const [kartAccount, kartAccountBump, info] = await fetchKartInfo({
+      program,
+      poolName,
+      kartMint,
+      user: wallet.publicKey,
+    })
+
+    setPublicAddress(kartAccount)
+    setBump(kartAccountBump)
+
+    if (!info) {
+      setIsInitialize(false)
+    } else {
+      setIsInitialize(true)
+    }
+
+    return info
+  }, [program, wallet, kartMint, poolName])
+
+  const { accountInfo, revalidate } = useAccount(fetchInfo)
+
+  const isLoading = useMemo(() => {
+    return bump === undefined || !publicAddress || isInitialize === undefined
+  }, [bump, publicAddress, isInitialize])
+
+  return {
+    kartInfo: accountInfo,
+    publicAddress,
+    isInitialize,
+    bump,
+    isLoading,
+    revalidate,
+  }
 }

@@ -1,12 +1,15 @@
 import * as anchor from '@project-serum/anchor'
+import { Program } from '@project-serum/anchor'
 import { PublicKey, Transaction } from '@solana/web3.js'
-import { TOKEN_METADATA_PROGRAM_ID } from '~/api/addresses'
-import { SolRaceStaking } from '~/api/types/sol_race_staking'
-import { POOL_NAME } from '~/gov/hooks'
-
+import {
+  SOL_RACE_STAKING_PROGRAM_ID,
+  TOKEN_METADATA_PROGRAM_ID,
+} from '~/api/solana/addresses'
+import { IDL, SolRaceStaking } from '~/api/solana/types/sol_race_staking'
+import { POOL_NAME } from '~/api/solana/constants'
 interface UpgradeKart {
-  program: anchor.Program<SolRaceStaking>
   provider: anchor.Provider
+  poolAccount: PublicKey
   kartMint: PublicKey
   kartAccount: PublicKey
   kartAccountBump: number
@@ -18,21 +21,21 @@ interface UpgradeKart {
 }
 
 export const upgradeKart = async ({
-  program,
   provider,
   kartMint,
+  poolAccount,
   kartAccount,
   kartAccountBump,
   kartTokenAccount,
   stakingAccount,
   isInitialize,
 }: UpgradeKart) => {
-  const transaction = new Transaction()
-
-  const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
-    [Buffer.from(POOL_NAME), Buffer.from('pool_account')],
-    program.programId,
+  const program = new Program<SolRaceStaking>(
+    IDL,
+    SOL_RACE_STAKING_PROGRAM_ID,
+    provider,
   )
+  const transaction = new Transaction()
 
   if (!isInitialize) {
     // TODO: fetch real meta

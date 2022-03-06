@@ -6,13 +6,14 @@ import Image from '~/ui/Image'
 import Button from '~/ui/Button'
 import { useWorkspace } from '~/workspace/hooks'
 import { toast } from 'react-toastify'
-import { bond, getStakingAccount, verifyNFT } from '~/stake/services'
+import { bond, verifyNFT } from '~/stake-nft/services'
 import { PublicKey } from '@solana/web3.js'
 
-import { SOLR_MINT_ADDRESS, SOL_RACE_STAKING_PROGRAM_ID } from '~/api/addresses'
+import { SOLR_MINT_ADDRESS } from '~/api/solana/addresses'
 import { useStakeAccount } from '~/hooks/useAccount'
 import * as anchor from '@project-serum/anchor'
-import { toEther } from '~/api/utils/parse-ether'
+import { toEther } from '~/api/solana/utils/parse-ether'
+import { POOL_NAME } from '~/api/solana/constants'
 
 const Card = styled(Column)`
   width: 20vw;
@@ -54,10 +55,7 @@ const StakingCard: React.FC<Props> = ({
   const { provider, wallet } = useWorkspace()
   const { uri } = data
   const [imageURI, setImageURI] = useState<string>()
-  const { stakingAccountInfo, isStaked, revalidate } = useStakeAccount(
-    SOL_RACE_STAKING_PROGRAM_ID,
-    new PublicKey(tokenAccountAddress),
-  )
+  const { stakeInfo, isStaked, revalidate } = useStakeAccount(POOL_NAME, mint)
 
   const loadMetadata = async (targetUri: string) => {
     const { data: metadata } = await api.get(targetUri)
@@ -144,20 +142,20 @@ const StakingCard: React.FC<Props> = ({
     }
   }, [isStaked])
 
-  const pendingReward = useMemo(() => {
-    if (!stakingAccountInfo || !poolAccountInfo) return undefined
-    const { pendingReward, rewardIndex, isBond } = stakingAccountInfo
-    const { globalRewardIndex } = poolAccountInfo
+  // const pendingReward = useMemo(() => {
+  //   if (!stakeInfo || !poolAccountInfo) return undefined
+  //   const { pendingReward, rewardIndex, isBond } = stakeInfo
+  //   const { globalRewardIndex } = poolAccountInfo
 
-    let bondAmount = new anchor.BN(0)
-    if (isBond) {
-      bondAmount = new anchor.BN(1)
-    }
+  //   let bondAmount = new anchor.BN(0)
+  //   if (isBond) {
+  //     bondAmount = new anchor.BN(1)
+  //   }
 
-    const a = globalRewardIndex.mul(bondAmount)
-    const b = rewardIndex.mul(bondAmount)
-    return toEther(pendingReward.add(a.sub(b)), 6).toNumber()
-  }, [stakingAccountInfo, poolAccountInfo])
+  //   const a = globalRewardIndex.mul(bondAmount)
+  //   const b = rewardIndex.mul(bondAmount)
+  //   return toEther(pendingReward.add(a.sub(b)), 6).toNumber()
+  // }, [stakeInfo, poolAccountInfo])
 
   return (
     <Card>
@@ -171,7 +169,7 @@ const StakingCard: React.FC<Props> = ({
           }}
         />
       ) : null}
-      {pendingReward !== undefined && <p>reward: {pendingReward} SOLR </p>}
+      {/* {pendingReward !== undefined && <p>reward: {pendingReward} SOLR </p>} */}
       <CTAButton disabled={!candyMachineID} onClick={stake}>
         {buttonContent}
       </CTAButton>

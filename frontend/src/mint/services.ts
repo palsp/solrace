@@ -1,7 +1,11 @@
 import * as anchor from '@project-serum/anchor'
-import { Token } from '@solana/spl-token'
+import { MintLayout, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { Connection } from '@solana/web3.js'
-import { getAtaForMint } from '~/api/solana/candy-machine/utils'
+
+import {
+  createAssociatedTokenAccountInstruction,
+  getAtaForMint,
+} from '~/api/solana/candy-machine/utils'
 
 export const handleMintError = (error: any) => {
   let message = error.msg || 'Minting failed! Please try again!'
@@ -44,4 +48,53 @@ export const getUserBalance = async (
       return ['0', 0]
     }
   }
+}
+
+export const mint = async (
+  payer: anchor.web3.PublicKey,
+  provider: anchor.Provider,
+) => {
+  const mint = anchor.web3.Keypair.generate()
+
+  const userTokenAccountAddress = (
+    await getAtaForMint(mint.publicKey, payer)
+  )[0]
+
+  const instructions = [
+    anchor.web3.SystemProgram.createAccount({
+      fromPubkey: payer,
+      newAccountPubkey: mint.publicKey,
+      space: MintLayout.span,
+      lamports: await provider.connection.getMinimumBalanceForRentExemption(
+        MintLayout.span,
+      ),
+      programId: TOKEN_PROGRAM_ID,
+    }),
+    Token.createInitMintInstruction(
+      TOKEN_PROGRAM_ID,
+      mint.publicKey,
+      0,
+      payer,
+      payer,
+    ),
+    createAssociatedTokenAccountInstruction(
+      userTokenAccountAddress,
+      payer,
+      payer,
+      mint.publicKey,
+    ),
+    Token.createMintToInstruction(
+      TOKEN_PROGRAM_ID,
+      mint.publicKey,
+      userTokenAccountAddress,
+      payer,
+      [],
+      1,
+    ),
+  ]
+
+  const transaction = new anchor.web3.Transaction()
+  instructions.forEach((instruction) => transaction.add(instruction))
+
+  return provider.send(transaction, [mint])
 }

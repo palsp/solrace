@@ -1,4 +1,7 @@
 import type { AppProps } from 'next/app'
+import dayjs from 'dayjs'
+import localizedFormat from 'dayjs/plugin/localizedFormat'
+import relativeTime from 'dayjs/plugin/relativeTime'
 
 /** solana */
 import {
@@ -30,7 +33,8 @@ import { WorkspaceProvider } from '~/workspace/WorkspaceContext'
 import { NFTProvider } from '~/nft/NFTContext'
 import { AuthProvider } from '~/auth/AuthContext'
 import { LinkedWalletProvider } from '~/wallet/LinkedWalletContext'
-import { StakerProvider } from '~/stake/StakerContext'
+import { StakerProvider } from '~/stake-nft/StakerContext'
+import { PoolProvider } from '~/pool/PoolContext'
 
 const swrOption: Partial<PublicConfiguration> = {
   fetcher,
@@ -44,6 +48,9 @@ const wallets = [
   new LedgerWalletAdapter(),
 ]
 
+dayjs.extend(localizedFormat)
+dayjs.extend(relativeTime)
+
 // TODO: ALLOW USER TO SWITCH NETWORK
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -54,15 +61,17 @@ function MyApp({ Component, pageProps }: AppProps) {
           <SWRConfig value={swrOption}>
             <WorkspaceProvider>
               <WalletModalProvider>
-                <StakerProvider>
-                  <NFTProvider>
-                    <AuthProvider>
-                      <LinkedWalletProvider>
-                        <Component {...pageProps} />
-                      </LinkedWalletProvider>
-                    </AuthProvider>
-                  </NFTProvider>
-                </StakerProvider>
+                <PoolProvider>
+                  <StakerProvider>
+                    <NFTProvider>
+                      <AuthProvider>
+                        <LinkedWalletProvider>
+                          <Component {...pageProps} />
+                        </LinkedWalletProvider>
+                      </AuthProvider>
+                    </NFTProvider>
+                  </StakerProvider>
+                </PoolProvider>
               </WalletModalProvider>
             </WorkspaceProvider>
           </SWRConfig>

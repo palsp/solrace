@@ -1,19 +1,18 @@
 import * as anchor from '@project-serum/anchor'
-import { getMetadata } from '~/api/utils'
+import { getMetadata } from '~/api/solana/utils'
 import { getMasterEdition } from '~/api/solana/candy-machine'
-import idl from '~/api/idl/verify_nft.json'
-import stakingIDL from '~/api/idl/sol_race_staking.json'
 import {
   SOL_RACE_STAKING_PROGRAM_ID,
   TOKEN_METADATA_PROGRAM_ID,
-} from '~/api/addresses'
-import { PublicKey, SystemProgram } from '@solana/web3.js'
+} from '~/api/solana/addresses'
+import { Connection, PublicKey, SystemProgram } from '@solana/web3.js'
 import { AnchorWallet } from '@solana/wallet-adapter-react'
 import { programs } from '@metaplex/js'
 import {
   SolRaceStaking,
   IDL as SolRaceStakingIDL,
-} from '~/api/types/sol_race_staking'
+} from '~/api/solana/types/sol_race_staking'
+import { Program } from '@project-serum/anchor'
 
 // TODO: delete
 export const poolName = 'hi'
@@ -44,6 +43,20 @@ export type StakingAccountParams = {
   garageTokenAccount: anchor.web3.PublicKey
   provider: anchor.Provider
 }
+
+const getStakeAccountInfo = async (
+  program: Program<SolRaceStaking>,
+  publicAddress: PublicKey,
+) => {
+  return program.account.stakingAccount.fetch(publicAddress)
+}
+
+const getStakeAccountRPC = async (connection: Connection) => {
+  const resp = connection.getProgramAccounts(SOL_RACE_STAKING_PROGRAM_ID, {
+    commitment: connection.commitment,
+  })
+}
+
 export const verifyNFT = async ({
   provider,
   creator,
@@ -190,11 +203,6 @@ export async function bond({
         poolAccount,
         stakingAccount,
         solrMint,
-        garageMint,
-        garageTokenAccount,
-        garageMetadataAccount,
-        creatureEdition: masterEdition,
-        tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
         systemProgram: SystemProgram.programId,
       },
     }),

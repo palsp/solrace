@@ -1,6 +1,6 @@
 import * as anchor from '@project-serum/anchor'
 import { CandyMachineAccount } from '~/api/solana/candy-machine'
-import { toEther } from '~/api/utils/parse-ether'
+import { toEther } from '~/api/solana/utils/parse-ether'
 import { Row } from '~/ui'
 
 interface Props {

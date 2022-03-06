@@ -1,22 +1,24 @@
-import React, { useMemo, useRef } from 'react'
-import { Provider, Program } from '@project-serum/anchor'
-
+import React, { useCallback, useMemo, useRef } from 'react'
+import * as anchor from '@project-serum/anchor'
 import {
   AnchorWallet,
   useAnchorWallet,
   useConnection,
+  useWallet,
   WalletContextState,
 } from '@solana/wallet-adapter-react'
-
 import { COMMITMENT, PREFLIGHT_COMMITMENT } from '~/workspace/constants'
+import { noop } from 'lodash'
 
 interface IWorkspaceContext {
-  provider?: Provider
+  provider: anchor.Provider
   wallet?: AnchorWallet
-  program?: Program
+  program?: anchor.Program
 }
 
-const defaultWorkspaceContext: IWorkspaceContext = {}
+const defaultWorkspaceContext: IWorkspaceContext = {
+  provider: undefined as any,
+}
 
 export type WorkSpace = IWorkspaceContext
 
@@ -24,12 +26,10 @@ export const WorkspaceContext = React.createContext(defaultWorkspaceContext)
 
 export const WorkspaceProvider: React.FC = ({ children }) => {
   const { connection } = useConnection()
-  const wallet = useAnchorWallet()
+  const wallet: any = useAnchorWallet()
 
   const provider = useMemo(() => {
-    if (!wallet) return undefined
-
-    return new Provider(connection, wallet, {
+    return new anchor.Provider(connection, wallet, {
       preflightCommitment: PREFLIGHT_COMMITMENT,
       commitment: COMMITMENT,
     })

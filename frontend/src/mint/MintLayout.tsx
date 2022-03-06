@@ -15,7 +15,7 @@ import MintButton from '~/mint/MintButton'
 import { DEFAULT_ENDPOINT } from '~/workspace/constants'
 import { toast } from 'react-toastify'
 import { useWorkspace } from '~/workspace/hooks'
-import { CANDY_MACHINE_PROGRAM } from '~/api/addresses'
+import { CANDY_MACHINE_PROGRAM } from '~/api/solana/addresses'
 import { getUserBalance, handleMintError } from '~/mint/services'
 import MintCard from '~/mint/MintCard'
 
