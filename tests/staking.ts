@@ -76,7 +76,7 @@ describe('sol_race_staking', () => {
 
   let startTime = new anchor.BN(Date.now() / 1000)
   let elapseTime = startTime.add(new anchor.BN(5))
-  let endTime = startTime.add(new anchor.BN(15))
+  let endTime = elapseTime.add(new anchor.BN(15))
 
   const time = endTime.sub(startTime)
 
@@ -543,6 +543,14 @@ describe('sol_race_staking', () => {
       program.programId,
     )
 
+    const {
+      globalRewardIndex: prevGlobalReward,
+    } = await program.account.poolAccount.fetch(poolAccount)
+    const {
+      rewardIndex: prevRewardIndex,
+      pendingReward: prevPendingReward,
+    } = await program.account.stakingAccount.fetch(stakingAccount)
+
     await program.rpc.unBond({
       accounts: {
         user: staker.publicKey,
@@ -559,150 +567,157 @@ describe('sol_race_staking', () => {
     )
     const poolInfo = await program.account.poolAccount.fetch(poolAccount)
 
+    const newReward = poolInfo.globalRewardIndex - prevRewardIndex
+
     // update pool info
+    expect(poolInfo.globalRewardIndex).greaterThan(prevGlobalReward)
     expect(poolInfo.totalStaked).to.be.bignumber.equals(new BN(1))
 
+    expect(stakerInfo.pendingReward).to.be.bignumber.greaterThan('0')
+    expect(stakerInfo.pendingReward).to.be.bignumber.equals(
+      prevPendingReward.add(new BN(newReward)),
+    )
     expect(stakerInfo.rewardIndex).to.equals(poolInfo.globalRewardIndex)
     expect(stakerInfo.isBond).to.be.false
 
     staker1PendingReward = stakerInfo.pendingReward
   })
 
-  it('allow user to restake', async () => {
-    const [stakingAccount] = await anchor.web3.PublicKey.findProgramAddress(
-      [
-        Buffer.from('staking_account'),
-        // TODO: delete poolName
-        Buffer.from(poolName),
-        staker.publicKey.toBuffer(),
-        garageMintAccount.publicKey.toBuffer(),
-      ],
-      program.programId,
-    )
+  // it('allow user to restake', async () => {
+  //   const [stakingAccount] = await anchor.web3.PublicKey.findProgramAddress(
+  //     [
+  //       Buffer.from('staking_account'),
+  //       // TODO: delete poolName
+  //       Buffer.from(poolName),
+  //       staker.publicKey.toBuffer(),
+  //       garageMintAccount.publicKey.toBuffer(),
+  //     ],
+  //     program.programId,
+  //   )
 
-    const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
-      [Buffer.from(poolName), Buffer.from('pool_account')],
-      program.programId,
-    )
+  //   const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
+  //     [Buffer.from(poolName), Buffer.from('pool_account')],
+  //     program.programId,
+  //   )
 
-    await program.rpc.bond({
-      accounts: {
-        user: staker.publicKey,
-        poolAccount,
-        stakingAccount,
-        solrMint,
-        systemProgram: anchor.web3.SystemProgram.programId,
-      },
-      signers: [staker],
-    })
+  //   await program.rpc.bond({
+  //     accounts: {
+  //       user: staker.publicKey,
+  //       poolAccount,
+  //       stakingAccount,
+  //       solrMint,
+  //       systemProgram: anchor.web3.SystemProgram.programId,
+  //     },
+  //     signers: [staker],
+  //   })
 
-    const stakerInfo = await program.account.stakingAccount.fetch(
-      stakingAccount,
-    )
+  //   const stakerInfo = await program.account.stakingAccount.fetch(
+  //     stakingAccount,
+  //   )
 
-    expect(stakerInfo.pendingReward).to.be.bignumber.equals(
-      staker1PendingReward,
-    )
-    expect(stakerInfo.isBond).to.be.true
-  })
+  //   expect(stakerInfo.pendingReward).to.be.bignumber.equals(
+  //     staker1PendingReward,
+  //   )
+  //   expect(stakerInfo.isBond).to.be.true
+  // })
 
-  const lateStaker = anchor.web3.Keypair.generate()
-  it('not distribute reward if distribution period is end', async () => {
-    if (Date.now() < endTime.toNumber() * 1000 + 1000) {
-      await sleep(endTime.toNumber() * 1000 - Date.now() + 4000)
-    }
+  // const lateStaker = anchor.web3.Keypair.generate()
+  // it('not distribute reward if distribution period is end', async () => {
+  //   if (Date.now() < endTime.toNumber() * 1000 + 1000) {
+  //     await sleep(endTime.toNumber() * 1000 - Date.now() + 4000)
+  //   }
 
-    // request sol
-    const tx = await provider.connection.requestAirdrop(
-      lateStaker.publicKey,
-      100000000000,
-    )
-    await provider.connection.confirmTransaction(tx)
+  //   // request sol
+  //   const tx = await provider.connection.requestAirdrop(
+  //     lateStaker.publicKey,
+  //     100000000000,
+  //   )
+  //   await provider.connection.confirmTransaction(tx)
 
-    // create nft
-    const lateStakerNftMintAccount = await createMint(provider, 0)
-    const lateStakerNftTokenAccount = await createTokenAccount(
-      provider,
-      lateStakerNftMintAccount.publicKey,
-      lateStaker.publicKey,
-    )
-    await lateStakerNftMintAccount.mintTo(
-      lateStakerNftTokenAccount,
-      provider.wallet.publicKey,
-      [],
-      1,
-    )
-    const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
-      [Buffer.from(poolName), Buffer.from('pool_account')],
-      program.programId,
-    )
+  //   // create nft
+  //   const lateStakerNftMintAccount = await createMint(provider, 0)
+  //   const lateStakerNftTokenAccount = await createTokenAccount(
+  //     provider,
+  //     lateStakerNftMintAccount.publicKey,
+  //     lateStaker.publicKey,
+  //   )
+  //   await lateStakerNftMintAccount.mintTo(
+  //     lateStakerNftTokenAccount,
+  //     provider.wallet.publicKey,
+  //     [],
+  //     1,
+  //   )
+  //   const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
+  //     [Buffer.from(poolName), Buffer.from('pool_account')],
+  //     program.programId,
+  //   )
 
-    const [
-      stakingAccount,
-      stakingAccountBump,
-    ] = await anchor.web3.PublicKey.findProgramAddress(
-      [
-        Buffer.from('staking_account'),
-        // TODO: delete poolName
-        Buffer.from(poolName),
-        lateStaker.publicKey.toBuffer(),
-        lateStakerNftMintAccount.publicKey.toBuffer(),
-      ],
-      program.programId,
-    )
+  //   const [
+  //     stakingAccount,
+  //     stakingAccountBump,
+  //   ] = await anchor.web3.PublicKey.findProgramAddress(
+  //     [
+  //       Buffer.from('staking_account'),
+  //       // TODO: delete poolName
+  //       Buffer.from(poolName),
+  //       lateStaker.publicKey.toBuffer(),
+  //       lateStakerNftMintAccount.publicKey.toBuffer(),
+  //     ],
+  //     program.programId,
+  //   )
 
-    // mock
-    const metadataAccount = anchor.web3.Keypair.generate()
-    const masterEdition = anchor.web3.Keypair.generate()
+  //   // mock
+  //   const metadataAccount = anchor.web3.Keypair.generate()
+  //   const masterEdition = anchor.web3.Keypair.generate()
 
-    const instructions = [
-      program.instruction.initStake(stakingAccountBump, {
-        accounts: {
-          user: lateStaker.publicKey,
-          poolAccount,
-          stakingAccount,
-          solrMint,
-          garageMint: lateStakerNftMintAccount.publicKey,
-          garageTokenAccount: lateStakerNftTokenAccount,
-          garageMetadataAccount: metadataAccount.publicKey,
-          creatureEdition: masterEdition.publicKey,
-          tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
-          systemProgram: anchor.web3.SystemProgram.programId,
-        },
-        signers: [lateStaker],
-      }),
-      program.instruction.bond({
-        accounts: {
-          user: lateStaker.publicKey,
-          poolAccount,
-          stakingAccount,
-          solrMint,
-          systemProgram: anchor.web3.SystemProgram.programId,
-        },
-        signers: [lateStaker],
-      }),
-    ]
+  //   const instructions = [
+  //     program.instruction.initStake(stakingAccountBump, {
+  //       accounts: {
+  //         user: lateStaker.publicKey,
+  //         poolAccount,
+  //         stakingAccount,
+  //         solrMint,
+  //         garageMint: lateStakerNftMintAccount.publicKey,
+  //         garageTokenAccount: lateStakerNftTokenAccount,
+  //         garageMetadataAccount: metadataAccount.publicKey,
+  //         creatureEdition: masterEdition.publicKey,
+  //         tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
+  //         systemProgram: anchor.web3.SystemProgram.programId,
+  //       },
+  //       signers: [lateStaker],
+  //     }),
+  //     program.instruction.bond({
+  //       accounts: {
+  //         user: lateStaker.publicKey,
+  //         poolAccount,
+  //         stakingAccount,
+  //         solrMint,
+  //         systemProgram: anchor.web3.SystemProgram.programId,
+  //       },
+  //       signers: [lateStaker],
+  //     }),
+  //   ]
 
-    const transaction = new Transaction()
-    instructions.forEach((instruction) => transaction.add(instruction))
+  //   const transaction = new Transaction()
+  //   instructions.forEach((instruction) => transaction.add(instruction))
 
-    const signature = await provider.send(transaction, [lateStaker])
-    await provider.connection.confirmTransaction(signature)
+  //   const signature = await provider.send(transaction, [lateStaker])
+  //   await provider.connection.confirmTransaction(signature)
 
-    const poolAccountInfo = await program.account.poolAccount.fetch(poolAccount)
+  //   const poolAccountInfo = await program.account.poolAccount.fetch(poolAccount)
 
-    const lateStakerStakingAccountInfo = await program.account.stakingAccount.fetch(
-      stakingAccount,
-    )
+  //   const lateStakerStakingAccountInfo = await program.account.stakingAccount.fetch(
+  //     stakingAccount,
+  //   )
 
-    expect(lateStakerStakingAccountInfo.isBond).to.be.true
+  //   expect(lateStakerStakingAccountInfo.isBond).to.be.true
 
-    expect(lateStakerStakingAccountInfo.pendingReward).to.be.bignumber.equals(
-      new BN(0),
-    )
+  //   expect(lateStakerStakingAccountInfo.pendingReward).to.be.bignumber.equals(
+  //     new BN(0),
+  //   )
 
-    expect(lateStakerStakingAccountInfo.rewardIndex).to.equals(
-      poolAccountInfo.globalRewardIndex,
-    )
-  })
+  //   expect(lateStakerStakingAccountInfo.rewardIndex).to.equals(
+  //     poolAccountInfo.globalRewardIndex,
+  //   )
+  // })
 })

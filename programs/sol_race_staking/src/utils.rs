@@ -89,6 +89,7 @@ pub fn compute_reward(pool_account: &mut PoolAccount, current_time: i64) {
 
     distributed_amount = (distributed_amount_per_sec * passed_time as f64) as u128
   }
+
   pool_account.last_distributed = current_time;
   pool_account.global_reward_index = pool_account.global_reward_index
     + (distributed_amount as f64 / pool_account.total_staked as f64)
@@ -99,8 +100,9 @@ pub fn compute_staker_reward(staking_account: &mut StakingAccount, pool_account:
     true => 1,
     false => 0,
   };
+
   let pending_reward = (bond_amount * pool_account.global_reward_index as u128)
-    .checked_sub(bond_amount * pool_account.global_reward_index as u128)
+    .checked_sub(bond_amount * staking_account.reward_index as u128)
     .unwrap();
 
   staking_account.reward_index = pool_account.global_reward_index;
