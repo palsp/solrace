@@ -3,8 +3,6 @@ import { BN, Program } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
 import { SolRaceCore } from '~/api/solana/types/sol_race_core'
 import { formatTime } from '~/utils/time'
-import { Token } from '@solana/spl-token'
-import { createMint, getMintInfo } from '@project-serum/common'
 
 export interface PoolInfo {
   poolName: string
@@ -18,7 +16,7 @@ export interface PoolInfo {
 
   startTime: BN
   endTime: BN
-  lastDistribution: string
+  lastDistributed: BN
   totalStaked: BN
   totalDistribution: BN
 }
@@ -40,15 +38,13 @@ export const fetchPoolInfo = async ({
   try {
     const accountInfo = await program.account.poolAccount.fetch(poolAccount)
 
-    const { lastDistributed, ...cleanPoolInfo } = accountInfo
     // TODO: format ether total distribution
     return [
       poolAccount,
       poolAccountBump,
       {
-        ...cleanPoolInfo,
+        ...accountInfo,
         poolName,
-        lastDistribution: formatTime(lastDistributed.toNumber()),
       },
     ]
   } catch (e) {

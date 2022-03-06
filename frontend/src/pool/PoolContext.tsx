@@ -6,6 +6,7 @@ import { usePoolAccount } from '~/hooks/useAccount'
 import { BN } from '@project-serum/anchor'
 import { useMintInfo } from '~/hooks/useMintInfo'
 import { toEther } from '~/api/solana/utils/parse-ether'
+import { StakeInfo } from '~/api/solana/account/stake-account'
 interface IPoolContext {
   poolInfo?: PoolInfo
   publicAddress?: PublicKey
@@ -40,17 +41,29 @@ export const PoolProvider: React.FC = ({ children }) => {
 
     const secPerYear = new BN(365 * 24 * 60 * 60)
 
-    return toEther(poolInfo.totalDistribution, solrMintInfo.decimals)
+    const calculatedApr = toEther(
+      poolInfo.totalDistribution,
+      solrMintInfo.decimals,
+    )
       .mul(secPerYear)
       .mul(new BN('100'))
       .div(time)
       .div(totalPoolShare)
-      .toString()
+
+    return calculatedApr.gte(new BN('20000'))
+      ? '20000+'
+      : calculatedApr.toString()
   }, [poolInfo, solrMintInfo])
 
   return (
     <PoolContext.Provider
-      value={{ poolInfo, publicAddress, bump, revalidate, apr }}
+      value={{
+        poolInfo,
+        publicAddress,
+        bump,
+        revalidate,
+        apr,
+      }}
     >
       {children}
     </PoolContext.Provider>

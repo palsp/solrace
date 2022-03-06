@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { toast } from 'react-toastify'
 
@@ -8,7 +8,7 @@ import { useStakeAccount } from '~/hooks/useAccount'
 import { shortenIfAddress } from '~/wallet/utils'
 import { bond, unBond } from '~/garage/services'
 import { SOLR_MINT_ADDRESS } from '~/api/solana/addresses'
-import { Column } from '~/ui'
+import { Row } from '~/ui'
 import Button from '~/ui/Button'
 import Image from '~/ui/Image'
 import { NFTAccount } from '~/nft/hooks'
@@ -17,6 +17,10 @@ import { usePool } from '~/pool/hooks'
 import { useStaker } from '~/staker/hooks'
 import { toastAPIError } from '~/utils'
 import Card from '~/ui/Card'
+import { calculateReward } from '~/pool/utils'
+import { useMintInfo } from '~/hooks/useMintInfo'
+import CircularProgress from '~/ui/CircularProgress'
+import { useCountdown } from '~/hooks/useCountdown'
 
 const CTAButton = styled(Button)`
   border: 1px solid #ccc;
@@ -32,9 +36,23 @@ const CTAButton = styled(Button)`
     background-color: #ccc;
   }
 `
+
+const MainCard = styled(Card)`
+  position: relative;
+`
+
+const ProgressSection = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  justify-content: space-evenly;
+`
 interface Props {
   nft: NFTAccount
 }
+
+const AUTO_REFRESH_TIME = 10 * 1000
+
 const GarageCard: React.FC<Props> = ({ nft }) => {
   const { mint, tokenAccountAddress } = nft
   const { provider, wallet } = useWorkspace()
@@ -43,6 +61,7 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
     revalidate: revalidatePool,
     publicAddress: poolAccount,
   } = usePool()
+  const mintInfo = useMintInfo(poolInfo?.solrMint)
   const {
     stakeInfo,
     isStaked,
@@ -54,6 +73,18 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
   } = useStakeAccount(POOL_NAME, mint)
   const { revalidate: revalidateStaker } = useStaker()
   const [loading, setLoading] = useState(false)
+  const [reward, setReward] = useState<string>()
+  // const [countdown, setCountdown] = useState(AUTO_REFRESH_TIME)
+
+  const calcReward = useCallback(() => {
+    if (poolInfo && stakeInfo && mintInfo) {
+      setReward(
+        calculateReward(stakeInfo, poolInfo, mintInfo.decimals).toFixed(2),
+      )
+    }
+  }, [poolInfo, stakeInfo, mintInfo])
+
+  const { countdown, resetCountdown } = useCountdown(calcReward)
 
   const toggleStake = async () => {
     if (!provider || !wallet) {
@@ -120,6 +151,7 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
       }
     }
     setLoading(false)
+    resetCountdown()
   }
 
   const buttonContent = useMemo(() => {
@@ -131,34 +163,27 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
       return 'STAKE'
     }
   }, [isStaked])
-  const { globalRewardIndex } = poolInfo || {}
-  const { pendingReward, rewardIndex, isBond } = stakeInfo || {}
 
-  const displayReward = useMemo(() => {
-    if (
-      globalRewardIndex === undefined ||
-      pendingReward === undefined ||
-      rewardIndex === undefined ||
-      isBond === undefined
-    ) {
-      return undefined
-    }
-    const bondAmount = isBond ? 1 : 0
+  // calculate for the first time all data is loaded from blockchain
+  useEffect(() => {
+    calcReward()
+  }, [calcReward])
 
-    const newReward = globalRewardIndex * bondAmount - rewardIndex * bondAmount
-
-    return ((pendingReward + newReward) / 10 ** 6).toFixed(2)
-  }, [globalRewardIndex, pendingReward, rewardIndex, isBond])
+  const rewardRenderer = useMemo(() => {
+    return reward !== undefined ? <p>reward: {reward} SOLR </p> : null
+  }, [reward])
 
   return (
-    <Card>
+    <MainCard>
       <h3>Mint: {shortenIfAddress(nft.mint.toBase58())}</h3>
-
-      {displayReward !== undefined ? (
-        <p>reward: {displayReward} SOLR </p>
-      ) : (
-        <p>ata: {shortenIfAddress(nft.tokenAccountAddress.toBase58())}</p>
-      )}
+      <ProgressSection>
+        <CircularProgress
+          value={!loading ? (100 / AUTO_REFRESH_TIME) * countdown : 100}
+          width="20px"
+          height="20px"
+        />
+      </ProgressSection>
+      {rewardRenderer}
       <Image
         src="/garage-template.jpeg"
         height="25em"
@@ -173,7 +198,7 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
           {buttonContent}
         </CTAButton>
       )}
-    </Card>
+    </MainCard>
   )
 }
 
