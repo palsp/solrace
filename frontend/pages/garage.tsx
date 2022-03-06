@@ -41,14 +41,14 @@ const GaragePage = () => {
       const tx = await mint(wallet.publicKey, provider)
       const resp = await provider.connection.confirmTransaction(tx)
       if (resp.value.err) {
-        toast('Stake Failed', { type: 'error' })
+        toast('Mint Failed', { type: 'error' })
       } else {
-        toast('Stake Succeed', { type: 'success' })
+        toast('Mint Succeed', { type: 'success' })
       }
       await revalidateNFTs()
     } catch (e) {
       console.log(e)
-      toast('Stake Failed', { type: 'error' })
+      toast('Mint Failed', { type: 'error' })
     }
   }
 
