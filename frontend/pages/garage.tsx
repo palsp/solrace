@@ -18,6 +18,11 @@ import { usePool } from '~/pool/hooks'
 
 const Main = styled(Row)`
   justify-content: space-around;
+  flex-wrap: wrap;
+`
+
+const CTAButton = styled(Button)`
+  margin-bottom: 1rem;
 `
 
 const GaragePage = () => {
@@ -55,7 +60,7 @@ const GaragePage = () => {
       ) : (
         <>
           <h1>APR: {apr} % </h1>
-          <Button onClick={handleMint}>MOCK MINT</Button>
+          <CTAButton onClick={handleMint}>MOCK MINT</CTAButton>
           {poolInfo && (
             <Main>
               {nfts.map((nft) => (

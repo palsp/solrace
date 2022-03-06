@@ -17,6 +17,7 @@ import { usePool } from '~/pool/hooks'
 
 const Main = styled(Row)`
   justify-content: space-around;
+  flex-wrap: wrap;
 `
 
 const KartPage = () => {

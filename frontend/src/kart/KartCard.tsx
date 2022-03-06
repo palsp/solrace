@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
-
+import ReactLoading from 'react-loading'
 import { PublicKey } from '@solana/web3.js'
 import { useStaker } from '~/stake-nft/hooks'
 import { NFTAccount } from '~/nft/hooks'
@@ -12,18 +12,10 @@ import { useWorkspace } from '~/workspace/hooks'
 import { useKartAccount } from '~/hooks/useAccount'
 import { Column } from '~/ui'
 import Button from '~/ui/Button'
-import { PoolInfo } from '~/api/solana/account/pool-account'
 import Image from '~/ui/Image'
 import { usePool } from '~/pool/hooks'
-
-const Card = styled(Column)`
-  width: 20vw;
-  height: 35em;
-  align-items: space-between;
-  border: 1px solid #ccc;
-  border-radius: 1rem;
-  padding: 1rem;
-`
+import { toastAPIError } from '~/utils'
+import Card from '~/ui/Card'
 
 const Select = styled.select`
   padding: 0.5rem;
@@ -64,11 +56,19 @@ const KartCard: React.FC<Props> = ({ nft }) => {
     publicAddress,
     isInitialize,
     bump,
-    isLoading,
+    isLoading: loadingKart,
   } = useKartAccount(POOL_NAME, kartMint)
+  const [loading, setIsLoading] = useState<boolean>(false)
 
-  const handleGarageChange: React.ChangeEventHandler<HTMLSelectElement> = (e) =>
-    setSelectedGarage(new PublicKey(e.target.value))
+  const handleGarageChange: React.ChangeEventHandler<HTMLSelectElement> = (
+    e,
+  ) => {
+    if (e.target.value !== '') {
+      setSelectedGarage(new PublicKey(e.target.value))
+    } else {
+      setSelectedGarage(undefined)
+    }
+  }
 
   const handleUpgrade = async () => {
     // if (!solRaceProgram || !provider) return
@@ -78,7 +78,7 @@ const KartCard: React.FC<Props> = ({ nft }) => {
       })
       return
     }
-    if (isLoading || !poolAccount) {
+    if (loadingKart || !poolAccount) {
       // not finish loading
       return
     }
@@ -96,25 +96,15 @@ const KartCard: React.FC<Props> = ({ nft }) => {
       })
       const resp = await provider.connection.confirmTransaction(tx)
       if (resp.value.err) {
-        toast('Fail! please try again', { type: 'error' })
+        toastAPIError(resp.value.err, 'Fail! please try again')
       } else {
-        toast('Upgrade succeed', { type: 'success' })
+        toast('Congratulation! upgrade succeed', { type: 'success' })
+        await revalidateKart()
       }
-      await revalidateKart()
     } catch (e) {
-      console.log(e)
-      toast('Fail! please try again', { type: 'error' })
+      toastAPIError(e, 'Fail! please try again')
     }
   }
-
-  const disabled = useMemo(() => {
-    return (
-      bump === undefined ||
-      !publicAddress ||
-      isInitialize === undefined ||
-      !selectedGarage
-    )
-  }, [bump, publicAddress, isInitialize, selectedGarage])
 
   return (
     <Card>
@@ -133,18 +123,26 @@ const KartCard: React.FC<Props> = ({ nft }) => {
         <p>SELECT GARAGE</p>
       )}
       <Select onChange={handleGarageChange}>
+        <option value="">Please Select Garage</option>
         {stakers.map((staker) => (
           <option
             key={staker.publicAddress.toBase58()}
             value={staker.publicAddress.toBase58()}
           >
-            {shortenIfAddress(staker.publicAddress.toBase58())}
+            {shortenIfAddress(staker.publicAddress.toBase58())} (100%)
           </option>
         ))}
       </Select>
-      <CTAButton onClick={handleUpgrade} disabled={disabled}>
-        upgrade
-      </CTAButton>
+      {loading || loadingKart ? (
+        <ReactLoading type="bubbles" color="#512da8" />
+      ) : (
+        <CTAButton
+          onClick={handleUpgrade}
+          disabled={loading || loadingKart || !selectedGarage}
+        >
+          upgrade
+        </CTAButton>
+      )}
     </Card>
   )
 }

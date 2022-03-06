@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { getStakers, Staker } from '~/api/solana/account/stake-account'
-import { SOL_RACE_STAKING_PROGRAM_ID } from '~/api/solana/addresses'
-import { SolRaceStaking, IDL } from '~/api/solana/types/sol_race_staking'
+import { SOL_RACE_CORE_PROGRAM_ID } from '~/api/solana/addresses'
+import { SolRaceCore, IDL } from '~/api/solana/types/sol_race_core'
 import { useProgram } from '~/hooks/useProgram'
 
 interface IStakerContext {
@@ -16,7 +16,7 @@ const defaultStakerContext: IStakerContext = {
 export const StakerContext = React.createContext(defaultStakerContext)
 
 export const StakerProvider: React.FC = ({ children }) => {
-  const program = useProgram<SolRaceStaking>(IDL, SOL_RACE_STAKING_PROGRAM_ID)
+  const program = useProgram<SolRaceCore>(IDL, SOL_RACE_CORE_PROGRAM_ID)
 
   const [stakers, setStakers] = useState<Staker[]>([])
 

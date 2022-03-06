@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { Program } from '@project-serum/anchor'
 import { GetProgramAccountsFilter, PublicKey } from '@solana/web3.js'
-import { SolRaceStaking } from '~/api/solana/types/sol_race_staking'
+import { SolRaceCore } from '~/api/solana/types/sol_race_core'
 
 import bs58 from 'bs58'
 
@@ -21,14 +21,14 @@ export interface Staker extends StakeInfo {
 }
 
 type FetchStakeInfo = {
-  program: Program<SolRaceStaking>
+  program: Program<SolRaceCore>
   poolName: string
   user: PublicKey
   garageMintAccount: PublicKey
 }
 
 type GetStakers = {
-  program: Program<SolRaceStaking>
+  program: Program<SolRaceCore>
   filterOnlyStake?: boolean
 }
 
@@ -55,7 +55,6 @@ export const fetchStakeInfo = async ({
   try {
     const stakeInfo = await program.account.stakingAccount.fetch(stakingAccount)
 
-    console.log(garageMintAccount.toBase58(), stakeInfo)
     const { pendingReward, ...cleanStakeInfo } = stakeInfo
     return [
       stakingAccount,

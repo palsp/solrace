@@ -1,12 +1,12 @@
 import { useState, useCallback, useEffect, useMemo } from 'react'
-import { SolRaceStaking, IDL } from '~/api/solana/types/sol_race_staking'
+import { SolRaceCore, IDL } from '~/api/solana/types/sol_race_core'
 
 import { PublicKey } from '@solana/web3.js'
 import { useWorkspace } from '~/workspace/hooks'
 import { useProgram } from '~/hooks/useProgram'
 import { fetchPoolInfo } from '~/api/solana/account/pool-account'
 import { fetchStakeInfo } from '~/api/solana/account/stake-account'
-import { SOL_RACE_STAKING_PROGRAM_ID } from '~/api/solana/addresses'
+import { SOL_RACE_CORE_PROGRAM_ID } from '~/api/solana/addresses'
 import { fetchKartInfo } from '~/api/solana/account/kart-account'
 
 export type PoolAccount = typeof IDL.accounts[0]
@@ -33,7 +33,7 @@ const useAccount = <T>(fetchInfo: () => Promise<T>) => {
 // use isInitialize to determine loading is finish or not, if isInitialize = undefined then loading else finish
 
 export const usePoolAccount = (poolName: string) => {
-  const program = useProgram<SolRaceStaking>(IDL, SOL_RACE_STAKING_PROGRAM_ID)
+  const program = useProgram<SolRaceCore>(IDL, SOL_RACE_CORE_PROGRAM_ID)
   const [publicAddress, setPublicAddress] = useState<PublicKey>()
   const [bump, setBump] = useState<number>()
 
@@ -57,7 +57,7 @@ export const useStakeAccount = (
   poolName: string,
   garageMintAccount: PublicKey,
 ) => {
-  const program = useProgram<SolRaceStaking>(IDL, SOL_RACE_STAKING_PROGRAM_ID)
+  const program = useProgram<SolRaceCore>(IDL, SOL_RACE_CORE_PROGRAM_ID)
   const { wallet } = useWorkspace()
   const [isStaked, setIsStaked] = useState<boolean>()
   const [publicAddress, setPublicAddress] = useState<PublicKey>()
@@ -103,7 +103,7 @@ export const useStakeAccount = (
 }
 
 export const useKartAccount = (poolName: string, kartMint: PublicKey) => {
-  const program = useProgram<SolRaceStaking>(IDL, SOL_RACE_STAKING_PROGRAM_ID)
+  const program = useProgram<SolRaceCore>(IDL, SOL_RACE_CORE_PROGRAM_ID)
   const { wallet } = useWorkspace()
 
   const [publicAddress, setPublicAddress] = useState<PublicKey>()

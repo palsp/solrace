@@ -2,16 +2,16 @@ import * as anchor from '@project-serum/anchor'
 import { getMetadata } from '~/api/solana/utils'
 import { getMasterEdition } from '~/api/solana/candy-machine'
 import {
-  SOL_RACE_STAKING_PROGRAM_ID,
+  SOL_RACE_CORE_PROGRAM_ID,
   TOKEN_METADATA_PROGRAM_ID,
 } from '~/api/solana/addresses'
 import { Connection, PublicKey, SystemProgram } from '@solana/web3.js'
 import { AnchorWallet } from '@solana/wallet-adapter-react'
 import { programs } from '@metaplex/js'
 import {
-  SolRaceStaking,
-  IDL as SolRaceStakingIDL,
-} from '~/api/solana/types/sol_race_staking'
+  SolRaceCore,
+  IDL as SolRaceCoreIDL,
+} from '~/api/solana/types/sol_race_core'
 import { Program } from '@project-serum/anchor'
 
 // TODO: delete
@@ -45,14 +45,14 @@ export type StakingAccountParams = {
 }
 
 const getStakeAccountInfo = async (
-  program: Program<SolRaceStaking>,
+  program: Program<SolRaceCore>,
   publicAddress: PublicKey,
 ) => {
   return program.account.stakingAccount.fetch(publicAddress)
 }
 
 const getStakeAccountRPC = async (connection: Connection) => {
-  const resp = connection.getProgramAccounts(SOL_RACE_STAKING_PROGRAM_ID, {
+  const resp = connection.getProgramAccounts(SOL_RACE_CORE_PROGRAM_ID, {
     commitment: connection.commitment,
   })
 }
@@ -69,9 +69,9 @@ export const verifyNFT = async ({
   //   new PublicKey(idl.metadata.address),
   //   provider,
   // )
-  const program = new anchor.Program<SolRaceStaking>(
-    SolRaceStakingIDL,
-    SOL_RACE_STAKING_PROGRAM_ID,
+  const program = new anchor.Program<SolRaceCore>(
+    SolRaceCoreIDL,
+    SOL_RACE_CORE_PROGRAM_ID,
     provider,
   )
   const nftMetadataAccount = await getMetadata(nftMint)
@@ -111,9 +111,9 @@ export const getStakingAccount = async ({
   user,
   garageTokenAccount,
 }: StakingAccountParams) => {
-  const program = new anchor.Program<SolRaceStaking>(
-    SolRaceStakingIDL,
-    SOL_RACE_STAKING_PROGRAM_ID,
+  const program = new anchor.Program<SolRaceCore>(
+    SolRaceCoreIDL,
+    SOL_RACE_CORE_PROGRAM_ID,
     provider,
   )
 
@@ -150,9 +150,9 @@ export async function bond({
   garageMint,
   garageTokenAccount,
 }: Bond) {
-  const program = new anchor.Program<SolRaceStaking>(
-    SolRaceStakingIDL,
-    SOL_RACE_STAKING_PROGRAM_ID,
+  const program = new anchor.Program<SolRaceCore>(
+    SolRaceCoreIDL,
+    SOL_RACE_CORE_PROGRAM_ID,
     provider,
   )
 

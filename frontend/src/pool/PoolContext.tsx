@@ -28,6 +28,13 @@ export const PoolProvider: React.FC = ({ children }) => {
   const apr = useMemo(() => {
     if (!poolInfo) return '...'
 
+    if (poolInfo.totalStaked.eq(new BN('0'))) {
+      return poolInfo.totalDistribution
+        .div(new BN(10 ** 6))
+        .div(new BN('1').mul(new BN(100)))
+        .toString()
+    }
+
     return poolInfo.totalDistribution
       .div(new BN(10 ** 6))
       .div(poolInfo.totalStaked.mul(new BN(100)))

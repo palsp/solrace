@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { PublicKey } from '@solana/web3.js'
 import { Program } from '@project-serum/anchor'
-import { SolRaceStaking } from '~/api/solana/types/sol_race_staking'
+import { SolRaceCore } from '~/api/solana/types/sol_race_core'
 
 interface KartInfo {
   owner: PublicKey
@@ -17,7 +17,7 @@ interface KartInfo {
 }
 
 type FetchKartInfo = {
-  program: Program<SolRaceStaking>
+  program: Program<SolRaceCore>
   poolName: string
   user: PublicKey
   kartMint: PublicKey

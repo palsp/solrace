@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { toast } from 'react-toastify'
 
+import ReactLoading from 'react-loading'
 import { useWorkspace } from '~/workspace/hooks'
 import { useStakeAccount } from '~/hooks/useAccount'
 import { shortenIfAddress } from '~/wallet/utils'
@@ -14,19 +15,13 @@ import { NFTAccount } from '~/nft/hooks'
 import { POOL_NAME } from '~/api/solana/constants'
 import { usePool } from '~/pool/hooks'
 import { useStaker } from '~/stake-nft/hooks'
-
-const Card = styled(Column)`
-  width: 20vw;
-  height: 35em;
-  align-items: space-between;
-  border: 1px solid #ccc;
-  border-radius: 1rem;
-  padding: 1rem;
-`
+import { toastAPIError } from '~/utils'
+import Card from '~/ui/Card'
 
 const CTAButton = styled(Button)`
   border: 1px solid #ccc;
   border-radius: 1rem;
+  margin: 1rem;
 
   &:hover {
     background-color: #1a1f2e;
@@ -52,12 +47,13 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
     stakeInfo,
     isStaked,
     isInitialize,
-    isLoading,
+    isLoading: loadingStaker,
     publicAddress: stakingAccount,
     bump: stakingAccountBump,
     revalidate: revalidateStakeAccount,
   } = useStakeAccount(POOL_NAME, mint)
   const { revalidate: revalidateStaker } = useStaker()
+  const [loading, setLoading] = useState(false)
 
   const toggleStake = async () => {
     if (!provider || !wallet) {
@@ -65,10 +61,11 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
       return
     }
 
-    if (!poolAccount || isLoading) {
+    if (!poolAccount || loadingStaker) {
       return
     }
 
+    setLoading(true)
     if (!isStaked) {
       try {
         const tx = await bond({
@@ -85,15 +82,15 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
 
         const resp = await provider.connection.confirmTransaction(tx)
         if (resp.value.err) {
-          toast('Stake Failed', { type: 'error' })
+          toastAPIError(resp.value.err, 'Stake Failed')
         } else {
-          toast('Stake Succeed', { type: 'success' })
+          toast('Congratulation! You have staked your garage.', {
+            type: 'success',
+          })
+          await Promise.all([revalidatePool(), revalidateStakeAccount()])
         }
-
-        await Promise.all([revalidatePool(), revalidateStakeAccount()])
       } catch (e) {
-        console.log(e)
-        toast('Stake Failed', { type: 'error' })
+        toastAPIError(e as any, 'Stake Failed')
       }
     } else {
       try {
@@ -107,21 +104,22 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
 
         const resp = await provider.connection.confirmTransaction(tx)
         if (resp.value.err) {
-          toast('UnStake Failed', { type: 'error' })
+          toastAPIError(resp.value.err, 'UnStake Failed')
         } else {
-          toast('UnStake Succeed', { type: 'success' })
+          toast('You have unstaked your garage.', {
+            type: 'success',
+          })
+          await Promise.all([
+            revalidatePool(),
+            revalidateStakeAccount(),
+            revalidateStaker(),
+          ])
         }
-
-        await Promise.all([
-          revalidatePool(),
-          revalidateStakeAccount(),
-          revalidateStaker(),
-        ])
       } catch (e) {
-        console.log(e)
-        toast('UnStake Failed', { type: 'error' })
+        toastAPIError(e as any, 'UnStake Failed')
       }
     }
+    setLoading(false)
   }
 
   const buttonContent = useMemo(() => {
@@ -147,16 +145,20 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
     }
     const bondAmount = isBond ? 1 : 0
 
-    return (
-      pendingReward +
-      (globalRewardIndex * bondAmount - rewardIndex * bondAmount) / 10 ** 6
-    ).toFixed(2)
+    const newReward = globalRewardIndex * bondAmount - rewardIndex * bondAmount
+
+    return ((pendingReward + newReward) / 10 ** 6).toFixed(2)
   }, [globalRewardIndex, pendingReward, rewardIndex, isBond])
 
   return (
     <Card>
       <h3>Mint: {shortenIfAddress(nft.mint.toBase58())}</h3>
-      <p>ata: {shortenIfAddress(nft.tokenAccountAddress.toBase58())}</p>
+
+      {displayReward !== undefined ? (
+        <p>reward: {displayReward} SOLR </p>
+      ) : (
+        <p>ata: {shortenIfAddress(nft.tokenAccountAddress.toBase58())}</p>
+      )}
       <Image
         src="/garage-template.jpeg"
         height="25em"
@@ -164,10 +166,13 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
           borderRadius: '1rem',
         }}
       />
-      {displayReward !== undefined && <p>reward: {displayReward} SOLR </p>}
-      <CTAButton onClick={toggleStake} disabled={isLoading}>
-        {buttonContent}
-      </CTAButton>
+      {loading || loadingStaker ? (
+        <ReactLoading type="bubbles" color="#512da8" />
+      ) : (
+        <CTAButton onClick={toggleStake} disabled={loadingStaker || loading}>
+          {buttonContent}
+        </CTAButton>
+      )}
     </Card>
   )
 }

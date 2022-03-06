@@ -2,10 +2,10 @@ import * as anchor from '@project-serum/anchor'
 import { Program } from '@project-serum/anchor'
 import { PublicKey, Transaction } from '@solana/web3.js'
 import {
-  SOL_RACE_STAKING_PROGRAM_ID,
+  SOL_RACE_CORE_PROGRAM_ID,
   TOKEN_METADATA_PROGRAM_ID,
 } from '~/api/solana/addresses'
-import { IDL, SolRaceStaking } from '~/api/solana/types/sol_race_staking'
+import { IDL, SolRaceCore } from '~/api/solana/types/sol_race_core'
 import { POOL_NAME } from '~/api/solana/constants'
 interface UpgradeKart {
   provider: anchor.Provider
@@ -30,9 +30,9 @@ export const upgradeKart = async ({
   stakingAccount,
   isInitialize,
 }: UpgradeKart) => {
-  const program = new Program<SolRaceStaking>(
+  const program = new Program<SolRaceCore>(
     IDL,
-    SOL_RACE_STAKING_PROGRAM_ID,
+    SOL_RACE_CORE_PROGRAM_ID,
     provider,
   )
   const transaction = new Transaction()

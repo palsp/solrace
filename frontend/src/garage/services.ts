@@ -1,10 +1,10 @@
 import * as anchor from '@project-serum/anchor'
 import { PublicKey, SystemProgram } from '@solana/web3.js'
 import {
-  SOL_RACE_STAKING_GOV_PROGRAM_ID,
+  SOL_RACE_CORE_PROGRAM_ID,
   TOKEN_METADATA_PROGRAM_ID,
 } from '~/api/solana/addresses'
-import { SolRaceStaking, IDL } from '~/api/solana/types/sol_race_staking'
+import { SolRaceCore, IDL } from '~/api/solana/types/sol_race_core'
 type Bond = {
   provider: anchor.Provider
   poolAccount: PublicKey
@@ -36,9 +36,9 @@ export const bond = async ({
   stakingAccountBump,
   isInitialized,
 }: Bond) => {
-  const program = new anchor.Program<SolRaceStaking>(
+  const program = new anchor.Program<SolRaceCore>(
     IDL,
-    SOL_RACE_STAKING_GOV_PROGRAM_ID,
+    SOL_RACE_CORE_PROGRAM_ID,
     provider,
   )
 
@@ -88,9 +88,9 @@ export const unBond = async ({
   stakingAccount,
   solrMint,
 }: UnBond) => {
-  const program = new anchor.Program<SolRaceStaking>(
+  const program = new anchor.Program<SolRaceCore>(
     IDL,
-    SOL_RACE_STAKING_GOV_PROGRAM_ID,
+    SOL_RACE_CORE_PROGRAM_ID,
     provider,
   )
 

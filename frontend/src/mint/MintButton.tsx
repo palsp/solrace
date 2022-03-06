@@ -1,10 +1,10 @@
 import styled from 'styled-components'
 import { CandyMachineAccount } from '~/api/solana/candy-machine'
-import { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Button from '~/ui/Button'
 import { GatewayStatus, useGateway } from '@civic/solana-gateway-react'
 
-import Spinner from '~/ui/Spinner'
+import ReactLoading from 'react-loading'
 
 export const CTAButton = styled(Button)`
   width: 30%;
@@ -54,18 +54,17 @@ const MintButton: React.FC<Props> = ({
   }, [gatewayStatus, clicked, setClicked, onMint])
 
   const buttonContent = useMemo(() => {
-    // return <Spinner />
     if (candyMachine?.state.isSoldOut) {
       return 'SOLD OUT'
     } else if (isMinting) {
-      return <Spinner />
+      return <ReactLoading type="bubbles" color="#512da8" />
     } else if (
       candyMachine?.state.isPresale ||
       candyMachine?.state.isWhitelistOnly
     ) {
       return 'WHITELIST MINT'
     } else if (clicked && candyMachine?.state.gatekeeper) {
-      return <Spinner />
+      return <ReactLoading type="bubbles" color="#512da8" />
     }
 
     return 'MINT'

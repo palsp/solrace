@@ -16,7 +16,7 @@ export const CIVIC = new PublicKey(
   'gatem74V238djXdzWnJf94Wo1DcnuGkfijbf3AuBhfs',
 )
 
-export const SOL_RACE_STAKING_PROGRAM_ID = new PublicKey(
+export const SOL_RACE_CORE_PROGRAM_ID = new PublicKey(
   '4tcD8pgdaSn4yzWQybKuKzSXpW3uoDugFY6owNUhhexd',
 )
 

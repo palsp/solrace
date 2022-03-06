@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { BN, Program } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
-import { SolRaceStaking } from '~/api/solana/types/sol_race_staking'
+import { SolRaceCore } from '~/api/solana/types/sol_race_core'
 import { formatTime } from '~/utils/time'
 
 export interface PoolInfo {
@@ -22,7 +22,7 @@ export interface PoolInfo {
 }
 
 type FetchPoolInfo = {
-  program: Program<SolRaceStaking>
+  program: Program<SolRaceCore>
   poolName: string
 }
 
