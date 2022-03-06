@@ -58,7 +58,7 @@ const KartCard: React.FC<Props> = ({ nft }) => {
     bump,
     isLoading: loadingKart,
   } = useKartAccount(POOL_NAME, kartMint)
-  const [loading, setIsLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const handleGarageChange: React.ChangeEventHandler<HTMLSelectElement> = (
     e,
@@ -82,6 +82,8 @@ const KartCard: React.FC<Props> = ({ nft }) => {
       // not finish loading
       return
     }
+
+    setLoading(true)
     try {
       // we can ensure all ! field is exist by checking is loading
       const tx = await upgradeKart({
@@ -103,6 +105,8 @@ const KartCard: React.FC<Props> = ({ nft }) => {
       }
     } catch (e) {
       toastAPIError(e, 'Fail! please try again')
+    } finally {
+      setLoading(false)
     }
   }
 

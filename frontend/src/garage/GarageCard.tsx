@@ -154,6 +154,11 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
     resetCountdown()
   }
 
+  // calculate for the first time all data is loaded from blockchain
+  useEffect(() => {
+    calcReward()
+  }, [calcReward])
+
   const buttonContent = useMemo(() => {
     if (isStaked === undefined) return '...'
 
@@ -164,11 +169,6 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
     }
   }, [isStaked])
 
-  // calculate for the first time all data is loaded from blockchain
-  useEffect(() => {
-    calcReward()
-  }, [calcReward])
-
   const rewardRenderer = useMemo(() => {
     return reward !== undefined ? <p>reward: {reward} SOLR </p> : null
   }, [reward])
@@ -177,11 +177,13 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
     <MainCard>
       <h3>Mint: {shortenIfAddress(nft.mint.toBase58())}</h3>
       <ProgressSection>
-        <CircularProgress
-          value={!loading ? (100 / AUTO_REFRESH_TIME) * countdown : 100}
-          width="20px"
-          height="20px"
-        />
+        {stakeInfo?.isBond && (
+          <CircularProgress
+            value={!loading ? (100 / AUTO_REFRESH_TIME) * countdown : 100}
+            width="20px"
+            height="20px"
+          />
+        )}
       </ProgressSection>
       {rewardRenderer}
       <Image
