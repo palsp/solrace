@@ -1,7 +1,5 @@
-import React, { useRef } from 'react'
-import { Provider, Program, Idl, Wallet } from '@project-serum/anchor'
-import candyMachineIdl from '~/utils/idl/candy_machine.json'
-
+import React, { useCallback, useMemo, useRef } from 'react'
+import * as anchor from '@project-serum/anchor'
 import {
   AnchorWallet,
   useAnchorWallet,
@@ -9,20 +7,18 @@ import {
   useWallet,
   WalletContextState,
 } from '@solana/wallet-adapter-react'
-
-import {
-  CANDY_MACHINE_PROGRAM_ID,
-  COMMITMENT,
-  PREFLIGHT_COMMITMENT,
-} from '~/workspace/constants'
+import { COMMITMENT, PREFLIGHT_COMMITMENT } from '~/workspace/constants'
+import { noop } from 'lodash'
 
 interface IWorkspaceContext {
-  provider?: Provider
-  wallet?: WalletContextState
-  program?: Program
+  provider: anchor.Provider
+  wallet?: AnchorWallet
+  program?: anchor.Program
 }
 
-const defaultWorkspaceContext: IWorkspaceContext = {}
+const defaultWorkspaceContext: IWorkspaceContext = {
+  provider: undefined as any,
+}
 
 export type WorkSpace = IWorkspaceContext
 
@@ -30,24 +26,19 @@ export const WorkspaceContext = React.createContext(defaultWorkspaceContext)
 
 export const WorkspaceProvider: React.FC = ({ children }) => {
   const { connection } = useConnection()
-  const wallet = useWallet()
-  const { current: provider } = useRef(
-    // @ts-ignore
-    new Provider(connection, wallet, {
+  const wallet: any = useAnchorWallet()
+
+  const provider = useMemo(() => {
+    return new anchor.Provider(connection, wallet, {
       preflightCommitment: PREFLIGHT_COMMITMENT,
       commitment: COMMITMENT,
-    }),
-  )
-
-  const { current: program } = useRef(
-    new Program(candyMachineIdl as Idl, CANDY_MACHINE_PROGRAM_ID, provider),
-  )
+    })
+  }, [wallet, connection])
 
   return (
     <WorkspaceContext.Provider
       value={{
         provider,
-        program,
         wallet,
       }}
     >

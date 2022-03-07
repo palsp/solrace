@@ -17,6 +17,7 @@ import {
 } from '~/wallet/services'
 import { shortenIfAddress } from '~/wallet/utils'
 import { toastAPIError } from '~/utils'
+import { useWallet } from '@solana/wallet-adapter-react'
 
 const AccountContainer = styled(Column)`
   display: flex;
@@ -29,9 +30,7 @@ const AccountContainer = styled(Column)`
 const AccountPage = () => {
   useRequireAuth()
 
-  const workspace = useWorkspace()
-
-  const { wallet } = workspace
+  const wallet = useWallet()
   const { publicAddress, revalidate } = useLinkedWallet()
   const { push } = useRouter()
 
@@ -90,15 +89,15 @@ const AccountPage = () => {
       })
       return
     }
-    const { message } = await requestSigningMessage()
-    const { signature, publicAddress } = await signWallet(wallet, message)
     try {
+      const { message } = await requestSigningMessage()
+      const { signature, publicAddress } = await signWallet(wallet, message)
       await verifySignature(publicAddress, signature)
       toast('Signature Verified', {
         type: 'success',
       })
     } catch (e) {
-      toastAPIError(e as any)
+      toastAPIError(e)
     }
   }
 

@@ -6,11 +6,15 @@ interface Props
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
   > {
-  width: string
+  width?: string
 }
 const Button = styled.button`
   padding: 1rem;
   width: ${(props: Props) => props.width || 'auto'};
+  background-color: #512da8;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
 `
 
 export default Button

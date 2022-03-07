@@ -41,7 +41,11 @@ const getParsedNFTAccountByOwner = async (owner: anchor.web3.PublicKey) => {
     })
     .map((t) => {
       const address = t.account?.data?.parsed?.info?.mint
-      return new PublicKey(address)
+
+      return {
+        tokenAccountAddress: t.pubkey,
+        mint: new PublicKey(address),
+      }
     })
 }
 
@@ -58,9 +62,8 @@ export const getNFTAccountByCollection = async (owner: string) => {
   const userNFTAccountIndexMap: { [key: string]: number } = {}
 
   const nftAccounts = await getParsedNFTAccountByOwner(ownerPubkey)
-
-  for (const nftAccount of nftAccounts) {
-    const meta = await getMetadata(nftAccount)
+  for (const { mint, tokenAccountAddress } of nftAccounts) {
+    const meta = await getMetadata(mint)
 
     const info = await connection.getAccountInfo(meta)
     if (info) {
@@ -71,14 +74,23 @@ export const getNFTAccountByCollection = async (owner: string) => {
       const collection = collectionMap[symbol]
       if (collection) {
         const index = userNFTAccountIndexMap[symbol]
+        // when creator (candy machine public address ) is registered, we select only our registered creator
+        if (collection.publicAddress) {
+          const hasCreator = metaData.data.creators.find(
+            (creator) => creator.address === collection.publicAddress,
+          )
+          if (!hasCreator) continue
+        }
+
+        const account = { ...metaData, tokenAccountAddress }
         // if 0 =  false
         if (index !== undefined) {
-          userNFTAccounts[index].accounts.push(metaData)
+          userNFTAccounts[index].accounts.push(account)
         } else {
           userNFTAccountIndexMap[symbol] = userNFTAccounts.length
           userNFTAccounts.push({
             collection,
-            accounts: [metaData],
+            accounts: [account],
           })
         }
       }

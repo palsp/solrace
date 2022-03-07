@@ -1,8 +1,8 @@
 import { clusterApiUrl } from '@solana/web3.js'
 import { ENV as ChainId } from '@solana/spl-token-registry'
 
-export const PREFLIGHT_COMMITMENT = 'processed'
-export const COMMITMENT = 'processed'
+export const PREFLIGHT_COMMITMENT = 'confirmed'
+export const COMMITMENT = 'confirmed'
 
 export const CANDY_MACHINE_PROGRAM_ID =
   'cndy3Z4yapfJBmL3ShUp5exZKqR3z33thTzeNMm2gRZ'
@@ -28,4 +28,4 @@ export const ENDPOINTS: Array<ENDPOINT> = [
   },
 ]
 
-export const DEFAULT_ENDPOINT = ENDPOINTS[2]
+export const DEFAULT_ENDPOINT = ENDPOINTS[1]

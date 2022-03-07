@@ -13,14 +13,14 @@ const nextConfig = {
       path: false,
       stream: false,
       os: false,
-    };
+    }
 
-    return config;
+    return config
   },
   compiler: {
     // ssr and displayName are configured by default
     styledComponents: true,
   },
-};
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig
