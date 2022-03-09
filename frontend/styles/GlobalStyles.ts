@@ -66,7 +66,25 @@ html {
   --color-secondary-light: ${COLORS.secondaryLight};
   --color-black: ${COLORS.black};
   --color-white: ${COLORS.white};
-}
+  --shadow-color: 139deg 57% 52%;
+  --shadow-elevation-low:
+    0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.27),
+    0.4px 0.8px 1px -1.2px hsl(var(--shadow-color) / 0.27),
+    0.9px 1.8px 2.3px -2.5px hsl(var(--shadow-color) / 0.27);
+  --shadow-elevation-medium:
+    0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.29),
+    0.8px 1.5px 1.9px -0.8px hsl(var(--shadow-color) / 0.29),
+    1.9px 3.7px 4.7px -1.7px hsl(var(--shadow-color) / 0.29),
+    4.5px 9px 11.3px -2.5px hsl(var(--shadow-color) / 0.29);
+  --shadow-elevation-high:
+    0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.27),
+    1.2px 2.4px 3px -0.4px hsl(var(--shadow-color) / 0.27),
+    2.2px 4.4px 5.5px -0.7px hsl(var(--shadow-color) / 0.27),
+    3.6px 7.2px 9.1px -1.1px hsl(var(--shadow-color) / 0.27),
+    5.7px 11.5px 14.4px -1.4px hsl(var(--shadow-color) / 0.27),
+    9px 17.9px 22.5px -1.8px hsl(var(--shadow-color) / 0.27),
+    13.6px 27.2px 34.2px -2.1px hsl(var(--shadow-color) / 0.27),
+    20px 40px 50.3px -2.5px hsl(var(--shadow-color) / 0.27);}
 
 a {
   color: inherit;
