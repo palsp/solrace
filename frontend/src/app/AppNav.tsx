@@ -15,8 +15,8 @@ const AppNav = () => {
           <Image
             src="/logo.png"
             width="200px"
-            height="50px"
-            style={{ cursor: "pointer", paddingBottom: "1rem" }}
+            height="40px"
+            style={{ cursor: "pointer", marginBottom: "0.5rem" }}
           />
         </Link>
         <AppLink href="/garage">GARAGE</AppLink>
@@ -58,11 +58,11 @@ const NavContainer = styled.div`
   top: 0;
   left: 0;
   width: 100%;
-  height: 1rem;
+  min-height: 5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2em;
+  background: var(--color-white);
 `;
 
 export default AppNav;
