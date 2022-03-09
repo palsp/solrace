@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import { COLORS } from "~/constants";
 
 const GlobalStyles = createGlobalStyle`
 
@@ -54,6 +55,17 @@ p, h1, h2, h3, h4, h5, h6 {
 */
 #root, #__next {
   isolation: isolate;
+}
+
+html {
+  --color-primary: ${COLORS.primary};
+  --color-primary-dark: ${COLORS.primaryDark};
+  --color-primary-light: ${COLORS.primaryLight};
+  --color-secondary: ${COLORS.secondary};
+  --color-secondary-dark: ${COLORS.secondaryDark};
+  --color-secondary-light: ${COLORS.secondaryLight};
+  --color-black: ${COLORS.black};
+  --color-white: ${COLORS.white};
 }
 
 a {
