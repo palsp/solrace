@@ -81,7 +81,9 @@ const LoginPage = () => {
         </WrapperButton>
         <RegisterDiv>
           <ParagraphItalic>Haven't registered? </ParagraphItalic>
-          <AppLink href="/register">Register</AppLink>
+          <AppLink href="/register" color="primary">
+            Register
+          </AppLink>
         </RegisterDiv>
       </LoginForm>
     </AuthLayout>

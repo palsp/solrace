@@ -11,7 +11,7 @@ import { toastAPIError } from "~/utils";
 
 import FormInput from "~/ui/form/FormInput";
 import StyledButton from "~/ui/button/Button";
-import { AppLink } from "~/ui";
+import { AppLink, ParagraphItalic } from "~/ui";
 
 interface IRegisterForm {
   email: string;
@@ -92,7 +92,10 @@ const RegisterPage = () => {
             Register
           </StyledButton>
         </WrapperButton>
-        <AppLink href="/login">Login</AppLink>
+        <LoginDiv>
+          <ParagraphItalic>Already registered?</ParagraphItalic>
+          <AppLink href="/login">Login</AppLink>
+        </LoginDiv>
       </RegisterForm>
     </AuthLayout>
   );
@@ -102,4 +105,9 @@ const WrapperButton = styled.div`
   width: 300px;
 `;
 
+const LoginDiv = styled.div`
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+`;
 export default RegisterPage;

@@ -4,8 +4,9 @@ import styled from "styled-components";
 
 interface Props {
   href: string;
+  color?: string;
 }
-const AppLink: React.FC<Props> = ({ children, href }) => {
+const AppLink: React.FC<Props> = ({ children, href, color }) => {
   const { pathname } = useRouter();
 
   const getActiveClassName = () => {
@@ -14,7 +15,7 @@ const AppLink: React.FC<Props> = ({ children, href }) => {
 
   return (
     <Link href={href} passHref>
-      <A className={getActiveClassName()}>
+      <A className={getActiveClassName()} color={color}>
         <Span>{children}</Span>
       </A>
     </Link>
@@ -40,7 +41,8 @@ const A = styled.a`
     transform: scaleY(0.3);
     transition: transform 0.6s cubic-bezier(0.53, 0.21, 0, 1);
     transform-origin: bottom;
-    background-color: var(--color-secondary);
+    background-color: ${(props) =>
+      props.color ? `var(--color-${props.color})` : "var(--color-secondary)"};
     opacity: 0.6;
   }
 
