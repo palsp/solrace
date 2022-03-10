@@ -8,7 +8,7 @@ import { useAuth } from "~/auth/hooks";
 import { login } from "~/auth/services";
 import { toastAPIError } from "~/utils";
 import FormInput from "~/ui/form/FormInput";
-import StyledButton from "~/ui/button/Button";
+import Button from "~/ui/button/Button";
 import { AppLink, Title, ParagraphItalic, Paragraph } from "~/ui";
 
 interface ILoginForm {
@@ -70,11 +70,9 @@ const LoginPage = () => {
           register={register}
           error={formState.errors["password"]}
         />
-        <WrapperButton>
-          <StyledButton type="submit" color="primary" width="100%">
-            Login
-          </StyledButton>
-        </WrapperButton>
+        <Button type="submit" color="primary" width="100%">
+          Login
+        </Button>
         <RegisterDiv>
           <ParagraphItalic>Haven't registered? </ParagraphItalic>
           <AppLink href="/register" color="primary">
@@ -85,10 +83,6 @@ const LoginPage = () => {
     </AuthLayout>
   );
 };
-
-const WrapperButton = styled.div`
-  width: 100%;
-`;
 
 const RegisterDiv = styled.div`
   display: flex;

@@ -10,7 +10,7 @@ import { signup } from "~/auth/services";
 import { toastAPIError } from "~/utils";
 
 import FormInput from "~/ui/form/FormInput";
-import StyledButton from "~/ui/button/Button";
+import Button from "~/ui/button/Button";
 import { AppLink, ParagraphItalic, Paragraph } from "~/ui";
 
 interface IRegisterForm {
@@ -85,11 +85,9 @@ const RegisterPage = () => {
           register={register}
           error={formState.errors["password"]}
         />
-        <WrapperButton>
-          <StyledButton type="submit" color="secondary" width="100%">
-            Register
-          </StyledButton>
-        </WrapperButton>
+        <Button type="submit" color="secondary" width="100%">
+          Register
+        </Button>
         <LoginDiv>
           <ParagraphItalic>Already registered?</ParagraphItalic>
           <AppLink href="/login">Login</AppLink>
