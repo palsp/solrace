@@ -1,4 +1,5 @@
 import type { AppProps } from "next/app";
+import Head from "next/head";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -55,6 +56,10 @@ dayjs.extend(relativeTime);
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
+      <Head>
+        <title>Solrace</title>
+      </Head>
+
       <ToastContainer />
       <ConnectionProvider endpoint={DEFAULT_ENDPOINT.url}>
         <WalletProvider wallets={wallets} autoConnect>
