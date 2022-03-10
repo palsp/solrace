@@ -16,7 +16,7 @@ export const COLORS = {
   primaryLight: "hsl(139deg 94% 85%)",
   secondary: "hsl(191deg 100% 76%)",
   secondaryDark: "hsl(191deg 100% 61%)",
-  secondaryLight: "hsl(191deg 100% 96%)",
+  secondaryLight: "hsl(191deg 100% 86%)",
   black: "hsl(0deg 0% 0%)",
   blackLight: "hsl(220deg 14% 8%)",
   white: "hsl(0deg 0% 100%)",

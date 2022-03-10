@@ -1,18 +1,19 @@
-import { RegisterOptions, UseFormRegister } from 'react-hook-form'
-import styled from 'styled-components'
+import { RegisterOptions, UseFormRegister } from "react-hook-form";
+import styled from "styled-components";
 
 interface Props
   extends React.DetailedHTMLProps<
     React.InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
   > {
-  register: UseFormRegister<any>
-  className?: string
-  label?: React.ReactNode
-  name: string
-  error?: any
-  registerOptions?: RegisterOptions
-  errorMessage?: Record<string, React.ReactNode>
+  register: UseFormRegister<any>;
+  className?: string;
+  label?: React.ReactNode;
+  name: string;
+  error?: any;
+  registerOptions?: RegisterOptions;
+  errorMessage?: Record<string, React.ReactNode>;
+  color?: string;
 }
 
 const FormInput: React.FC<Props> = ({
@@ -25,11 +26,26 @@ const FormInput: React.FC<Props> = ({
   ...rest
 }) => {
   return (
-    <label>
+    <Label>
       {label && <div>{label}</div>}
-      <input {...register(name, registerOptions)} {...rest} />
+      <Input {...register(name, registerOptions)} {...rest} />
       <div>{error && error.message}</div>
-    </label>
-  )
-}
-export default FormInput
+    </Label>
+  );
+};
+
+const Input = styled.input`
+  width: 100%;
+  border: none;
+  border: 0.05rem solid lightgray;
+  border-radius: 0.175rem;
+
+  &:focus {
+    outline: 1px solid ${(props: Props) => `var(--color-${props.color}-dark)`};
+  }
+`;
+
+const Label = styled.label`
+  width: 100%;
+`;
+export default FormInput;

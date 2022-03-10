@@ -11,22 +11,13 @@ import { toastAPIError } from "~/utils";
 
 import FormInput from "~/ui/form/FormInput";
 import StyledButton from "~/ui/button/Button";
-import { AppLink, ParagraphItalic } from "~/ui";
+import { AppLink, ParagraphItalic, Paragraph } from "~/ui";
 
 interface IRegisterForm {
   email: string;
   password: string;
   confirmPassword: string;
 }
-
-const RegisterForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  /* height: 30%; */
-  justify-content: space-evenly;
-  gap: 1rem;
-  align-items: center;
-`;
 
 const RegisterPage = () => {
   const { setUser } = useAuth();
@@ -60,11 +51,16 @@ const RegisterPage = () => {
 
   return (
     <AuthLayout direction="row-reverse">
+      <TitleDiv>
+        <h1>Register</h1>
+        <Paragraph>Join the world of Solracer!</Paragraph>
+      </TitleDiv>
       <RegisterForm onSubmit={handleSubmit(onSubmit)}>
         <FormInput
           label="Email"
           name="email"
           type="text"
+          color="secondary"
           registerOptions={{ required: true }}
           register={register}
           error={formState.errors["email"]}
@@ -74,6 +70,7 @@ const RegisterPage = () => {
           label="Password"
           name="password"
           type="password"
+          color="secondary"
           registerOptions={{ required: true }}
           register={register}
           error={formState.errors["password"]}
@@ -83,6 +80,7 @@ const RegisterPage = () => {
           label="Confirm Password"
           name="confirmPassword"
           type="password"
+          color="secondary"
           registerOptions={{ required: true }}
           register={register}
           error={formState.errors["password"]}
@@ -102,12 +100,24 @@ const RegisterPage = () => {
 };
 
 const WrapperButton = styled.div`
-  width: 300px;
+  width: 100%;
 `;
 
 const LoginDiv = styled.div`
   display: flex;
   align-items: baseline;
   gap: 1rem;
+`;
+
+const TitleDiv = styled.div`
+  text-align: start;
+`;
+
+const RegisterForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 1.5rem;
 `;
 export default RegisterPage;

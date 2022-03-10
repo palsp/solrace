@@ -9,21 +9,12 @@ import { login } from "~/auth/services";
 import { toastAPIError } from "~/utils";
 import FormInput from "~/ui/form/FormInput";
 import StyledButton from "~/ui/button/Button";
-import { AppLink, Title, ParagraphItalic } from "~/ui";
+import { AppLink, Title, ParagraphItalic, Paragraph } from "~/ui";
 
 interface ILoginForm {
   email: string;
   password: string;
 }
-
-const LoginForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  /* height: 30%; */
-  justify-content: space-evenly;
-  align-items: center;
-  gap: 1rem;
-`;
 
 const LoginPage = () => {
   const { setUser } = useAuth();
@@ -57,12 +48,15 @@ const LoginPage = () => {
     <AuthLayout direction="row">
       <TitleDiv>
         <h1>Login</h1>
+
+        <Paragraph>It's good to see you again!</Paragraph>
       </TitleDiv>
       <LoginForm onSubmit={handleSubmit(onSubmit)}>
         <FormInput
           label="Email"
           name="email"
           type="text"
+          color="primary"
           registerOptions={{ required: true }}
           register={register}
           error={formState.errors["email"]}
@@ -71,6 +65,7 @@ const LoginPage = () => {
           label="Password"
           name="password"
           type="password"
+          color="primary"
           registerOptions={{ required: true }}
           register={register}
           error={formState.errors["password"]}
@@ -92,7 +87,7 @@ const LoginPage = () => {
 };
 
 const WrapperButton = styled.div`
-  width: 300px;
+  width: 100%;
 `;
 
 const RegisterDiv = styled.div`
@@ -102,7 +97,15 @@ const RegisterDiv = styled.div`
 `;
 
 const TitleDiv = styled.div`
-  width: 40%;
   text-align: start;
 `;
+
+const LoginForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 1.5rem;
+`;
+
 export default LoginPage;
