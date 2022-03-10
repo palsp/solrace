@@ -51,13 +51,19 @@ const GaragePage = () => {
   return (
     <AppLayout>
       <WrapperGarage>
-        <Title>GARAGE</Title>
+        <TitleDiv>
+          <Title>GARAGE - </Title>
+          <Paragraph>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. In,
+            voluptates!{" "}
+          </Paragraph>
+        </TitleDiv>
         {!connected ? (
           <Paragraph>Please Connect Your Wallet</Paragraph>
         ) : (
           <>
-            <h1>APR: {apr} % </h1>
-            <Button onClick={handleMint} color="primary">
+            <h1>APR - {apr}% </h1>
+            <Button onClick={handleMint} color="primary" width="100%">
               MOCK MINT
             </Button>
             {poolInfo && (
@@ -79,6 +85,12 @@ const GaragePage = () => {
 
 const WrapperGarage = styled.div`
   margin-top: 2rem;
+`;
+
+const TitleDiv = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 `;
 
 export default GaragePage;

@@ -22,21 +22,6 @@ import { useMintInfo } from "~/hooks/useMintInfo";
 import CircularProgress from "~/ui/circularProgress/CircularProgress";
 import { useCountdown } from "~/hooks/useCountdown";
 
-const CTAButton = styled(Button)`
-  border: 1px solid #ccc;
-  border-radius: 1rem;
-  margin: 1rem;
-
-  &:hover {
-    background-color: #1a1f2e;
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    background-color: #ccc;
-  }
-`;
-
 const MainCard = styled(Card)`
   position: relative;
 `;
@@ -175,37 +160,44 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
 
   return (
     <MainCard>
-      <h3>Mint: {shortenIfAddress(nft.mint.toBase58())}</h3>
-      <ProgressSection>
-        {stakeInfo?.isBond && (
-          <CircularProgress
-            value={!loading ? (100 / AUTO_REFRESH_TIME) * countdown : 100}
-            width="20px"
-            height="20px"
-          />
+      <WrapperCardContent>
+        <h3>Mint: {shortenIfAddress(nft.mint.toBase58())}</h3>
+        <ProgressSection>
+          {stakeInfo?.isBond && (
+            <CircularProgress
+              value={!loading ? (100 / AUTO_REFRESH_TIME) * countdown : 100}
+              width="20px"
+              height="20px"
+            />
+          )}
+        </ProgressSection>
+        {rewardRenderer}
+        <Image src="/garage-template.jpeg" width="300px" height="250px" />
+        {loading || loadingStaker ? (
+          <ReactLoading type="bubbles" color="#512da8" />
+        ) : (
+          <Button
+            onClick={toggleStake}
+            disabled={loadingStaker || loading}
+            color="primary"
+            width="100%"
+          >
+            {buttonContent}
+          </Button>
         )}
-      </ProgressSection>
-      {rewardRenderer}
-      <Image
-        src="/garage-template.jpeg"
-        height="25em"
-        style={{
-          borderRadius: "1rem",
-        }}
-      />
-      {loading || loadingStaker ? (
-        <ReactLoading type="bubbles" color="#512da8" />
-      ) : (
-        <CTAButton
-          onClick={toggleStake}
-          disabled={loadingStaker || loading}
-          color="primary"
-        >
-          {buttonContent}
-        </CTAButton>
-      )}
+      </WrapperCardContent>
     </MainCard>
   );
 };
+
+const WrapperCardContent = styled.div`
+  // needs this or else the background will be on top
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+`;
 
 export default GarageCard;
