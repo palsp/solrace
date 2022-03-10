@@ -1,28 +1,28 @@
-import styled from 'styled-components'
-import { useMemo, useState } from 'react'
-import { toast } from 'react-toastify'
-import ReactLoading from 'react-loading'
-import { PublicKey } from '@solana/web3.js'
-import { useStaker } from '~/staker/hooks'
-import { NFTAccount } from '~/nft/hooks'
-import { POOL_NAME } from '~/api/solana/constants'
-import { upgradeKart } from '~/kart/services'
-import { shortenIfAddress } from '~/wallet/utils'
-import { useWorkspace } from '~/workspace/hooks'
-import { useKartAccount } from '~/hooks/useAccount'
-import { Column } from '~/ui'
-import Button from '~/ui/Button'
-import Image from '~/ui/Image'
-import { usePool } from '~/pool/hooks'
-import { toastAPIError } from '~/utils'
-import Card from '~/ui/Card'
+import styled from 'styled-components';
+import { useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
+import ReactLoading from 'react-loading';
+import { PublicKey } from '@solana/web3.js';
+import { useStaker } from '~/staker/hooks';
+import { NFTAccount } from '~/nft/hooks';
+import { POOL_NAME } from '~/api/solana/constants';
+import { upgradeKart } from '~/kart/services';
+import { shortenIfAddress } from '~/wallet/utils';
+import { useWorkspace } from '~/workspace/hooks';
+import { useKartAccount } from '~/hooks/useAccount';
+import { Column } from '~/ui';
+import Button from '~/ui/button/Button';
+import Image from '~/ui/image/Image';
+import { usePool } from '~/pool/hooks';
+import { toastAPIError } from '~/utils';
+import Card from '~/ui/card/Card';
 
 const Select = styled.select`
   padding: 0.5rem;
   margin: 1rem;
   width: 100%;
   border-radius: 0.25rem;
-`
+`;
 
 const CTAButton = styled(Button)`
   border: 1px solid #ccc;
@@ -36,19 +36,19 @@ const CTAButton = styled(Button)`
     cursor: not-allowed;
     background-color: #ccc;
   }
-`
+`;
 
 interface Props {
-  nft: NFTAccount
+  nft: NFTAccount;
 }
 
 const KartCard: React.FC<Props> = ({ nft }) => {
-  const { mint: kartMint, tokenAccountAddress: kartTokenAccount } = nft
-  const { stakers } = useStaker()
-  const { provider } = useWorkspace()
-  const { publicAddress: poolAccount } = usePool()
+  const { mint: kartMint, tokenAccountAddress: kartTokenAccount } = nft;
+  const { stakers } = useStaker();
+  const { provider } = useWorkspace();
+  const { publicAddress: poolAccount } = usePool();
 
-  const [selectedGarage, setSelectedGarage] = useState<PublicKey>()
+  const [selectedGarage, setSelectedGarage] = useState<PublicKey>();
 
   const {
     kartInfo,
@@ -57,33 +57,33 @@ const KartCard: React.FC<Props> = ({ nft }) => {
     isInitialize,
     bump,
     isLoading: loadingKart,
-  } = useKartAccount(POOL_NAME, kartMint)
-  const [loading, setLoading] = useState<boolean>(false)
+  } = useKartAccount(POOL_NAME, kartMint);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleGarageChange: React.ChangeEventHandler<HTMLSelectElement> = (
-    e,
+    e
   ) => {
     if (e.target.value !== '') {
-      setSelectedGarage(new PublicKey(e.target.value))
+      setSelectedGarage(new PublicKey(e.target.value));
     } else {
-      setSelectedGarage(undefined)
+      setSelectedGarage(undefined);
     }
-  }
+  };
 
   const handleUpgrade = async () => {
     // if (!solRaceProgram || !provider) return
     if (!selectedGarage) {
       toast('Please select the garage to enhance your kart', {
         type: 'warning',
-      })
-      return
+      });
+      return;
     }
     if (loadingKart || !poolAccount) {
       // not finish loading
-      return
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
     try {
       // we can ensure all ! field is exist by checking is loading
       const tx = await upgradeKart({
@@ -95,20 +95,20 @@ const KartCard: React.FC<Props> = ({ nft }) => {
         kartTokenAccount,
         stakingAccount: selectedGarage,
         isInitialize: isInitialize!,
-      })
-      const resp = await provider.connection.confirmTransaction(tx)
+      });
+      const resp = await provider.connection.confirmTransaction(tx);
       if (resp.value.err) {
-        toastAPIError(resp.value.err, 'Fail! please try again')
+        toastAPIError(resp.value.err, 'Fail! please try again');
       } else {
-        toast('Congratulation! upgrade succeed', { type: 'success' })
-        await revalidateKart()
+        toast('Congratulation! upgrade succeed', { type: 'success' });
+        await revalidateKart();
       }
     } catch (e) {
-      toastAPIError(e, 'Fail! please try again')
+      toastAPIError(e, 'Fail! please try again');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <Card>
@@ -143,12 +143,13 @@ const KartCard: React.FC<Props> = ({ nft }) => {
         <CTAButton
           onClick={handleUpgrade}
           disabled={loading || loadingKart || !selectedGarage}
+          color="primary"
         >
           upgrade
         </CTAButton>
       )}
     </Card>
-  )
-}
+  );
+};
 
-export default KartCard
+export default KartCard;

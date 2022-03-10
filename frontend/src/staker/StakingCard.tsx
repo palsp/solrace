@@ -1,19 +1,19 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import styled from 'styled-components'
-import { api } from '~/api'
-import { Column } from '~/ui'
-import Image from '~/ui/Image'
-import Button from '~/ui/Button'
-import { useWorkspace } from '~/workspace/hooks'
-import { toast } from 'react-toastify'
-import { bond, verifyNFT } from '~/staker/services'
-import { PublicKey } from '@solana/web3.js'
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import styled from 'styled-components';
+import { api } from '~/api';
+import { Column } from '~/ui';
+import Image from '~/ui/image/Image';
+import Button from '~/ui/button/Button';
+import { useWorkspace } from '~/workspace/hooks';
+import { toast } from 'react-toastify';
+import { bond, verifyNFT } from '~/staker/services';
+import { PublicKey } from '@solana/web3.js';
 
-import { SOLR_MINT_ADDRESS } from '~/api/solana/addresses'
-import { useStakeAccount } from '~/hooks/useAccount'
-import * as anchor from '@project-serum/anchor'
-import { toEther } from '~/api/solana/utils/parse-ether'
-import { POOL_NAME } from '~/api/solana/constants'
+import { SOLR_MINT_ADDRESS } from '~/api/solana/addresses';
+import { useStakeAccount } from '~/hooks/useAccount';
+import * as anchor from '@project-serum/anchor';
+import { toEther } from '~/api/solana/utils/parse-ether';
+import { POOL_NAME } from '~/api/solana/constants';
 
 const Card = styled(Column)`
   width: 20vw;
@@ -22,7 +22,7 @@ const Card = styled(Column)`
   border: 1px solid #ccc;
   border-radius: 1rem;
   padding: 1rem;
-`
+`;
 
 const CTAButton = styled(Button)`
   border: 1px solid #ccc;
@@ -36,13 +36,13 @@ const CTAButton = styled(Button)`
     cursor: not-allowed;
     background-color: #ccc;
   }
-`
+`;
 
 interface Props {
-  account: any
-  poolAccountInfo: any
-  candyMachineID?: string
-  revalidatePool: () => Promise<void>
+  account: any;
+  poolAccountInfo: any;
+  candyMachineID?: string;
+  revalidatePool: () => Promise<void>;
 }
 
 const StakingCard: React.FC<Props> = ({
@@ -51,30 +51,30 @@ const StakingCard: React.FC<Props> = ({
   poolAccountInfo,
   revalidatePool,
 }) => {
-  const { tokenAccountAddress, data, mint } = account
-  const { provider, wallet } = useWorkspace()
-  const { uri } = data
-  const [imageURI, setImageURI] = useState<string>()
-  const { stakeInfo, isStaked, revalidate } = useStakeAccount(POOL_NAME, mint)
+  const { tokenAccountAddress, data, mint } = account;
+  const { provider, wallet } = useWorkspace();
+  const { uri } = data;
+  const [imageURI, setImageURI] = useState<string>();
+  const { stakeInfo, isStaked, revalidate } = useStakeAccount(POOL_NAME, mint);
 
   const loadMetadata = async (targetUri: string) => {
-    const { data: metadata } = await api.get(targetUri)
+    const { data: metadata } = await api.get(targetUri);
 
-    setImageURI(metadata.image)
-  }
+    setImageURI(metadata.image);
+  };
 
   useEffect(() => {
-    loadMetadata(uri)
-  }, [uri])
+    loadMetadata(uri);
+  }, [uri]);
 
   const verify = async () => {
     if (!provider || !wallet) {
-      toast('Please connect your wallet', { type: 'warning' })
-      return
+      toast('Please connect your wallet', { type: 'warning' });
+      return;
     }
 
     if (!candyMachineID) {
-      return
+      return;
     }
 
     try {
@@ -84,27 +84,27 @@ const StakingCard: React.FC<Props> = ({
         creator: new PublicKey(candyMachineID),
         nftMint: new PublicKey(mint),
         nftTokenAccount: new PublicKey(tokenAccountAddress),
-      })
-      const resp = await provider.connection.confirmTransaction(tx)
+      });
+      const resp = await provider.connection.confirmTransaction(tx);
       if (resp.value.err) {
-        toast('Verification Failed', { type: 'error' })
+        toast('Verification Failed', { type: 'error' });
       } else {
-        toast('Your NFT is verified', { type: 'success' })
+        toast('Your NFT is verified', { type: 'success' });
       }
 
-      await revalidate()
-      await revalidatePool()
+      await revalidate();
+      await revalidatePool();
     } catch (e) {
-      console.log(e)
-      toast('Verification Failed', { type: 'error' })
+      console.log(e);
+      toast('Verification Failed', { type: 'error' });
     }
-  }
+  };
 
   const stake = useCallback(
     async (initialize = true) => {
       if (!provider || !wallet) {
-        toast('Please connect your wallet', { type: 'warning' })
-        return
+        toast('Please connect your wallet', { type: 'warning' });
+        return;
       }
 
       try {
@@ -115,32 +115,32 @@ const StakingCard: React.FC<Props> = ({
           garageTokenAccount: new PublicKey(tokenAccountAddress),
           garageMint: new PublicKey(mint),
           initialize,
-        })
-        const resp = await provider.connection.confirmTransaction(tx)
+        });
+        const resp = await provider.connection.confirmTransaction(tx);
         if (resp.value.err) {
-          toast('staked Failed', { type: 'error' })
+          toast('staked Failed', { type: 'error' });
         } else {
-          toast('staked', { type: 'success' })
+          toast('staked', { type: 'success' });
         }
-        await revalidate()
+        await revalidate();
       } catch (e) {
-        toast('Stake Failed', { type: 'error' })
+        toast('Stake Failed', { type: 'error' });
       }
     },
-    [provider, wallet, tokenAccountAddress, mint],
-  )
+    [provider, wallet, tokenAccountAddress, mint]
+  );
 
   const buttonContent = useMemo(() => {
     if (isStaked === undefined) {
-      return 'isLoading'
+      return 'isLoading';
     }
 
     if (isStaked) {
-      return 'UNSTAKE'
+      return 'UNSTAKE';
     } else {
-      return 'STAKE'
+      return 'STAKE';
     }
-  }, [isStaked])
+  }, [isStaked]);
 
   // const pendingReward = useMemo(() => {
   //   if (!stakeInfo || !poolAccountInfo) return undefined
@@ -170,14 +170,14 @@ const StakingCard: React.FC<Props> = ({
         />
       ) : null}
       {/* {pendingReward !== undefined && <p>reward: {pendingReward} SOLR </p>} */}
-      <CTAButton disabled={!candyMachineID} onClick={stake}>
+      <CTAButton disabled={!candyMachineID} onClick={stake} color="primary">
         {buttonContent}
       </CTAButton>
-      <CTAButton disabled={!candyMachineID} onClick={verify}>
+      <CTAButton disabled={!candyMachineID} onClick={verify} color="primary">
         VERIFY
       </CTAButton>
     </Card>
-  )
-}
+  );
+};
 
-export default StakingCard
+export default StakingCard;

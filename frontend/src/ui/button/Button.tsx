@@ -38,9 +38,6 @@ const Button = styled.button`
     `var(--shadow-elevation-medium-${props.color})`};
   position: relative;
   overflow: hidden;
-  /* &:hover {
-    background-color: ${(props: Props) => `var(--color-${props.color}-light)`};
-  } */
 
   &::before {
     content: "";

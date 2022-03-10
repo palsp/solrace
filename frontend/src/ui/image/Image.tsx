@@ -1,9 +1,9 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 interface Props {
-  src: string
-  width?: string
-  height?: string
+  src: string;
+  width?: string;
+  height?: string;
 }
 
 const Image = styled.div`
@@ -13,8 +13,8 @@ const Image = styled.div`
   background-origin: border-box;
   background-clip: border-box;
   background-image: ${(props: Props) => `url(${props.src})`};
-  width: ${(props: Props) => props.width || '100%'};
-  height: ${(props: Props) => props.height || '20vh'};
-`
+  width: ${(props: Props) => props.width || "100%"};
+  height: ${(props: Props) => props.height || "20vh"};
+`;
 
-export default Image
+export default Image;

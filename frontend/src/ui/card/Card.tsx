@@ -1,5 +1,5 @@
-import styled from 'styled-components'
-import { Column } from '~/ui'
+import styled from "styled-components";
+import Column from "../column";
 
 const Card = styled(Column)`
   width: 20vw;
@@ -9,6 +9,6 @@ const Card = styled(Column)`
   border-radius: 1rem;
   padding: 1rem;
   margin: 1rem;
-`
+`;
 
-export default Card
+export default Card;
