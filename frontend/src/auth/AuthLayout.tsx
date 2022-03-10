@@ -31,23 +31,25 @@ const AuthLayout: React.FC<Props> = ({ children, direction }) => {
           />
         </WrapperLogo>
         <Star direction={direction}>&#10022;</Star>
-        <Line1 />
-        <Line2 />
-        <Line3 />
-        <Line4 />
-        <Line5 />
-        <Line6 />
-        <Line7 />
-        <Line8 />
-        <Line9 />
-        <Line10 />
-        <Line11 />
-        <Line12 />
-        <Line13 />
-        <Line14 />
-        <Line15 />
-        <Line16 />
-        <Line17 />
+        <WrapperLine direction={direction}>
+          <Line1 />
+          <Line2 />
+          <Line3 />
+          <Line4 />
+          <Line5 />
+          <Line6 />
+          <Line7 />
+          <Line8 />
+          <Line9 />
+          <Line10 />
+          <Line11 />
+          <Line12 />
+          <Line13 />
+          <Line14 />
+          <Line15 />
+          <Line16 />
+          <Line17 />
+        </WrapperLine>
       </WrapperDecorative>
       <AuthForm>
         <WrapperAuth direction={direction}>{children}</WrapperAuth>
@@ -103,6 +105,15 @@ const WrapperLogo = styled.div`
   width: 300px;
   margin-top: 0.75rem;
 `;
+
+const WrapperLine = styled.div`
+  ${(props: Props) =>
+    props.direction === "row"
+      ? ""
+      : `transform: scaleX(-1);
+  position: relative;
+  top: 88.5%;`}
+`;
 const AuthForm = styled.div`
   flex: 6;
   background: var(--background-gradient);
@@ -115,6 +126,7 @@ const AuthForm = styled.div`
 
 const Star = styled.div`
   position: fixed;
+  z-index: 2;
   top: calc(50vh - 128px);
   transform: translateX(-50%);
   left: ${(props: Props) => {
