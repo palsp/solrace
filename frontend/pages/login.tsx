@@ -1,17 +1,18 @@
-import Link from 'next/link'
-import styled from 'styled-components'
-import { useRouter } from 'next/router'
-import { useForm } from 'react-hook-form'
+import Link from "next/link";
+import styled from "styled-components";
+import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
 
-import AuthLayout from '~/auth/AuthLayout'
-import { useAuth } from '~/auth/hooks'
-import { login } from '~/auth/services'
-import { toastAPIError } from '~/utils'
-import FormInput from '~/ui/form/FormInput'
+import AuthLayout from "~/auth/AuthLayout";
+import { useAuth } from "~/auth/hooks";
+import { login } from "~/auth/services";
+import { toastAPIError } from "~/utils";
+import FormInput from "~/ui/form/FormInput";
+import StyledButton from "~/ui/Button";
 
 interface ILoginForm {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 const LoginForm = styled.form`
@@ -20,38 +21,38 @@ const LoginForm = styled.form`
   height: 30%;
   justify-content: space-evenly;
   align-items: center;
-`
+`;
 
 const LoginPage = () => {
-  const { setUser } = useAuth()
-  const { push, query } = useRouter()
+  const { setUser } = useAuth();
+  const { push, query } = useRouter();
   const { register, formState, handleSubmit } = useForm<ILoginForm>({
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
-  })
+  });
 
   const redirect = () => {
     if (query.from) {
-      push(decodeURIComponent(query.from as string))
+      push(decodeURIComponent(query.from as string));
     } else {
-      push('/')
+      push("/");
     }
-  }
+  };
 
   const onSubmit = async ({ email, password }: ILoginForm) => {
     try {
-      const user = await login(email as string, password as string)
-      setUser(user)
-      redirect()
+      const user = await login(email as string, password as string);
+      setUser(user);
+      redirect();
     } catch (e) {
-      toastAPIError(e as any)
+      toastAPIError(e as any);
     }
-  }
+  };
 
   return (
-    <AuthLayout>
+    <AuthLayout direction="row">
       <LoginForm onSubmit={handleSubmit(onSubmit)}>
         <FormInput
           label="Email"
@@ -59,7 +60,7 @@ const LoginPage = () => {
           type="text"
           registerOptions={{ required: true }}
           register={register}
-          error={formState.errors['email']}
+          error={formState.errors["email"]}
         />
 
         <FormInput
@@ -68,16 +69,18 @@ const LoginPage = () => {
           type="password"
           registerOptions={{ required: true }}
           register={register}
-          error={formState.errors['password']}
+          error={formState.errors["password"]}
         />
 
-        <button type="submit">Login</button>
+        <StyledButton type="submit" color="primary" width="100%">
+          Login
+        </StyledButton>
       </LoginForm>
       <Link href="/register">
         <a>Register</a>
       </Link>
     </AuthLayout>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;

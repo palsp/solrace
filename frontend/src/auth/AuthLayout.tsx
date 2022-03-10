@@ -1,37 +1,31 @@
-import Link from 'next/link'
-import styled from 'styled-components'
+import Link from "next/link";
+import styled from "styled-components";
+
+interface Props {
+  direction: string;
+}
+
+const AuthLayout: React.FC<Props> = ({ children, direction }) => {
+  return (
+    <AuthLayoutContainer direction={direction}>
+      <DecorativeWrapper></DecorativeWrapper>
+      <AuthForm>{children}</AuthForm>
+    </AuthLayoutContainer>
+  );
+};
 
 const AuthLayoutContainer = styled.div`
+  height: 100%;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  padding: 0 20vw;
-  width: 100vw;
-  height: 100vh;
-  margin-top: 5rem;
-  margin-top: 20vh;
-`
+  flex-direction: ${(props: Props) => props.direction};
+`;
 
-const NavContainer = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 2em;
-`
-
-const AuthLayout: React.FC = ({ children }) => {
-  return (
-    <AuthLayoutContainer>
-      <NavContainer>
-        <Link href="/">back</Link>
-      </NavContainer>
-      {children}
-    </AuthLayoutContainer>
-  )
-}
-export default AuthLayout
+const DecorativeWrapper = styled.div`
+  flex: 4;
+  background: var(--color-black-light);
+`;
+const AuthForm = styled.div`
+  flex: 6;
+  background: var(--background-gradient);
+`;
+export default AuthLayout;

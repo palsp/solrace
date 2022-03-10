@@ -1,20 +1,21 @@
-import Link from 'next/link'
-import styled from 'styled-components'
-import { toast } from 'react-toastify'
-import { useRouter } from 'next/router'
-import { useForm } from 'react-hook-form'
+import Link from "next/link";
+import styled from "styled-components";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
 
-import AuthLayout from '~/auth/AuthLayout'
-import { useAuth } from '~/auth/hooks'
-import { signup } from '~/auth/services'
-import { toastAPIError } from '~/utils'
+import AuthLayout from "~/auth/AuthLayout";
+import { useAuth } from "~/auth/hooks";
+import { signup } from "~/auth/services";
+import { toastAPIError } from "~/utils";
 
-import FormInput from '~/ui/form/FormInput'
+import FormInput from "~/ui/form/FormInput";
+import StyledButton from "~/ui/Button";
 
 interface IRegisterForm {
-  email: string
-  password: string
-  confirmPassword: string
+  email: string;
+  password: string;
+  confirmPassword: string;
 }
 
 const RegisterForm = styled.form`
@@ -23,18 +24,18 @@ const RegisterForm = styled.form`
   height: 30%;
   justify-content: space-evenly;
   align-items: center;
-`
+`;
 
 const RegisterPage = () => {
-  const { setUser } = useAuth()
-  const { push } = useRouter()
+  const { setUser } = useAuth();
+  const { push } = useRouter();
 
   const { register, formState, handleSubmit } = useForm<IRegisterForm>({
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
-  })
+  });
 
   const onSubmit = async ({
     email,
@@ -42,21 +43,21 @@ const RegisterPage = () => {
     confirmPassword,
   }: IRegisterForm) => {
     if (password !== confirmPassword) {
-      toast('Password not matching', { type: 'error' })
-      return
+      toast("Password not matching", { type: "error" });
+      return;
     }
 
     try {
-      const user = await signup(email as string, password as string)
-      setUser(user)
-      push('/')
+      const user = await signup(email as string, password as string);
+      setUser(user);
+      push("/");
     } catch (e) {
-      toastAPIError(e as any)
+      toastAPIError(e as any);
     }
-  }
+  };
 
   return (
-    <AuthLayout>
+    <AuthLayout direction="row-reverse">
       <RegisterForm onSubmit={handleSubmit(onSubmit)}>
         <FormInput
           label="Email"
@@ -64,7 +65,7 @@ const RegisterPage = () => {
           type="text"
           registerOptions={{ required: true }}
           register={register}
-          error={formState.errors['email']}
+          error={formState.errors["email"]}
         />
 
         <FormInput
@@ -73,7 +74,7 @@ const RegisterPage = () => {
           type="password"
           registerOptions={{ required: true }}
           register={register}
-          error={formState.errors['password']}
+          error={formState.errors["password"]}
         />
 
         <FormInput
@@ -82,15 +83,17 @@ const RegisterPage = () => {
           type="password"
           registerOptions={{ required: true }}
           register={register}
-          error={formState.errors['password']}
+          error={formState.errors["password"]}
         />
-        <button type="submit">Register</button>
+        <StyledButton type="submit" color="secondary" width="100%">
+          Register
+        </StyledButton>
       </RegisterForm>
       <Link href="/login">
         <a>Login</a>
       </Link>
     </AuthLayout>
-  )
-}
+  );
+};
 
-export default RegisterPage
+export default RegisterPage;
