@@ -9,6 +9,7 @@ import { login } from "~/auth/services";
 import { toastAPIError } from "~/utils";
 import FormInput from "~/ui/form/FormInput";
 import StyledButton from "~/ui/Button";
+import { AppLink } from "~/ui";
 
 interface ILoginForm {
   email: string;
@@ -76,9 +77,7 @@ const LoginPage = () => {
           Login
         </StyledButton>
       </LoginForm>
-      <Link href="/register">
-        <a>Register</a>
-      </Link>
+      <AppLink href="/register">Register</AppLink>
     </AuthLayout>
   );
 };

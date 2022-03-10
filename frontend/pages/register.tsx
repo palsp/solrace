@@ -11,6 +11,7 @@ import { toastAPIError } from "~/utils";
 
 import FormInput from "~/ui/form/FormInput";
 import StyledButton from "~/ui/Button";
+import { AppLink } from "~/ui";
 
 interface IRegisterForm {
   email: string;
@@ -85,13 +86,12 @@ const RegisterPage = () => {
           register={register}
           error={formState.errors["password"]}
         />
+
         <StyledButton type="submit" color="secondary" width="100%">
           Register
         </StyledButton>
       </RegisterForm>
-      <Link href="/login">
-        <a>Login</a>
-      </Link>
+      <AppLink href="/login">Login</AppLink>
     </AuthLayout>
   );
 };
