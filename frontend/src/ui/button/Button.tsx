@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -10,11 +10,11 @@ interface Props
   color: string;
 }
 
-const StyledButton = ({ width, color, children }: Props) => {
+const Button = ({ width, color, children }: Props) => {
   return (
-    <Button width={width} color={color}>
+    <WrapperButton width={width} color={color}>
       <Span>{children}</Span>
-    </Button>
+    </WrapperButton>
   );
 };
 
@@ -25,10 +25,10 @@ const Span = styled.span`
   transition: color 0.6s cubic-bezier(0.53, 0.21, 0, 1);
 `;
 
-const Button = styled.button`
+const WrapperButton = styled.button`
   border: none;
   padding: 1rem;
-  width: ${(props: Props) => props.width || "auto"};
+  width: ${(props: Props) => props.width || 'auto'};
   background-color: ${(props: Props) => `var(--color-${props.color})`};
   color: var(--color-black);
   font-weight: bold;
@@ -40,7 +40,7 @@ const Button = styled.button`
   overflow: hidden;
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 50%;
     left: 0;
@@ -61,4 +61,4 @@ const Button = styled.button`
   }
 `;
 
-export default StyledButton;
+export default Button;
