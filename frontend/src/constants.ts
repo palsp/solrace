@@ -12,10 +12,10 @@ const QUERIES = {
 
 export const COLORS = {
   primary: "hsl(139deg 94% 75%)",
-  primaryDark: "hsl(139deg 94% 55%)",
-  primaryLight: "hsl(139deg 94% 95%)",
+  primaryDark: "hsl(139deg 94% 65%)",
+  primaryLight: "hsl(139deg 94% 85%)",
   secondary: "hsl(191deg 100% 76%)",
-  secondaryDark: "hsl(191deg 100% 56%)",
+  secondaryDark: "hsl(191deg 100% 61%)",
   secondaryLight: "hsl(191deg 100% 96%)",
   black: "hsl(0deg 0% 0%)",
   white: "hsl(0deg 0% 100%)",
