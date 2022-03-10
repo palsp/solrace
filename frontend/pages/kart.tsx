@@ -8,7 +8,7 @@ import { useWorkspace } from "~/workspace/hooks";
 import { mint } from "~/mint/services";
 import Title from "~/ui/title/Title";
 import Button from "~/ui/button/Button";
-import { Row } from "~/ui";
+import { Paragraph, Row } from "~/ui";
 import { usePoolAccount } from "~/hooks/useAccount";
 import KartCard from "~/kart/KartCard";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -48,25 +48,34 @@ const KartPage = () => {
   };
   return (
     <AppLayout>
-      <Title>KART</Title>
-      {!connected ? (
-        <ConnectWalletButton />
-      ) : (
-        <>
-          <Button onClick={handleMint} color="primary">
-            MOCK MINT
-          </Button>
-          {poolInfo && (
-            <Main>
-              {nfts.map((nft) => (
-                <KartCard key={nft.tokenAccountAddress.toBase58()} nft={nft} />
-              ))}
-            </Main>
-          )}
-        </>
-      )}
+      <WrapperKart>
+        <Title>KART</Title>
+        {!connected ? (
+          <Paragraph>Please Connect Your Wallet</Paragraph>
+        ) : (
+          <>
+            <Button onClick={handleMint} color="primary">
+              MOCK MINT
+            </Button>
+            {poolInfo && (
+              <Main>
+                {nfts.map((nft) => (
+                  <KartCard
+                    key={nft.tokenAccountAddress.toBase58()}
+                    nft={nft}
+                  />
+                ))}
+              </Main>
+            )}
+          </>
+        )}
+      </WrapperKart>
     </AppLayout>
   );
 };
+
+const WrapperKart = styled.div`
+  margin-top: 2rem;
+`;
 
 export default KartPage;

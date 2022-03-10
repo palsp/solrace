@@ -9,7 +9,7 @@ import { mint } from "~/mint/services";
 import GarageCard from "~/garage/GarageCard";
 import Button from "~/ui/button/Button";
 import Title from "~/ui/title/Title";
-import { Row } from "~/ui";
+import { Paragraph, Row } from "~/ui";
 import { useWallet } from "@solana/wallet-adapter-react";
 import ConnectWalletButton from "~/wallet/ConnectWalletButton";
 import { useMemo } from "react";
@@ -54,29 +54,35 @@ const GaragePage = () => {
 
   return (
     <AppLayout>
-      <Title>GARAGE</Title>
-      {!connected ? (
-        <ConnectWalletButton />
-      ) : (
-        <>
-          <h1>APR: {apr} % </h1>
-          <CTAButton onClick={handleMint} color="primary">
-            MOCK MINT
-          </CTAButton>
-          {poolInfo && (
-            <Main>
-              {nfts.map((nft) => (
-                <GarageCard
-                  key={nft.tokenAccountAddress.toBase58()}
-                  nft={nft}
-                />
-              ))}
-            </Main>
-          )}
-        </>
-      )}
+      <WrapperGarage>
+        <Title>GARAGE</Title>
+        {!connected ? (
+          <Paragraph>Please Connect Your Wallet</Paragraph>
+        ) : (
+          <>
+            <h1>APR: {apr} % </h1>
+            <CTAButton onClick={handleMint} color="primary">
+              MOCK MINT
+            </CTAButton>
+            {poolInfo && (
+              <Main>
+                {nfts.map((nft) => (
+                  <GarageCard
+                    key={nft.tokenAccountAddress.toBase58()}
+                    nft={nft}
+                  />
+                ))}
+              </Main>
+            )}
+          </>
+        )}
+      </WrapperGarage>
     </AppLayout>
   );
 };
+
+const WrapperGarage = styled.div`
+  margin-top: 2rem;
+`;
 
 export default GaragePage;

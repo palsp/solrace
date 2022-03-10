@@ -30,7 +30,7 @@ const WrapperButton = styled(WalletMultiButton)`
   overflow: hidden;
 
   &:hover {
-    background-color: var(--color-primary-light) !important;
+    background-color: var(--color-primary) !important;
   }
 
   &::before {
