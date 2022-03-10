@@ -55,7 +55,7 @@ const LoginPage = () => {
 
   return (
     <AuthLayout direction="row">
-      <Title>Login</Title>
+      <h1>Login</h1>
       <LoginForm onSubmit={handleSubmit(onSubmit)}>
         <FormInput
           label="Email"
@@ -79,10 +79,10 @@ const LoginPage = () => {
             Login
           </StyledButton>
         </WrapperButton>
-        <div>
+        <RegisterDiv>
           <ParagraphItalic>Haven't registered? </ParagraphItalic>
           <AppLink href="/register">Register</AppLink>
-        </div>
+        </RegisterDiv>
       </LoginForm>
     </AuthLayout>
   );
@@ -90,6 +90,12 @@ const LoginPage = () => {
 
 const WrapperButton = styled.div`
   width: 300px;
+`;
+
+const RegisterDiv = styled.div`
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
 `;
 
 export default LoginPage;

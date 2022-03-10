@@ -3,7 +3,7 @@ import { useAuth } from "~/auth/hooks";
 import Link from "next/link";
 import { AppLink, Row } from "~/ui";
 import ConnectWalletButton from "~/wallet/ConnectWalletButton";
-import Image from "~/ui/Image";
+import { AppImage } from "~/ui";
 
 const AppNav = () => {
   const { user } = useAuth();
@@ -12,8 +12,8 @@ const AppNav = () => {
     <NavContainer>
       <UserSection>
         <Link href="/" passHref>
-          <Image
-            src="/logo.png"
+          <AppImage
+            src="/solrace-logo.png"
             width="200px"
             height="40px"
             style={{ cursor: "pointer", marginBottom: "0.5rem" }}

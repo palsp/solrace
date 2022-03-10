@@ -1,26 +1,26 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import styled from 'styled-components';
-import { toast } from 'react-toastify';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import styled from "styled-components";
+import { toast } from "react-toastify";
 
-import ReactLoading from 'react-loading';
-import { useWorkspace } from '~/workspace/hooks';
-import { useStakeAccount } from '~/hooks/useAccount';
-import { shortenIfAddress } from '~/wallet/utils';
-import { bond, unBond } from '~/garage/services';
-import { SOLR_MINT_ADDRESS } from '~/api/solana/addresses';
-import { Row } from '~/ui';
-import Button from '~/ui/button/Button';
-import Image from '~/ui/image/Image';
-import { NFTAccount } from '~/nft/hooks';
-import { POOL_NAME } from '~/api/solana/constants';
-import { usePool } from '~/pool/hooks';
-import { useStaker } from '~/staker/hooks';
-import { toastAPIError } from '~/utils';
-import Card from '~/ui/card/Card';
-import { calculateReward } from '~/pool/utils';
-import { useMintInfo } from '~/hooks/useMintInfo';
-import CircularProgress from '~/ui/circularProgress/CircularProgress';
-import { useCountdown } from '~/hooks/useCountdown';
+import ReactLoading from "react-loading";
+import { useWorkspace } from "~/workspace/hooks";
+import { useStakeAccount } from "~/hooks/useAccount";
+import { shortenIfAddress } from "~/wallet/utils";
+import { bond, unBond } from "~/garage/services";
+import { SOLR_MINT_ADDRESS } from "~/api/solana/addresses";
+import { Row } from "~/ui";
+import Button from "~/ui/button/Button";
+import Image from "~/ui/appImage/AppImage";
+import { NFTAccount } from "~/nft/hooks";
+import { POOL_NAME } from "~/api/solana/constants";
+import { usePool } from "~/pool/hooks";
+import { useStaker } from "~/staker/hooks";
+import { toastAPIError } from "~/utils";
+import Card from "~/ui/card/Card";
+import { calculateReward } from "~/pool/utils";
+import { useMintInfo } from "~/hooks/useMintInfo";
+import CircularProgress from "~/ui/circularProgress/CircularProgress";
+import { useCountdown } from "~/hooks/useCountdown";
 
 const CTAButton = styled(Button)`
   border: 1px solid #ccc;
@@ -88,7 +88,7 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
 
   const toggleStake = async () => {
     if (!provider || !wallet) {
-      toast('Please connect wallet', { type: 'warning' });
+      toast("Please connect wallet", { type: "warning" });
       return;
     }
 
@@ -113,15 +113,15 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
 
         const resp = await provider.connection.confirmTransaction(tx);
         if (resp.value.err) {
-          toastAPIError(resp.value.err, 'Stake Failed');
+          toastAPIError(resp.value.err, "Stake Failed");
         } else {
-          toast('Congratulation! You have staked your garage.', {
-            type: 'success',
+          toast("Congratulation! You have staked your garage.", {
+            type: "success",
           });
           await Promise.all([revalidatePool(), revalidateStakeAccount()]);
         }
       } catch (e) {
-        toastAPIError(e as any, 'Stake Failed');
+        toastAPIError(e as any, "Stake Failed");
       }
     } else {
       try {
@@ -135,10 +135,10 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
 
         const resp = await provider.connection.confirmTransaction(tx);
         if (resp.value.err) {
-          toastAPIError(resp.value.err, 'UnStake Failed');
+          toastAPIError(resp.value.err, "UnStake Failed");
         } else {
-          toast('You have unstaked your garage.', {
-            type: 'success',
+          toast("You have unstaked your garage.", {
+            type: "success",
           });
           await Promise.all([
             revalidatePool(),
@@ -147,7 +147,7 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
           ]);
         }
       } catch (e) {
-        toastAPIError(e as any, 'UnStake Failed');
+        toastAPIError(e as any, "UnStake Failed");
       }
     }
     setLoading(false);
@@ -160,12 +160,12 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
   }, [calcReward]);
 
   const buttonContent = useMemo(() => {
-    if (isStaked === undefined) return '...';
+    if (isStaked === undefined) return "...";
 
     if (isStaked) {
-      return 'UNSTAKE';
+      return "UNSTAKE";
     } else {
-      return 'STAKE';
+      return "STAKE";
     }
   }, [isStaked]);
 
@@ -190,7 +190,7 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
         src="/garage-template.jpeg"
         height="25em"
         style={{
-          borderRadius: '1rem',
+          borderRadius: "1rem",
         }}
       />
       {loading || loadingStaker ? (

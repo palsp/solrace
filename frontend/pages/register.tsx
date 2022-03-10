@@ -10,7 +10,7 @@ import { signup } from "~/auth/services";
 import { toastAPIError } from "~/utils";
 
 import FormInput from "~/ui/form/FormInput";
-import StyledButton from "~/ui/Button";
+import StyledButton from "~/ui/button/Button";
 import { AppLink } from "~/ui";
 
 interface IRegisterForm {

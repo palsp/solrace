@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 interface Props {
   src: string;
@@ -12,9 +12,9 @@ const AppImage = styled.div`
   background-position: center;
   background-origin: border-box;
   background-clip: border-box;
-  background-app: ${(props: Props) => `url(${props.src})`};
-  width: ${(props: Props) => props.width || '100%'};
-  height: ${(props: Props) => props.height || '20vh'};
+  background-image: ${(props: Props) => `url(${props.src})`};
+  width: ${(props: Props) => props.width || "100%"};
+  height: ${(props: Props) => props.height || "20vh"};
 `;
 
 export default AppImage;

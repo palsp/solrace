@@ -1,21 +1,20 @@
-import styled from 'styled-components';
-import { useMemo, useState } from 'react';
-import { toast } from 'react-toastify';
-import ReactLoading from 'react-loading';
-import { PublicKey } from '@solana/web3.js';
-import { useStaker } from '~/staker/hooks';
-import { NFTAccount } from '~/nft/hooks';
-import { POOL_NAME } from '~/api/solana/constants';
-import { upgradeKart } from '~/kart/services';
-import { shortenIfAddress } from '~/wallet/utils';
-import { useWorkspace } from '~/workspace/hooks';
-import { useKartAccount } from '~/hooks/useAccount';
-import { Column } from '~/ui';
-import Button from '~/ui/button/Button';
-import Image from '~/ui/image/Image';
-import { usePool } from '~/pool/hooks';
-import { toastAPIError } from '~/utils';
-import Card from '~/ui/card/Card';
+import styled from "styled-components";
+import { useMemo, useState } from "react";
+import { toast } from "react-toastify";
+import ReactLoading from "react-loading";
+import { PublicKey } from "@solana/web3.js";
+import { useStaker } from "~/staker/hooks";
+import { NFTAccount } from "~/nft/hooks";
+import { POOL_NAME } from "~/api/solana/constants";
+import { upgradeKart } from "~/kart/services";
+import { shortenIfAddress } from "~/wallet/utils";
+import { useWorkspace } from "~/workspace/hooks";
+import { useKartAccount } from "~/hooks/useAccount";
+import { AppImage, Column } from "~/ui";
+import Button from "~/ui/button/Button";
+import { usePool } from "~/pool/hooks";
+import { toastAPIError } from "~/utils";
+import Card from "~/ui/card/Card";
 
 const Select = styled.select`
   padding: 0.5rem;
@@ -63,7 +62,7 @@ const KartCard: React.FC<Props> = ({ nft }) => {
   const handleGarageChange: React.ChangeEventHandler<HTMLSelectElement> = (
     e
   ) => {
-    if (e.target.value !== '') {
+    if (e.target.value !== "") {
       setSelectedGarage(new PublicKey(e.target.value));
     } else {
       setSelectedGarage(undefined);
@@ -73,8 +72,8 @@ const KartCard: React.FC<Props> = ({ nft }) => {
   const handleUpgrade = async () => {
     // if (!solRaceProgram || !provider) return
     if (!selectedGarage) {
-      toast('Please select the garage to enhance your kart', {
-        type: 'warning',
+      toast("Please select the garage to enhance your kart", {
+        type: "warning",
       });
       return;
     }
@@ -98,13 +97,13 @@ const KartCard: React.FC<Props> = ({ nft }) => {
       });
       const resp = await provider.connection.confirmTransaction(tx);
       if (resp.value.err) {
-        toastAPIError(resp.value.err, 'Fail! please try again');
+        toastAPIError(resp.value.err, "Fail! please try again");
       } else {
-        toast('Congratulation! upgrade succeed', { type: 'success' });
+        toast("Congratulation! upgrade succeed", { type: "success" });
         await revalidateKart();
       }
     } catch (e) {
-      toastAPIError(e, 'Fail! please try again');
+      toastAPIError(e, "Fail! please try again");
     } finally {
       setLoading(false);
     }
@@ -114,11 +113,11 @@ const KartCard: React.FC<Props> = ({ nft }) => {
     <Card>
       <h3>Mint: {shortenIfAddress(nft.mint.toBase58())}</h3>
       <p>Max Speed: {kartInfo?.masSpeed || 0}</p>
-      <Image
+      <AppImage
         src="/kart-template.png"
         height="25em"
         style={{
-          borderRadius: '1rem',
+          borderRadius: "1rem",
         }}
       />
       {selectedGarage ? (
