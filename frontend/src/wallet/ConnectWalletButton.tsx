@@ -23,14 +23,14 @@ const Span = styled.span`
 `;
 
 const WrapperButton = styled(WalletMultiButton)`
-  background-color: var(--color-secondary);
+  background-color: var(--color-primary);
   color: var(--color-black);
-  box-shadow: var(--shadow-elevation-medium-secondary);
+  box-shadow: var(--shadow-elevation-medium-primary);
   position: relative;
   overflow: hidden;
 
   &:hover {
-    background-color: var(--color-secondary-dark) !important;
+    background-color: var(--color-primary-light) !important;
   }
 
   &::before {
@@ -42,7 +42,7 @@ const WrapperButton = styled(WalletMultiButton)`
     transform: translate(-100%, -50%);
     width: 100%;
     height: 100%;
-    background-color: var(--color-primary);
+    background-color: var(--color-primary-dark);
     transition: transform 0.6s cubic-bezier(0.53, 0.21, 0, 1);
   }
 
