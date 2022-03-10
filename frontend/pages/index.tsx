@@ -49,14 +49,30 @@ const Home = () => {
         </Link>
       </NAV> */}
       <Wrapper>
-        <Button width="300px" color="primary">
+        <VideoWrapper>
+          <Video src="/car_driving.mp4" controls></Video>
+        </VideoWrapper>
+        {/* <Button width="300px" color="primary">
           Mint
-        </Button>
+        </Button> */}
       </Wrapper>
     </AppLayout>
   );
 };
 
 const Wrapper = styled.div``;
+
+const VideoWrapper = styled.div`
+  /* margin-left: -3rem; */
+  position: absolute;
+  top: 5rem;
+  left: 0;
+  max-height: 100%;
+  width: 100%;
+  /* height: 90%; */
+`;
+const Video = styled.video`
+  min-width: 100%;
+`;
 
 export default Home;
