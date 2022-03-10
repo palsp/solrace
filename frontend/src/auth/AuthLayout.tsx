@@ -91,6 +91,11 @@ const WrapperIcon = styled.div`
   top: 2rem;
   left: 2rem;
   z-index: 1;
+  transition: opacity ease 500ms;
+
+  &:hover {
+    opacity: 0.65;
+  }
 `;
 
 const WrapperLogo = styled.div`
