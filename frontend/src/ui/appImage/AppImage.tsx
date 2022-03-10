@@ -15,6 +15,7 @@ const AppImage = styled.div`
   background-image: ${(props: Props) => `url(${props.src})`};
   width: ${(props: Props) => props.width || "100%"};
   height: ${(props: Props) => props.height || "20vh"};
+  border-radius: 0.5rem;
 `;
 
 export default AppImage;
