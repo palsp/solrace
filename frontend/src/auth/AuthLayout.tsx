@@ -1,7 +1,7 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import styled from 'styled-components';
-import { backButton, backButtonPrimary, backButtonSecondary } from '~/assets';
+import Image from "next/image";
+import Link from "next/link";
+import styled from "styled-components";
+import { backButton, backButtonPrimary, backButtonSecondary } from "~/assets";
 
 interface Props {
   direction: string;
@@ -9,7 +9,8 @@ interface Props {
 
 const AuthLayout: React.FC<Props> = ({ children, direction }) => {
   let backButton =
-    direction === 'row' ? backButtonPrimary : backButtonSecondary;
+    direction === "row" ? backButtonPrimary : backButtonSecondary;
+
   return (
     <AuthLayoutContainer direction={direction}>
       <Link href="/">
@@ -21,7 +22,9 @@ const AuthLayout: React.FC<Props> = ({ children, direction }) => {
       </Link>
 
       <WrapperDecorative></WrapperDecorative>
-      <AuthForm>{children}</AuthForm>
+      <AuthForm>
+        <WrapperAuth direction={direction}>{children}</WrapperAuth>
+      </AuthForm>
     </AuthLayoutContainer>
   );
 };
@@ -37,7 +40,18 @@ const WrapperDecorative = styled.div`
   flex: 4;
   background: var(--color-black-light);
 `;
-
+const WrapperAuth = styled.div`
+  background: var(--color-white);
+  min-width: 450px;
+  height: 450px;
+  border-radius: 0.25rem;
+  padding: 0 3rem;
+  box-shadow: ${(props: Props) => {
+    if (props.direction === "row")
+      return "var(--shadow-elevation-medium-secondary)";
+    return "var(--shadow-elevation-medium-primary)";
+  }};
+`;
 const WrapperIcon = styled.div`
   position: fixed;
   top: 2rem;

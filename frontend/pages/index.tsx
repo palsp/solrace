@@ -2,10 +2,7 @@ import Link from "next/link";
 import styled from "styled-components";
 
 import AppLayout from "~/app/AppLayout";
-import Card from "~/ui/Card";
-import Title from "~/ui/Title";
-import Image from "~/ui/Image";
-import Button from "~/ui/Button";
+import Card from "~/ui/card/Card";
 
 const MainCard = styled(Card)`
   cursor: pointer;

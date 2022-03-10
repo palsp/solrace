@@ -55,7 +55,9 @@ const LoginPage = () => {
 
   return (
     <AuthLayout direction="row">
-      <h1>Login</h1>
+      <TitleDiv>
+        <h1>Login</h1>
+      </TitleDiv>
       <LoginForm onSubmit={handleSubmit(onSubmit)}>
         <FormInput
           label="Email"
@@ -73,7 +75,6 @@ const LoginPage = () => {
           register={register}
           error={formState.errors["password"]}
         />
-
         <WrapperButton>
           <StyledButton type="submit" color="primary" width="100%">
             Login
@@ -100,4 +101,8 @@ const RegisterDiv = styled.div`
   gap: 1rem;
 `;
 
+const TitleDiv = styled.div`
+  width: 40%;
+  text-align: start;
+`;
 export default LoginPage;
