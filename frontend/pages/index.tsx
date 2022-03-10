@@ -49,7 +49,9 @@ const Home = () => {
         </Link>
       </NAV> */}
       <Wrapper>
-        <Button width="300px">Mint</Button>
+        <Button width="300px" color="primary">
+          Mint
+        </Button>
       </Wrapper>
     </AppLayout>
   );

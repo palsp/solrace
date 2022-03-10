@@ -7,17 +7,61 @@ interface Props
     HTMLButtonElement
   > {
   width?: string;
+  color: string;
 }
+
+const StyledButton = ({ width, color, children }: Props) => {
+  return (
+    <Button width={width} color={color}>
+      <Span>{children}</Span>
+    </Button>
+  );
+};
+
+const Span = styled.span`
+  color: black;
+  position: relative;
+  z-index: 1;
+  transition: color 0.6s cubic-bezier(0.53, 0.21, 0, 1);
+`;
+
 const Button = styled.button`
   border: none;
   padding: 1rem;
   width: ${(props: Props) => props.width || "auto"};
-  background-color: var(--color-primary);
+  background-color: ${(props: Props) => `var(--color-${props.color})`};
   color: var(--color-black);
   font-weight: bold;
   cursor: pointer;
   border-radius: 0.25rem;
-  box-shadow: var(--shadow-elevation-medium);
+  box-shadow: ${(props: Props) =>
+    `var(--shadow-elevation-medium-${props.color})`};
+  position: relative;
+  overflow: hidden;
+  /* &:hover {
+    background-color: ${(props: Props) => `var(--color-${props.color}-light)`};
+  } */
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    border-radius: 6px;
+    transform: translate(-100%, -50%);
+    width: 100%;
+    height: 100%;
+    background-color: ${(props: Props) => `var(--color-${props.color}-dark)`};
+    transition: transform 0.6s cubic-bezier(0.53, 0.21, 0, 1);
+  }
+
+  &:hover ${Span} {
+    color: var(--color-white);
+  }
+
+  &:hover::before {
+    transform: translate(0, -50%);
+  }
 `;
 
-export default Button;
+export default StyledButton;
