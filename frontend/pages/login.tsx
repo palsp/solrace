@@ -19,9 +19,10 @@ interface ILoginForm {
 const LoginForm = styled.form`
   display: flex;
   flex-direction: column;
-  height: 30%;
+  /* height: 30%; */
   justify-content: space-evenly;
   align-items: center;
+  gap: 1rem;
 `;
 
 const LoginPage = () => {
@@ -63,7 +64,6 @@ const LoginPage = () => {
           register={register}
           error={formState.errors["email"]}
         />
-
         <FormInput
           label="Password"
           name="password"
@@ -73,13 +73,19 @@ const LoginPage = () => {
           error={formState.errors["password"]}
         />
 
-        <StyledButton type="submit" color="primary" width="100%">
-          Login
-        </StyledButton>
+        <WrapperButton>
+          <StyledButton type="submit" color="primary" width="100%">
+            Login
+          </StyledButton>
+        </WrapperButton>
+        <AppLink href="/register">Register</AppLink>
       </LoginForm>
-      <AppLink href="/register">Register</AppLink>
     </AuthLayout>
   );
 };
+
+const WrapperButton = styled.div`
+  width: 300px;
+`;
 
 export default LoginPage;

@@ -22,8 +22,9 @@ interface IRegisterForm {
 const RegisterForm = styled.form`
   display: flex;
   flex-direction: column;
-  height: 30%;
+  /* height: 30%; */
   justify-content: space-evenly;
+  gap: 1rem;
   align-items: center;
 `;
 
@@ -86,14 +87,19 @@ const RegisterPage = () => {
           register={register}
           error={formState.errors["password"]}
         />
-
-        <StyledButton type="submit" color="secondary" width="100%">
-          Register
-        </StyledButton>
+        <WrapperButton>
+          <StyledButton type="submit" color="secondary" width="100%">
+            Register
+          </StyledButton>
+        </WrapperButton>
+        <AppLink href="/login">Login</AppLink>
       </RegisterForm>
-      <AppLink href="/login">Login</AppLink>
     </AuthLayout>
   );
 };
+
+const WrapperButton = styled.div`
+  width: 300px;
+`;
 
 export default RegisterPage;
