@@ -67,7 +67,7 @@ html {
   --color-black: ${COLORS.black};
   --color-black-light: ${COLORS.blackLight};
   --color-white: ${COLORS.white};
-  --background-gradient: linear-gradient(
+  --background-gradient-1: linear-gradient(
     320deg,
     hsl(138deg 37% 86%) 0%,
     hsl(143deg 42% 86%) 11%,
@@ -80,6 +80,19 @@ html {
     hsl(184deg 73% 87%) 80%,
     hsl(188deg 76% 87%) 100%
   );
+  --background-gradient-2: linear-gradient(
+  45deg,
+  hsl(139deg 94% 75%) 1%,
+  hsl(150deg 94% 72%) 33%,
+  hsl(159deg 93% 69%) 41%,
+  hsl(166deg 92% 67%) 45%,
+  hsl(171deg 90% 66%) 48%,
+  hsl(176deg 88% 65%) 50%,
+  hsl(180deg 85% 66%) 53%,
+  hsl(184deg 91% 69%) 57%,
+  hsl(188deg 97% 73%) 66%,
+  hsl(191deg 100% 76%) 99%
+);
   --shadow-color-primary: 139deg 94% 75%;
   --shadow-color-secondary: 191deg 100% 76%;
   --shadow-color-black: 0deg 0% 0%;

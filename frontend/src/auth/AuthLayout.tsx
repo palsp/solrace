@@ -116,7 +116,7 @@ const WrapperLine = styled.div`
 `;
 const AuthForm = styled.div`
   flex: 6;
-  background: var(--background-gradient);
+  background: var(--color-white);
   display: flex;
   flex-direction: column;
   gap: 2rem;
