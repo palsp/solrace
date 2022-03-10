@@ -3,9 +3,6 @@ import AppNav from "~/app/AppNav";
 
 const AppLayoutContainer = styled.div`
   padding-top: 3rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   padding: 5rem 3rem 0;
   height: 100%;
   background-image: linear-gradient(
@@ -21,6 +18,7 @@ const AppLayoutContainer = styled.div`
     hsl(184deg 73% 87%) 80%,
     hsl(188deg 76% 87%) 100%
   );
+  overflow-x: hidden;
 `;
 
 const AppLayout: React.FC = ({ children }) => {
