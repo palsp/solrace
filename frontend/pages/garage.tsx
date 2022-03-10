@@ -21,10 +21,6 @@ const Main = styled(Row)`
   flex-wrap: wrap;
 `;
 
-const CTAButton = styled(Button)`
-  margin-bottom: 1rem;
-`;
-
 const GaragePage = () => {
   const { provider, wallet } = useWorkspace();
   const { poolInfo, apr } = usePool();
@@ -61,9 +57,9 @@ const GaragePage = () => {
         ) : (
           <>
             <h1>APR: {apr} % </h1>
-            <CTAButton onClick={handleMint} color="primary">
+            <Button onClick={handleMint} color="primary">
               MOCK MINT
-            </CTAButton>
+            </Button>
             {poolInfo && (
               <Main>
                 {nfts.map((nft) => (

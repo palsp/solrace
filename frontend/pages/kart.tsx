@@ -49,14 +49,20 @@ const KartPage = () => {
   return (
     <AppLayout>
       <WrapperKart>
-        <Title>KART</Title>
+        <TitleDiv>
+          <Title>KART -</Title>
+          <Paragraph>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. In,
+            voluptates!{" "}
+          </Paragraph>
+        </TitleDiv>
         {!connected ? (
           <Paragraph>Please Connect Your Wallet</Paragraph>
         ) : (
           <>
-            <Button onClick={handleMint} color="primary">
+            {/* <Button onClick={handleMint} color="primary">
               MOCK MINT
-            </Button>
+            </Button> */}
             {poolInfo && (
               <Main>
                 {nfts.map((nft) => (
@@ -76,6 +82,12 @@ const KartPage = () => {
 
 const WrapperKart = styled.div`
   margin-top: 2rem;
+`;
+
+const TitleDiv = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 `;
 
 export default KartPage;
