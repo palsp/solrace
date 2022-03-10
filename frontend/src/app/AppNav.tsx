@@ -37,7 +37,7 @@ const AppNav = () => {
           </div>
         )}
         <WrapperConnectWalletButton>
-          <ConnectWalletButton />
+          <ConnectWalletButton>Connect Wallet</ConnectWalletButton>
         </WrapperConnectWalletButton>
       </UserSection>
     </NavContainer>
