@@ -1,7 +1,7 @@
-import Image from "next/image";
-import Link from "next/link";
-import styled from "styled-components";
-import { backButton, backButtonPrimary, backButtonSecondary } from "~/assets";
+import Image from 'next/image';
+import Link from 'next/link';
+import styled from 'styled-components';
+import { backButton, backButtonPrimary, backButtonSecondary } from '~/assets';
 
 interface Props {
   direction: string;
@@ -9,7 +9,7 @@ interface Props {
 
 const AuthLayout: React.FC<Props> = ({ children, direction }) => {
   let backButton =
-    direction === "row" ? backButtonPrimary : backButtonSecondary;
+    direction === 'row' ? backButtonPrimary : backButtonSecondary;
   return (
     <AuthLayoutContainer direction={direction}>
       <Link href="/">
@@ -29,6 +29,7 @@ const AuthLayout: React.FC<Props> = ({ children, direction }) => {
 const AuthLayoutContainer = styled.div`
   height: 100%;
   display: flex;
+  /* align-items: center; */
   flex-direction: ${(props: Props) => props.direction};
 `;
 
@@ -45,5 +46,10 @@ const WrapperIcon = styled.div`
 const AuthForm = styled.div`
   flex: 6;
   background: var(--background-gradient);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
 `;
 export default AuthLayout;

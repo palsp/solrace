@@ -8,8 +8,8 @@ import { useAuth } from "~/auth/hooks";
 import { login } from "~/auth/services";
 import { toastAPIError } from "~/utils";
 import FormInput from "~/ui/form/FormInput";
-import StyledButton from "~/ui/Button";
-import { AppLink } from "~/ui";
+import StyledButton from "~/ui/button/Button";
+import { AppLink, Title, ParagraphItalic } from "~/ui";
 
 interface ILoginForm {
   email: string;
@@ -55,6 +55,7 @@ const LoginPage = () => {
 
   return (
     <AuthLayout direction="row">
+      <Title>Login</Title>
       <LoginForm onSubmit={handleSubmit(onSubmit)}>
         <FormInput
           label="Email"
@@ -78,7 +79,10 @@ const LoginPage = () => {
             Login
           </StyledButton>
         </WrapperButton>
-        <AppLink href="/register">Register</AppLink>
+        <div>
+          <ParagraphItalic>Haven't registered? </ParagraphItalic>
+          <AppLink href="/register">Register</AppLink>
+        </div>
       </LoginForm>
     </AuthLayout>
   );
