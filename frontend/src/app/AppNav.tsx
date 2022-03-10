@@ -19,6 +19,8 @@ const AppNav = () => {
             style={{ cursor: "pointer", marginBottom: "0.5rem" }}
           />
         </Link>
+        <AppLink href="/mint">MINT</AppLink>
+
         <AppLink href="/garage">GARAGE</AppLink>
         <AppLink href="/kart">KART</AppLink>
         {!user ? (
