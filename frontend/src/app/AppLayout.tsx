@@ -9,17 +9,17 @@ const AppLayoutContainer = styled.div`
   padding: 5rem 3rem 0;
   height: 100%;
   background-image: linear-gradient(
-    0deg,
-    hsl(139deg 91% 82%) 0%,
-    hsl(145deg 85% 81%) 11%,
-    hsl(152deg 80% 80%) 22%,
-    hsl(158deg 76% 78%) 32%,
-    hsl(164deg 73% 77%) 43%,
-    hsl(170deg 69% 75%) 53%,
-    hsl(175deg 67% 74%) 62%,
-    hsl(181deg 66% 72%) 72%,
-    hsl(185deg 73% 72%) 80%,
-    hsl(189deg 80% 72%) 100%
+    320deg,
+    hsl(138deg 37% 86%) 0%,
+    hsl(143deg 42% 86%) 11%,
+    hsl(149deg 45% 86%) 22%,
+    hsl(156deg 51% 86%) 32%,
+    hsl(161deg 54% 86%) 43%,
+    hsl(167deg 59% 87%) 53%,
+    hsl(172deg 64% 87%) 62%,
+    hsl(177deg 67% 87%) 72%,
+    hsl(184deg 73% 87%) 80%,
+    hsl(188deg 76% 87%) 100%
   );
 `;
 
