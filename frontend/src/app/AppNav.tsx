@@ -4,9 +4,11 @@ import Link from "next/link";
 import { AppLink, Row } from "~/ui";
 import ConnectWalletButton from "~/wallet/ConnectWalletButton";
 import { AppImage } from "~/ui";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 const AppNav = () => {
   const { user } = useAuth();
+  const { connected } = useWallet();
 
   return (
     <NavContainer>
@@ -37,7 +39,9 @@ const AppNav = () => {
           </div>
         )}
         <WrapperConnectWalletButton>
-          <ConnectWalletButton>Connect Wallet</ConnectWalletButton>
+          <ConnectWalletButton>
+            {!connected ? "Connect Wallet" : "Disconnect"}
+          </ConnectWalletButton>
         </WrapperConnectWalletButton>
       </UserSection>
     </NavContainer>
