@@ -23,20 +23,6 @@ const Select = styled.select`
   border-radius: 0.25rem;
 `;
 
-const CTAButton = styled(Button)`
-  border: 1px solid #ccc;
-  border-radius: 1rem;
-
-  &:hover {
-    background-color: #1a1f2e;
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    background-color: #ccc;
-  }
-`;
-
 interface Props {
   nft: NFTAccount;
 }
@@ -111,44 +97,51 @@ const KartCard: React.FC<Props> = ({ nft }) => {
 
   return (
     <Card>
-      <h3>Mint: {shortenIfAddress(nft.mint.toBase58())}</h3>
-      <p>Max Speed: {kartInfo?.masSpeed || 0}</p>
-      <AppImage
-        src="/kart-template.png"
-        height="25em"
-        style={{
-          borderRadius: "1rem",
-        }}
-      />
-      {selectedGarage ? (
-        <p>{shortenIfAddress(selectedGarage.toBase58())}</p>
-      ) : (
-        <p>SELECT GARAGE</p>
-      )}
-      <Select onChange={handleGarageChange}>
-        <option value="">Please Select Garage</option>
-        {stakers.map((staker) => (
-          <option
-            key={staker.publicAddress.toBase58()}
-            value={staker.publicAddress.toBase58()}
+      <WrapperCardContent>
+        <h3>Mint: {shortenIfAddress(nft.mint.toBase58())}</h3>
+        <p>Max Speed: {kartInfo?.masSpeed || 0}</p>
+        <AppImage src="/kart-template.png" height="250px" />
+        {selectedGarage ? (
+          <p>{shortenIfAddress(selectedGarage.toBase58())}</p>
+        ) : (
+          <p>SELECT GARAGE</p>
+        )}
+        <Select onChange={handleGarageChange}>
+          <option value="">Please Select Garage</option>
+          {stakers.map((staker) => (
+            <option
+              key={staker.publicAddress.toBase58()}
+              value={staker.publicAddress.toBase58()}
+            >
+              {shortenIfAddress(staker.publicAddress.toBase58())} (100%)
+            </option>
+          ))}
+        </Select>
+        {loading || loadingKart ? (
+          <ReactLoading type="bubbles" color="#512da8" />
+        ) : (
+          <Button
+            onClick={handleUpgrade}
+            disabled={loading || loadingKart || !selectedGarage}
+            color="secondary"
+            width="100%"
           >
-            {shortenIfAddress(staker.publicAddress.toBase58())} (100%)
-          </option>
-        ))}
-      </Select>
-      {loading || loadingKart ? (
-        <ReactLoading type="bubbles" color="#512da8" />
-      ) : (
-        <CTAButton
-          onClick={handleUpgrade}
-          disabled={loading || loadingKart || !selectedGarage}
-          color="primary"
-        >
-          upgrade
-        </CTAButton>
-      )}
+            upgrade
+          </Button>
+        )}
+      </WrapperCardContent>
     </Card>
   );
 };
+
+const WrapperCardContent = styled.div`
+  // needs this or else the background will be on top
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+`;
 
 export default KartCard;

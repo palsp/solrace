@@ -12,6 +12,9 @@ const Card = styled(Column)`
   border-radius: 0.5rem;
   padding: 1rem;
 
+  &:hover {
+    box-shadow: var(--shadow-elevation-high-secondary);
+  }
   &::before {
     content: "";
     position: absolute;
@@ -21,7 +24,7 @@ const Card = styled(Column)`
     width: 100%;
     height: 100%;
     background: var(--background-gradient-2);
-    transition: opacity 0.5s ease-in;
+    transition: all 0.5s ease-in;
   }
   &:hover::before {
     opacity: 1;
