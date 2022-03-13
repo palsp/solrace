@@ -85,7 +85,7 @@ const RegisterPage = () => {
           register={register}
           error={formState.errors["password"]}
         />
-        <Button type="submit" color="secondary" width="100%">
+        <Button type="submit" color="secondary" width="100%" icon="register">
           Register
         </Button>
         <LoginDiv>

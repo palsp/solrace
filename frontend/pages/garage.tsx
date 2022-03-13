@@ -63,9 +63,6 @@ const GaragePage = () => {
         ) : (
           <>
             <h1>APR - {apr}% </h1>
-            <Button onClick={handleMint} color="primary" width="100%">
-              MOCK MINT
-            </Button>
             {poolInfo && (
               <Main>
                 {nfts.map((nft) => (

@@ -70,7 +70,7 @@ const LoginPage = () => {
           register={register}
           error={formState.errors["password"]}
         />
-        <Button type="submit" color="primary" width="100%">
+        <Button type="submit" color="primary" icon="login" width="100%">
           Login
         </Button>
         <RegisterDiv>

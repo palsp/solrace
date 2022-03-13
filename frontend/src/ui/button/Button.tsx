@@ -1,5 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
+import AppImage from "../appImage";
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -8,12 +9,28 @@ interface Props
   > {
   width?: string;
   color: string;
+  border?: string;
+  icon?: string;
+  outline?: boolean;
 }
 
-const Button = ({ width, color, children }: Props) => {
+const Button = ({ width, color, children, icon, outline }: Props) => {
+  let Icon;
+  if (icon) {
+    Icon = (
+      <AppImage
+        src={`/${icon}-white.png`}
+        width="40px"
+        height="40px"
+      ></AppImage>
+    );
+  }
   return (
-    <WrapperButton width={width} color={color}>
-      <Span>{children}</Span>
+    <WrapperButton width={width} color={color} outline={outline}>
+      <Span>
+        {Icon}
+        {children}
+      </Span>
     </WrapperButton>
   );
 };
@@ -23,12 +40,17 @@ const Span = styled.span`
   position: relative;
   z-index: 1;
   transition: color 0.6s cubic-bezier(0.53, 0.21, 0, 1);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 `;
 
 const WrapperButton = styled.button`
   border: none;
   padding: 1rem;
-  width: ${(props: Props) => props.width || 'auto'};
+  width: ${(props: Props) => props.width || "auto"};
   background-color: ${(props: Props) => `var(--color-${props.color})`};
   color: var(--color-black);
   font-weight: bold;
@@ -40,7 +62,7 @@ const WrapperButton = styled.button`
   overflow: hidden;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     left: 0;
@@ -59,6 +81,14 @@ const WrapperButton = styled.button`
   &:hover::before {
     transform: translate(0, -50%);
   }
+
+  ${(props: Props) => {
+    if (props.outline) {
+      return `&:hover {
+    outline: 2px solid white;
+      }`;
+    }
+  }}
 `;
 
 export default Button;

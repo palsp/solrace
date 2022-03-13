@@ -125,8 +125,10 @@ const KartCard: React.FC<Props> = ({ nft }) => {
             disabled={loading || loadingKart || !selectedGarage}
             color="secondary"
             width="100%"
+            icon="upgrade"
+            outline
           >
-            upgrade
+            Upgrade
           </Button>
         )}
       </WrapperCardContent>
