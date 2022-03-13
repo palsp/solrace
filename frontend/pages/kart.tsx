@@ -14,6 +14,7 @@ import KartCard from "~/kart/KartCard";
 import { useWallet } from "@solana/wallet-adapter-react";
 import ConnectWalletButton from "~/wallet/ConnectWalletButton";
 import { usePool } from "~/pool/hooks";
+import Link from "next/link";
 
 const Main = styled(Row)`
   justify-content: space-around;
@@ -66,10 +67,14 @@ const KartPage = () => {
             {poolInfo && (
               <Main>
                 {nfts.map((nft) => (
-                  <KartCard
-                    key={nft.tokenAccountAddress.toBase58()}
-                    nft={nft}
-                  />
+                  <Link href={`/kart/${nft.tokenAccountAddress.toBase58()}`}>
+                    <a>
+                      <KartCard
+                        key={nft.tokenAccountAddress.toBase58()}
+                        nft={nft}
+                      />
+                    </a>
+                  </Link>
                 ))}
               </Main>
             )}
