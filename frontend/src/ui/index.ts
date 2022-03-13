@@ -8,3 +8,4 @@ export { default as AppLink } from "./appLink";
 export { default as Row } from "./row";
 export { default as Title } from "./title";
 export { Paragraph, ParagraphItalic } from "./paragraph";
+export { default as Model3D } from "./model3d";

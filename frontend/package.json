@@ -13,6 +13,8 @@
     "@metaplex/js": "^4.12.0",
     "@project-serum/anchor": "^0.22.1",
     "@project-serum/common": "^0.0.1-beta.3",
+    "@react-three/drei": "^8.16.5",
+    "@react-three/fiber": "^7.0.26",
     "@solana/spl-token": "0.1.6",
     "@solana/spl-token-registry": "^0.2.2370",
     "@solana/wallet-adapter-base": "^0.9.3",
@@ -32,13 +34,15 @@
     "react-loading": "^2.0.3",
     "react-toastify": "^8.2.0",
     "styled-components": "^5.3.3",
-    "swr": "^1.2.2"
+    "swr": "^1.2.2",
+    "three": "^0.138.3"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
     "@types/node": "17.0.18",
     "@types/react": "17.0.39",
     "@types/styled-components": "^5.1.23",
+    "@types/three": "^0.138.0",
     "babel-plugin-styled-components": "^2.0.5",
     "eslint": "8.9.0",
     "eslint-config-next": "12.1.0",
