@@ -4,16 +4,16 @@ import Column from "../column";
 const Card = styled(Column)`
   position: relative;
   overflow: hidden;
-  width: clamp(200px, 100%, 400px);
+  width: clamp(200px, 100%, 350px);
   height: 100%;
   background: var(--color-white);
   box-shadow: var(--shadow-elevation-medium-secondary);
   gap: 1rem;
   border-radius: 0.5rem;
-  padding: 1rem;
 
   &:hover {
     box-shadow: var(--shadow-elevation-high-secondary);
+    cursor: pointer;
   }
   &::before {
     content: "";
