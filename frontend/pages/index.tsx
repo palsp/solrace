@@ -47,7 +47,7 @@ const Home = () => {
       </NAV> */}
       <Wrapper>
         <VideoWrapper>
-          <Video src="/car_driving.mp4" controls></Video>
+          <Video src="/solrace-map.mp4" controls></Video>
         </VideoWrapper>
         {/* <Button width="300px" color="primary">
           Mint
@@ -70,6 +70,7 @@ const VideoWrapper = styled.div`
 `;
 const Video = styled.video`
   min-width: 100%;
+  max-height: calc(100vh - 5rem);
 `;
 
 export default Home;
