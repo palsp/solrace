@@ -5,16 +5,14 @@ import { toast } from 'react-toastify'
 import ReactLoading from 'react-loading'
 import { useWorkspace } from '~/workspace/hooks'
 import { useStakeAccount } from '~/hooks/useAccount'
-import { shortenIfAddress } from '~/wallet/utils'
 import { bond, unBond } from '~/garage/services'
 import { SOLR_MINT_ADDRESS } from '~/api/solana/addresses'
-import { Row } from '~/ui'
 import Button from '~/ui/Button'
 import Image from '~/ui/Image'
-import { NFTAccount, NFTAccountData } from '~/nft/hooks'
+import { NFTAccountData } from '~/nft/hooks'
 import { POOL_NAME } from '~/api/solana/constants'
 import { usePool } from '~/pool/hooks'
-import { useStaker } from '~/staker/hooks'
+import { useGarageStaker } from '~/garage-staker/hooks'
 import { toastAPIError } from '~/utils'
 import Card from '~/ui/Card'
 import { calculateReward } from '~/pool/utils'
@@ -22,7 +20,7 @@ import { useMintInfo } from '~/hooks/useMintInfo'
 import CircularProgress from '~/ui/CircularProgress'
 import { useCountdown } from '~/hooks/useCountdown'
 import { PublicKey } from '@solana/web3.js'
-import { verifyNFT } from '~/mint/services'
+// import { verifyNFT } from '~/mint/services'
 
 const CTAButton = styled(Button)`
   border: 1px solid #ccc;
@@ -79,7 +77,7 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
     bump: stakingAccountBump,
     revalidate: revalidateStakeAccount,
   } = useStakeAccount(POOL_NAME, mintPubkey)
-  const { revalidate: revalidateStaker } = useStaker()
+  const { revalidate: revalidateStaker } = useGarageStaker()
   const [loading, setLoading] = useState(false)
   const [reward, setReward] = useState<string>()
   // const [countdown, setCountdown] = useState(AUTO_REFRESH_TIME)

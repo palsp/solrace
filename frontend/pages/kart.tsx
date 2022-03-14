@@ -19,6 +19,7 @@ import { useCandyMachine } from '~/hooks/useCandyMachine'
 
 import { KART_COLLECTION_NAME } from '~/kart/constants'
 import { useAnchorWallet } from '~/wallet/hooks'
+import ReactLoading from 'react-loading'
 
 const Main = styled(Row)`
   justify-content: space-around;
@@ -26,18 +27,19 @@ const Main = styled(Row)`
 `
 
 const KartPage = () => {
-  const { provider, wallet } = useWorkspace()
+  const { provider } = useWorkspace()
   const anchorWallet = useAnchorWallet()
   const { connected } = useWallet()
-  const { getNFTOfCollection } = useNFT()
+  const { getNFTOfCollection, revalidateNFTs } = useNFT()
   const { poolInfo } = usePool()
   const [sufficientFund, setSufficientFund] = useState<boolean>(false)
+  const [isPending, setIsPending] = useState(false)
 
   const nfts = useMemo(() => {
     return getNFTOfCollection(KART_COLLECTION_NAME)
   }, [getNFTOfCollection])
 
-  const { candyMachine, revalidate } = useCandyMachine({
+  const { candyMachine, revalidateCandyMachine } = useCandyMachine({
     candyMachineId: KART_CM_ID,
   })
 
@@ -55,7 +57,7 @@ const KartPage = () => {
     setSufficientFund(new BN(balance).gte(candyMachine.state.price))
   }, [anchorWallet, provider, candyMachine])
 
-  const handleMint = async () => {
+  const handleMint = useCallback(async () => {
     if (!sufficientFund) {
       toast('Insufficient Balance', { type: 'error' })
       return
@@ -67,24 +69,40 @@ const KartPage = () => {
     }
 
     try {
+      setIsPending(true)
       const [mintTxId] = await mint({ provider, candyMachine })
       const resp = await provider.connection.confirmTransaction(mintTxId)
       if (resp.value.err) {
         toast('Mint Failed', { type: 'error' })
       } else {
-        toast('Mint Succeed', { type: 'success' })
+        await Promise.all([revalidateNFTs(), revalidateCandyMachine()])
+        toast('Congratulation! You have Minted new kart', { type: 'success' })
       }
-      // await revalidateNFTs()
-      await revalidate()
     } catch (e) {
-      console.log(e)
       toast('Mint Failed', { type: 'error' })
+    } finally {
+      setIsPending(false)
     }
-  }
+  }, [
+    sufficientFund,
+    provider,
+    candyMachine,
+    revalidateCandyMachine,
+    revalidateNFTs,
+  ])
 
   useEffect(() => {
     validateUserBalance()
   }, [validateUserBalance])
+
+  const mintRenderer = useMemo(() => {
+    return isPending ? (
+      <ReactLoading type="bubbles" color="#512da8" />
+    ) : (
+      <Button onClick={handleMint}> MINT</Button>
+    )
+  }, [isPending, handleMint])
+
   return (
     <AppLayout>
       <Title>KART</Title>
@@ -92,7 +110,7 @@ const KartPage = () => {
         <ConnectWalletButton />
       ) : (
         <>
-          <Button onClick={handleMint}> MINT</Button>
+          {mintRenderer}
 
           {poolInfo && (
             <Main>

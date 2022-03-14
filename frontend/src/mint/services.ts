@@ -10,25 +10,26 @@ import {
   TransactionInstruction,
 } from '@solana/web3.js'
 import {
+  CIVIC,
   SOL_RACE_CORE_PROGRAM_ID,
   TOKEN_METADATA_PROGRAM_ID,
 } from '~/api/solana/addresses'
 import {
   CandyMachineAccount,
   getCandyMachineCreator,
-  getMasterEdition,
 } from '~/api/solana/candy-machine'
 
 import {
-  CIVIC,
   createAssociatedTokenAccountInstruction,
   getAtaForMint,
   getNetworkExpire,
   getNetworkToken,
-} from '~/api/solana/candy-machine/utils'
+  getMasterEdition,
+  getMetadata,
+} from '~/api/solana/utils'
+
 import { POOL_NAME } from '~/api/solana/constants'
 import { IDL, SolRaceCore } from '~/api/solana/types/sol_race_core'
-import { getMetadata } from '~/api/solana/utils'
 
 type Mint = {
   provider: anchor.Provider

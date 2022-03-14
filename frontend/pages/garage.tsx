@@ -2,7 +2,8 @@ import { useCallback, useState, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 import AppLayout from '~/app/AppLayout'
 import { useWorkspace } from '~/workspace/hooks'
-import { useAllNFT, useNFT } from '~/nft/hooks'
+import ReactLoading from 'react-loading'
+import { useNFT } from '~/nft/hooks'
 import GarageCard from '~/garage/GarageCard'
 import Button from '~/ui/Button'
 import Title from '~/ui/Title'
@@ -30,15 +31,15 @@ const CTAButton = styled(Button)`
 `
 
 const GaragePage = () => {
-  const { provider, wallet } = useWorkspace()
+  const { provider } = useWorkspace()
   const anchorWallet = useAnchorWallet()
   const { poolInfo, apr } = usePool()
   const { connected } = useWallet()
-  const { getNFTOfCollection } = useNFT()
+  const { getNFTOfCollection, revalidateNFTs } = useNFT()
   const [sufficientFund, setSufficientFund] = useState<boolean>(false)
   const [isPending, setIsPending] = useState(false)
 
-  const { candyMachine, revalidate } = useCandyMachine({
+  const { candyMachine, revalidateCandyMachine } = useCandyMachine({
     candyMachineId: GARAGE_CM_ID,
   })
 
@@ -60,7 +61,7 @@ const GaragePage = () => {
     setSufficientFund(new BN(balance).gte(candyMachine.state.price))
   }, [anchorWallet, provider, candyMachine])
 
-  const handleMint = async () => {
+  const handleMint = useCallback(async () => {
     if (!sufficientFund) {
       toast('Insufficient Balance', { type: 'error' })
       return
@@ -81,7 +82,7 @@ const GaragePage = () => {
       if (resp.value.err) {
         toastAPIError(resp.value.err, 'Mint Failed')
       } else {
-        await revalidate()
+        await Promise.all([revalidateCandyMachine(), revalidateNFTs()])
         toast('Congratulation! You have Minted new garage.', {
           type: 'success',
         })
@@ -92,11 +93,27 @@ const GaragePage = () => {
     } finally {
       setIsPending(false)
     }
-  }
+  }, [
+    sufficientFund,
+    provider,
+    candyMachine,
+    revalidateCandyMachine,
+    revalidateNFTs,
+  ])
 
   useEffect(() => {
     validateUserBalance()
   }, [validateUserBalance])
+
+  const mintRenderer = useMemo(() => {
+    return isPending ? (
+      <ReactLoading type="bubbles" color="#512da8" />
+    ) : (
+      <CTAButton onClick={handleMint} disabled={isPending}>
+        MINT
+      </CTAButton>
+    )
+  }, [isPending, handleMint])
 
   return (
     <AppLayout>
@@ -106,9 +123,8 @@ const GaragePage = () => {
       ) : (
         <>
           <h1>APR: {apr} % </h1>
-          <CTAButton onClick={handleMint} disabled={isPending}>
-            MINT
-          </CTAButton>
+
+          {mintRenderer}
           {poolInfo && (
             <Main>
               {nfts.map((nft) => (

@@ -14,16 +14,18 @@ import {
 import {
   CandyMachineAccount,
   getCandyMachineCreator,
-  getMasterEdition,
 } from '~/api/solana/candy-machine'
 import {
   createAssociatedTokenAccountInstruction,
   getAtaForMint,
   getNetworkExpire,
   getNetworkToken,
-} from '~/api/solana/candy-machine/utils'
+  getMasterEdition,
+  getMetadata,
+} from '~/api/solana/utils'
+
 import { SolRaceCore, IDL } from '~/api/solana/types/sol_race_core'
-import { getMetadata } from '~/api/solana/utils'
+
 type Bond = {
   provider: anchor.Provider
   poolAccount: PublicKey

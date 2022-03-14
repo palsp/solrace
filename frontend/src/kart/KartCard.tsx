@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import ReactLoading from 'react-loading'
 import { PublicKey } from '@solana/web3.js'
-import { useStaker } from '~/staker/hooks'
+import { useGarageStaker } from '~/garage-staker/hooks'
 import { NFTAccount, NFTAccountData } from '~/nft/hooks'
 import { POOL_NAME } from '~/api/solana/constants'
 import { upgradeKart } from '~/kart/services'
@@ -50,7 +50,7 @@ const KartCard: React.FC<Props> = ({ nft }) => {
     tokenAccountAddress,
   ])
 
-  const { stakers } = useStaker()
+  const { stakers } = useGarageStaker()
   const { provider } = useWorkspace()
   const { publicAddress: poolAccount } = usePool()
 

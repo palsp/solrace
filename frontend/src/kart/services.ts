@@ -6,9 +6,7 @@ import {
   TOKEN_METADATA_PROGRAM_ID,
 } from '~/api/solana/addresses'
 import { IDL, SolRaceCore } from '~/api/solana/types/sol_race_core'
-import { POOL_NAME } from '~/api/solana/constants'
-import { getMetadata } from '~/api/solana/utils'
-import { getMasterEdition } from '~/api/solana/candy-machine'
+import { getMetadata, getMasterEdition } from '~/api/solana/utils'
 interface UpgradeKart {
   provider: anchor.Provider
   poolAccount: PublicKey

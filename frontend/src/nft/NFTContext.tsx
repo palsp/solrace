@@ -23,18 +23,20 @@ export interface NFTAccountData {
 interface INFTContext {
   collections: NFTCollection[]
   getNFTOfCollection: (collectionName: string) => NFTAccountData[]
+  revalidateNFTs: () => Promise<void>
 }
 
 const defaultNFTContext: INFTContext = {
   collections: [],
   getNFTOfCollection: (collectionName: string) => [],
+  revalidateNFTs: Promise.resolve,
 }
 
 export const NFTContext = React.createContext(defaultNFTContext)
 
 export const NFTProvider: React.FC = ({ children }) => {
   const { publicKey: owner } = useWallet()
-  const { data: collections } = useSWR(
+  const { data: collections, mutate: revalidateNFTs } = useSWR(
     owner ? `/nft/${owner.toBase58()}` : null,
   )
 
@@ -52,7 +54,11 @@ export const NFTProvider: React.FC = ({ children }) => {
 
   return (
     <NFTContext.Provider
-      value={{ collections: collections || [], getNFTOfCollection }}
+      value={{
+        collections: collections || [],
+        getNFTOfCollection,
+        revalidateNFTs,
+      }}
     >
       {children}
     </NFTContext.Provider>
