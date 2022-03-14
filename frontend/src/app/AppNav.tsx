@@ -39,6 +39,7 @@ const AppNav = () => {
       <UserSection>
         <AppLink href="/garage">GARAGE</AppLink>
         <AppLink href="/kart">KART</AppLink>
+
         {!user ? (
           <div>
             <>

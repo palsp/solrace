@@ -9,24 +9,25 @@ import { prompt } from './helper'
 import { createMint, createTokenAccount, getTokenAccount } from './utils'
 
 const SUPPORT_ENV = ['devnet', 'testnet']
+
+const garageCreator = new PublicKey(
+  'AkuCDDdZhWi6GyuPLeVi1FVtajZ6Bbyj9hJEgDYRcfku',
+)
+const kartCreator = new PublicKey(
+  'GKouHKo891dGKvrWGi3Ld81ESaRrcUWpgqzhf5N4UZJH',
+)
+
 export const initialize = async () => {
-  const env = await prompt('which network [devnet, testnet] ? >')
+  const env = await prompt('which network [devnet, testnet] ? > ')
 
   if (!SUPPORT_ENV.includes(env)) {
     throw new Error(`${env} not supported`)
   }
 
   const walletKeypair = loadWalletKey(
-    '/Users/supasinliulaks/.config/solana/testnet.json',
+    '/Users/supasinliulaks/.config/solana/devnet.json',
   )
   const program = await loadStakingProgram(walletKeypair, env)
-
-  const garageCreator = new PublicKey(
-    'E4ZLGyZ8ADN13KsdGxeKP93rkPTrZUkT4yG99bcaUXh4',
-  )
-  const kartCreator = new PublicKey(
-    'HzDeFzmNx3cvtQP2GnJAwwzjDGBzRTQMADLdhBLXG2y5',
-  )
 
   const connection = new Connection(clusterApiUrl(env as Cluster), {
     commitment: 'processed',

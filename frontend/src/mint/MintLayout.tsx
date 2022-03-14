@@ -18,6 +18,8 @@ import { useWorkspace } from '~/workspace/hooks'
 import { CANDY_MACHINE_PROGRAM } from '~/api/solana/addresses'
 import { getUserBalance, handleMintError } from '~/mint/services'
 import MintCard from '~/mint/MintCard'
+import { mint } from '~/garage/services'
+import { toastAPIError } from '~/utils'
 
 const MintContainer = styled.div`
   display: flex;
@@ -86,24 +88,22 @@ const MintLayout = () => {
         return
       }
 
-      const [mintTxId] = await mintOneToken(wallet.publicKey, candyMachine)
-      let status: any = { err: true }
-      if (mintTxId) {
-        status = await awaitTransactionSignatureConfirmation(
-          mintTxId,
-          30000,
-          connection,
-          true,
-        )
-      }
+      const [mintTxId] = await mint({
+        provider,
+        candyMachine,
+      })
 
-      if (status && !status.err) {
-        toast('Congratulations! Mint succeeded!', { type: 'success' })
-        await revalidate()
+      const resp = await provider.connection.confirmTransaction(mintTxId)
+      if (resp.value.err) {
+        toastAPIError(resp.value.err, 'Mint Failed')
       } else {
-        toast('Mint failed! Please try again!', { type: 'error' })
+        await revalidate()
+        toast('Congratulation! You have Minted new garage.', {
+          type: 'success',
+        })
       }
     } catch (e) {
+      console.log(e)
       const message = handleMintError(e)
       toast(message, { type: 'error' })
     } finally {

@@ -21,13 +21,21 @@ export const SOL_RACE_CORE_PROGRAM_ID = new PublicKey(
 )
 
 export const SOLR_MINT_ADDRESS = new PublicKey(
-  'DSqS5gjWEzsXbWZnRM1hBMzHwyzPsHeVhjU4SZXvLp8Y',
+  'HQ7PKsKfk9EPtmHercrWs9ymUZqut7tS1e9ktpb8qd5n',
 )
 
 export const GARAGE_CREATOR = new PublicKey(
-  'E4ZLGyZ8ADN13KsdGxeKP93rkPTrZUkT4yG99bcaUXh4',
+  'AkuCDDdZhWi6GyuPLeVi1FVtajZ6Bbyj9hJEgDYRcfku',
 )
 
 export const KART_CREATOR = new PublicKey(
-  'HzDeFzmNx3cvtQP2GnJAwwzjDGBzRTQMADLdhBLXG2y5',
+  'GKouHKo891dGKvrWGi3Ld81ESaRrcUWpgqzhf5N4UZJH',
+)
+
+export const GARAGE_CM_ID = new PublicKey(
+  '7ZMyBKRwgGomnwAUkrZrAsnHiKyYqgvyBgid4pzmPWXr',
+)
+
+export const KART_CM_ID = new PublicKey(
+  'CiC9WDoGhLFEXgoCPLirhszNXjJJDCzUESQWnPdFucZ9',
 )

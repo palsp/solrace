@@ -30,7 +30,7 @@ export const calculateReward = (
 
   const newGlobalRewardIndex =
     poolInfo.globalRewardIndex +
-    distributedAmount / poolInfo.totalStaked.toNumber()
+    distributedAmount / (poolInfo.totalStaked.toNumber() || 1)
 
   const bondAmount = stakeInfo.isBond ? 1 : 0
 
