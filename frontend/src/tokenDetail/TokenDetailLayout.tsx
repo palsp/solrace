@@ -14,8 +14,12 @@ const TokenDetailLayout: React.FC<Props> = ({
   return (
     <AppLayout>
       <TokenDetailLayoutContainer direction={direction}>
-        <Wrapper3D>{token3D}</Wrapper3D>
-        <WrapperTokenDetail>{children}</WrapperTokenDetail>
+        <Wrapper3D>
+          <WrapperInner3D>{token3D}</WrapperInner3D>
+        </Wrapper3D>
+        <WrapperTokenDetail>
+          <WrapperCard>{children}</WrapperCard>
+        </WrapperTokenDetail>
       </TokenDetailLayoutContainer>
     </AppLayout>
   );
@@ -25,15 +29,31 @@ const TokenDetailLayoutContainer = styled.div`
   height: 100%;
   display: flex;
   flex-direction: ${(props: Props) => props.direction};
+  gap: 1rem;
 `;
 
 const Wrapper3D = styled.div`
   flex: 4;
 `;
 
+const WrapperInner3D = styled.div`
+  width: 80%;
+  margin: auto;
+`;
 const WrapperTokenDetail = styled.div`
   flex: 6;
-  padding: 2rem;
+  /* height: 75%; */
+  display: flex;
+  align-items: center;
+`;
+
+const WrapperCard = styled.div`
+  /* background: var(--color-primary-light); */
+
+  border-radius: 0.5rem;
+  padding: 1rem;
+
+  width: fit-content;
   display: flex;
   flex-direction: column;
   gap: 1rem;

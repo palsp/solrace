@@ -12,7 +12,7 @@ import { useWorkspace } from "~/workspace/hooks";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useAllNFT } from "~/nft/hooks";
 import { usePool } from "~/pool/hooks";
-import { Model3D, ParagraphItalic, Title } from "~/ui";
+import { Model3D, ParagraphItalic, Select, Title } from "~/ui";
 import TokenDetailLayout from "~/tokenDetail/TokenDetailLayout";
 import { shortenIfAddress } from "~/wallet/utils";
 import Button from "~/ui/button/Button";
@@ -110,9 +110,7 @@ const KartDetail = () => {
 
       <ParagraphItalic>Max Speed: 5</ParagraphItalic>
 
-      {selectedGarage ? "" : <p>SELECT GARAGE</p>}
-      <Select onChange={handleGarageChange}>
-        <option value="">Please Select Garage</option>
+      <Select onChange={handleGarageChange} value={selectedGarage?.toString()}>
         {stakers.map((staker) => (
           <option
             key={staker.publicAddress.toBase58()}
@@ -122,6 +120,7 @@ const KartDetail = () => {
           </option>
         ))}
       </Select>
+
       {/* {loading || loadingKart ? (
         <ReactLoading type="bubbles" color="var(--color-secondary)" />
       ) : ( */}
@@ -129,8 +128,9 @@ const KartDetail = () => {
         onClick={handleUpgrade}
         disabled={loading || loadingKart || !selectedGarage}
         color="secondary"
-        width="80%"
+        width="300px"
         icon="upgrade"
+        padding="0.5rem"
       >
         Upgrade
       </Button>
@@ -138,12 +138,5 @@ const KartDetail = () => {
     </TokenDetailLayout>
   );
 };
-
-const Select = styled.select`
-  padding: 0.5rem;
-  margin: 1rem;
-  width: 100%;
-  border-radius: 0.25rem;
-`;
 
 export default KartDetail;
