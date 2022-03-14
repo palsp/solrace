@@ -9,13 +9,13 @@ import { useAllNFT } from "~/nft/hooks";
 import { usePool } from "~/pool/hooks";
 import { Model3D } from "~/ui";
 
-const kartDetail = () => {
+const KartDetail = () => {
   const router = useRouter();
+  const { kartDetail: tokenId } = router.query;
   const { provider, wallet } = useWorkspace();
   const { connected } = useWallet();
   const { nfts, revalidate: revalidateNFTs } = useAllNFT(wallet?.publicKey);
   const { poolInfo } = usePool();
-  const { kartDetail: tokenId } = router.query;
   return (
     <AppLayout>
       {tokenId}
@@ -33,4 +33,4 @@ const WrapperModel3D = styled.div`
   align-items: center;
 `;
 
-export default kartDetail;
+export default KartDetail;

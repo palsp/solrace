@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Link from "next/link";
 import { toast } from "react-toastify";
 import AppLayout from "~/app/AppLayout";
 import { useWorkspace } from "~/workspace/hooks";
@@ -66,10 +67,14 @@ const GaragePage = () => {
             {poolInfo && (
               <Main>
                 {nfts.map((nft) => (
-                  <GarageCard
-                    key={nft.tokenAccountAddress.toBase58()}
-                    nft={nft}
-                  />
+                  <Link href={`/garage/${nft.tokenAccountAddress.toBase58()}`}>
+                    <a>
+                      <GarageCard
+                        key={nft.tokenAccountAddress.toBase58()}
+                        nft={nft}
+                      />
+                    </a>
+                  </Link>
                 ))}
               </Main>
             )}
