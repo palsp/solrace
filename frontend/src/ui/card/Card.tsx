@@ -10,7 +10,7 @@ const cardType = {
   kart: {
     img: "/kart-template.png",
     description: {
-      model: "ZGMF-X42F Helios",
+      model: "ZGMF-X42F Cassini",
       rarity: "AR",
       attributes: "Max Speed: 5",
       price: "5.43",
@@ -19,7 +19,7 @@ const cardType = {
   garage: {
     img: "/garage-template.jpeg",
     description: {
-      model: "ZX00 Pegasus",
+      model: "ZX-00 Pegasus",
       rarity: "SSR",
       attributes: "Chances of Success: 88",
       price: "8.69",

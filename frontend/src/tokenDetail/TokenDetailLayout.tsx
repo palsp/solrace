@@ -3,20 +3,19 @@ import AppLayout from "~/app/AppLayout";
 
 interface Props {
   direction: string;
-  tokenDetail?: any;
   token3D?: any;
 }
 
 const TokenDetailLayout: React.FC<Props> = ({
   direction,
-  tokenDetail,
   token3D,
+  children,
 }) => {
   return (
     <AppLayout>
       <TokenDetailLayoutContainer direction={direction}>
         <Wrapper3D>{token3D}</Wrapper3D>
-        <WrapperTokenDetail>{tokenDetail}</WrapperTokenDetail>
+        <WrapperTokenDetail>{children}</WrapperTokenDetail>
       </TokenDetailLayoutContainer>
     </AppLayout>
   );
@@ -34,6 +33,9 @@ const Wrapper3D = styled.div`
 
 const WrapperTokenDetail = styled.div`
   flex: 6;
-  background: yellow;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 `;
 export default TokenDetailLayout;
