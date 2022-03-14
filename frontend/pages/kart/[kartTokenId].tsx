@@ -2,12 +2,12 @@ import React from "react";
 import styled from "styled-components";
 
 import { useRouter } from "next/router";
-import AppLayout from "~/app/AppLayout";
 import { useWorkspace } from "~/workspace/hooks";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useAllNFT } from "~/nft/hooks";
 import { usePool } from "~/pool/hooks";
 import { Model3D } from "~/ui";
+import TokenDetailLayout from "~/tokenDetail/TokenDetailLayout";
 
 const KartDetail = () => {
   const router = useRouter();
@@ -17,20 +17,10 @@ const KartDetail = () => {
   const { nfts, revalidate: revalidateNFTs } = useAllNFT(wallet?.publicKey);
   const { poolInfo } = usePool();
   return (
-    <AppLayout>
+    <TokenDetailLayout direction="row" token3D={<Model3D />} tokenDetail="">
       {tokenId}
-      <WrapperModel3D>
-        <Model3D />
-      </WrapperModel3D>
-    </AppLayout>
+    </TokenDetailLayout>
   );
 };
-
-const WrapperModel3D = styled.div`
-  /* width: 500px; */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 
 export default KartDetail;
