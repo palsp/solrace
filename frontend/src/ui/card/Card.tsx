@@ -32,7 +32,7 @@ const Card: React.FC<Props> = ({ type, children }) => {
   return (
     <WrapperCard>
       <WrapperCardContent>
-        <AppImage src={card.img} height="300px" width="350px" />
+        <AppImage src={card.img} height="300px" width="300px" />
         <WrapperDescription>
           <TextDescription>
             <Paragraph>Model: {card.description.model}</Paragraph>

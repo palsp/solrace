@@ -31,11 +31,7 @@ const KartPage = () => {
     <AppLayout>
       <WrapperKart>
         <TitleDiv>
-          <Title>KART -</Title>
-          <Paragraph>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. In,
-            voluptates!{" "}
-          </Paragraph>
+          <h3>KART - your karts collection</h3>
         </TitleDiv>
         {!connected ? (
           <Paragraph>Please Connect Your Wallet</Paragraph>
@@ -78,8 +74,15 @@ const WrapperKart = styled.div`
 `;
 
 const TitleDiv = styled.div`
+  background: var(--color-primary-light);
+  width: fit-content;
+  margin: 2rem 0;
+  padding: 0.5rem;
+  box-shadow: var(--shadow-elevation-medium-primary);
   display: flex;
+  flex-direction: column;
   align-items: center;
+  border-radius: 0.5rem;
   gap: 2rem;
 `;
 
