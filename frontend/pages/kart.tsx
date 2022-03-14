@@ -20,6 +20,12 @@ import { useCandyMachine } from '~/hooks/useCandyMachine'
 import { KART_COLLECTION_NAME } from '~/kart/constants'
 import { useAnchorWallet } from '~/wallet/hooks'
 import ReactLoading from 'react-loading'
+import {
+  GatewayProvider,
+  GatewayStatus,
+  useGateway,
+} from '@civic/solana-gateway-react'
+import { PublicKey } from '@solana/web3.js'
 
 const Main = styled(Row)`
   justify-content: space-around;
@@ -34,6 +40,8 @@ const KartPage = () => {
   const { poolInfo } = usePool()
   const [sufficientFund, setSufficientFund] = useState<boolean>(false)
   const [isPending, setIsPending] = useState(false)
+  const { requestGatewayToken, gatewayStatus } = useGateway()
+  const [clicked, setClicked] = useState(false)
 
   const nfts = useMemo(() => {
     return getNFTOfCollection(KART_COLLECTION_NAME)
@@ -57,7 +65,7 @@ const KartPage = () => {
     setSufficientFund(new BN(balance).gte(candyMachine.state.price))
   }, [anchorWallet, provider, candyMachine])
 
-  const handleMint = useCallback(async () => {
+  const handleMint = async () => {
     if (!sufficientFund) {
       toast('Insufficient Balance', { type: 'error' })
       return
@@ -68,40 +76,53 @@ const KartPage = () => {
       return
     }
 
-    try {
-      setIsPending(true)
-      const [mintTxId] = await mint({ provider, candyMachine })
-      const resp = await provider.connection.confirmTransaction(mintTxId)
-      if (resp.value.err) {
-        toast('Mint Failed', { type: 'error' })
+    setClicked(true)
+    if (candyMachine?.state.isActive && candyMachine?.state.gatekeeper) {
+      if (gatewayStatus === GatewayStatus.ACTIVE) {
+        setClicked(true)
       } else {
-        await Promise.all([revalidateNFTs(), revalidateCandyMachine()])
-        toast('Congratulation! You have Minted new kart', { type: 'success' })
+        await requestGatewayToken()
       }
-    } catch (e) {
-      toast('Mint Failed', { type: 'error' })
-    } finally {
-      setIsPending(false)
+    } else {
+      try {
+        setIsPending(true)
+        const [mintTxId] = await mint({ provider, candyMachine })
+        const resp = await provider.connection.confirmTransaction(mintTxId)
+        if (resp.value.err) {
+          toast('Mint Failed', { type: 'error' })
+        } else {
+          await Promise.all([revalidateNFTs(), revalidateCandyMachine()])
+          toast('Congratulation! You have Minted new kart', { type: 'success' })
+        }
+      } catch (e) {
+        toast('Mint Failed', { type: 'error' })
+      } finally {
+        setIsPending(false)
+        setClicked(false)
+      }
     }
-  }, [
-    sufficientFund,
-    provider,
-    candyMachine,
-    revalidateCandyMachine,
-    revalidateNFTs,
-  ])
+  }
 
   useEffect(() => {
     validateUserBalance()
   }, [validateUserBalance])
 
-  const mintRenderer = useMemo(() => {
-    return isPending ? (
-      <ReactLoading type="bubbles" color="#512da8" />
-    ) : (
-      <Button onClick={handleMint}> MINT</Button>
-    )
-  }, [isPending, handleMint])
+  const mintButtonContent = useMemo(() => {
+    if (candyMachine?.state.isSoldOut) {
+      return 'SOLD OUT'
+    } else if (isPending) {
+      return <ReactLoading type="bubbles" color="#512da8" />
+    } else if (
+      candyMachine?.state.isPresale ||
+      candyMachine?.state.isWhitelistOnly
+    ) {
+      return 'WHITELIST MINT'
+    } else if (clicked && candyMachine?.state.gatekeeper) {
+      return <ReactLoading type="bubbles" color="#512da8" />
+    }
+
+    return 'MINT'
+  }, [clicked, isPending, candyMachine])
 
   return (
     <AppLayout>
@@ -109,9 +130,13 @@ const KartPage = () => {
       {!connected ? (
         <ConnectWalletButton />
       ) : (
-        <>
-          {mintRenderer}
-
+        <GatewayProvider
+          wallet={{
+            publicKey: provider.wallet?.publicKey || new PublicKey(KART_CM_ID),
+            signTransaction: provider.wallet?.signTransaction,
+          }}
+        >
+          <Button onClick={handleMint}>{mintButtonContent}</Button>
           {poolInfo && (
             <Main>
               {nfts.map((nft) => (
@@ -119,7 +144,7 @@ const KartPage = () => {
               ))}
             </Main>
           )}
-        </>
+        </GatewayProvider>
       )}
     </AppLayout>
   )

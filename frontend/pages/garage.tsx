@@ -13,12 +13,17 @@ import ConnectWalletButton from '~/wallet/ConnectWalletButton'
 import { BN } from '@project-serum/anchor'
 import { usePool } from '~/pool/hooks'
 import { useCandyMachine } from '~/hooks/useCandyMachine'
-import { GARAGE_CM_ID, GARAGE_CREATOR } from '~/api/solana/addresses'
+import { GARAGE_CM_ID } from '~/api/solana/addresses'
 import { useAnchorWallet } from '~/wallet/hooks'
 import { getUserBalance, handleMintError, mint } from '~/mint/services'
 import { toast } from 'react-toastify'
 import { toastAPIError } from '~/utils'
 import { GARAGE_COLLECTION_NAME } from '~/garage/constants'
+import {
+  useGateway,
+  GatewayStatus,
+  GatewayProvider,
+} from '@civic/solana-gateway-react'
 import { PublicKey } from '@solana/web3.js'
 
 const Main = styled(Row)`
@@ -38,6 +43,8 @@ const GaragePage = () => {
   const { getNFTOfCollection, revalidateNFTs } = useNFT()
   const [sufficientFund, setSufficientFund] = useState<boolean>(false)
   const [isPending, setIsPending] = useState(false)
+  const { requestGatewayToken, gatewayStatus } = useGateway()
+  const [clicked, setClicked] = useState(false)
 
   const { candyMachine, revalidateCandyMachine } = useCandyMachine({
     candyMachineId: GARAGE_CM_ID,
@@ -61,59 +68,69 @@ const GaragePage = () => {
     setSufficientFund(new BN(balance).gte(candyMachine.state.price))
   }, [anchorWallet, provider, candyMachine])
 
-  const handleMint = useCallback(async () => {
+  const handleMint = async () => {
     if (!sufficientFund) {
       toast('Insufficient Balance', { type: 'error' })
       return
     }
 
-    try {
-      setIsPending(true)
-      if (!provider || !candyMachine?.program) {
-        toast('Please connect wallet', { type: 'warning' })
-        return
-      }
-
-      const [mintTxId] = await mint({
-        provider,
-        candyMachine,
-      })
-      const resp = await provider.connection.confirmTransaction(mintTxId)
-      if (resp.value.err) {
-        toastAPIError(resp.value.err, 'Mint Failed')
+    if (candyMachine?.state.isActive && candyMachine?.state.gatekeeper) {
+      if (gatewayStatus === GatewayStatus.ACTIVE) {
+        setClicked(true)
       } else {
-        await Promise.all([revalidateCandyMachine(), revalidateNFTs()])
-        toast('Congratulation! You have Minted new garage.', {
-          type: 'success',
-        })
+        await requestGatewayToken()
       }
-    } catch (e) {
-      const message = handleMintError(e)
-      toast(message, { type: 'error' })
-    } finally {
-      setIsPending(false)
+    } else {
+      try {
+        setIsPending(true)
+        if (!provider || !candyMachine?.program) {
+          toast('Please connect wallet', { type: 'warning' })
+          return
+        }
+
+        const [mintTxId] = await mint({
+          provider,
+          candyMachine,
+        })
+        const resp = await provider.connection.confirmTransaction(mintTxId)
+        if (resp.value.err) {
+          toastAPIError(resp.value.err, 'Mint Failed')
+        } else {
+          await Promise.all([revalidateCandyMachine(), revalidateNFTs()])
+          toast('Congratulation! You have Minted new garage.', {
+            type: 'success',
+          })
+        }
+      } catch (e) {
+        const message = handleMintError(e)
+        toast(message, { type: 'error' })
+      } finally {
+        setIsPending(false)
+        setClicked(false)
+      }
     }
-  }, [
-    sufficientFund,
-    provider,
-    candyMachine,
-    revalidateCandyMachine,
-    revalidateNFTs,
-  ])
+  }
 
   useEffect(() => {
     validateUserBalance()
   }, [validateUserBalance])
 
-  const mintRenderer = useMemo(() => {
-    return isPending ? (
-      <ReactLoading type="bubbles" color="#512da8" />
-    ) : (
-      <CTAButton onClick={handleMint} disabled={isPending}>
-        MINT
-      </CTAButton>
-    )
-  }, [isPending, handleMint])
+  const mintButtonContent = useMemo(() => {
+    if (candyMachine?.state.isSoldOut) {
+      return 'SOLD OUT'
+    } else if (isPending) {
+      return <ReactLoading type="bubbles" color="#512da8" />
+    } else if (
+      candyMachine?.state.isPresale ||
+      candyMachine?.state.isWhitelistOnly
+    ) {
+      return 'WHITELIST MINT'
+    } else if (clicked && candyMachine?.state.gatekeeper) {
+      return <ReactLoading type="bubbles" color="#512da8" />
+    }
+
+    return 'MINT'
+  }, [clicked, isPending, candyMachine])
 
   return (
     <AppLayout>
@@ -121,10 +138,18 @@ const GaragePage = () => {
       {!connected ? (
         <ConnectWalletButton />
       ) : (
-        <>
+        <GatewayProvider
+          wallet={{
+            publicKey:
+              provider.wallet?.publicKey || new PublicKey(GARAGE_CM_ID),
+            signTransaction: provider.wallet?.signTransaction,
+          }}
+        >
           <h1>APR: {apr} % </h1>
 
-          {mintRenderer}
+          <CTAButton onClick={handleMint} disabled={isPending}>
+            {mintButtonContent}
+          </CTAButton>
           {poolInfo && (
             <Main>
               {nfts.map((nft) => (
@@ -132,7 +157,7 @@ const GaragePage = () => {
               ))}
             </Main>
           )}
-        </>
+        </GatewayProvider>
       )}
     </AppLayout>
   )
