@@ -1,0 +1,422 @@
+{
+	"asset":
+	{
+		"version": "2.0",
+		"generator": "Unreal Engine 4.26.0 glTF Exporter 1.0.6"
+	},
+	"scene": 0,
+	"accessors": [
+		{
+			"bufferView": 0,
+			"count": 9,
+			"type": "MAT4",
+			"componentType": 5126
+		},
+		{
+			"bufferView": 1,
+			"count": 5568,
+			"type": "SCALAR",
+			"componentType": 5123
+		},
+		{
+			"bufferView": 2,
+			"count": 2714,
+			"type": "VEC3",
+			"componentType": 5126,
+			"min": [ -1.73080409,
+				0.00297374721,
+				-1.02366138
+			],
+			"max": [ 1.97174859,
+				1.08228743,
+				1.02366149
+			]
+		},
+		{
+			"bufferView": 3,
+			"count": 2714,
+			"type": "VEC3",
+			"componentType": 5126
+		},
+		{
+			"bufferView": 4,
+			"count": 2714,
+			"type": "VEC4",
+			"componentType": 5126
+		},
+		{
+			"bufferView": 5,
+			"count": 2714,
+			"type": "VEC2",
+			"componentType": 5126
+		},
+		{
+			"bufferView": 6,
+			"count": 2714,
+			"type": "VEC4",
+			"componentType": 5121
+		},
+		{
+			"bufferView": 7,
+			"count": 2714,
+			"type": "VEC4",
+			"componentType": 5121,
+			"normalized": true
+		},
+		{
+			"bufferView": 8,
+			"count": 456,
+			"type": "SCALAR",
+			"componentType": 5121
+		},
+		{
+			"bufferView": 9,
+			"count": 172,
+			"type": "VEC3",
+			"componentType": 5126,
+			"min": [ -1.62853372,
+				0.0829495788,
+				-1.00535059
+			],
+			"max": [ 1.83581948,
+				1.01635623,
+				1.00535095
+			]
+		},
+		{
+			"bufferView": 10,
+			"count": 172,
+			"type": "VEC3",
+			"componentType": 5126
+		},
+		{
+			"bufferView": 11,
+			"count": 172,
+			"type": "VEC4",
+			"componentType": 5126
+		},
+		{
+			"bufferView": 12,
+			"count": 172,
+			"type": "VEC2",
+			"componentType": 5126
+		},
+		{
+			"bufferView": 13,
+			"count": 172,
+			"type": "VEC4",
+			"componentType": 5121
+		},
+		{
+			"bufferView": 14,
+			"count": 172,
+			"type": "VEC4",
+			"componentType": 5121,
+			"normalized": true
+		}
+	],
+	"buffers": [
+		{
+			"uri": "Cassini.bin",
+			"byteLength": 173784
+		}
+	],
+	"bufferViews": [
+		{
+			"buffer": 0,
+			"byteLength": 576
+		},
+		{
+			"buffer": 0,
+			"byteLength": 11136,
+			"byteOffset": 576,
+			"target": 34963
+		},
+		{
+			"buffer": 0,
+			"byteLength": 32568,
+			"byteOffset": 11712,
+			"target": 34962
+		},
+		{
+			"buffer": 0,
+			"byteLength": 32568,
+			"byteOffset": 44280,
+			"target": 34962
+		},
+		{
+			"buffer": 0,
+			"byteLength": 43424,
+			"byteOffset": 76848,
+			"target": 34962
+		},
+		{
+			"buffer": 0,
+			"byteLength": 21712,
+			"byteOffset": 120272,
+			"target": 34962
+		},
+		{
+			"buffer": 0,
+			"byteLength": 10856,
+			"byteOffset": 141984,
+			"target": 34962
+		},
+		{
+			"buffer": 0,
+			"byteLength": 10856,
+			"byteOffset": 152840,
+			"target": 34962
+		},
+		{
+			"buffer": 0,
+			"byteLength": 456,
+			"byteOffset": 163696,
+			"target": 34963
+		},
+		{
+			"buffer": 0,
+			"byteLength": 2064,
+			"byteOffset": 164152,
+			"target": 34962
+		},
+		{
+			"buffer": 0,
+			"byteLength": 2064,
+			"byteOffset": 166216,
+			"target": 34962
+		},
+		{
+			"buffer": 0,
+			"byteLength": 2752,
+			"byteOffset": 168280,
+			"target": 34962
+		},
+		{
+			"buffer": 0,
+			"byteLength": 1376,
+			"byteOffset": 171032,
+			"target": 34962
+		},
+		{
+			"buffer": 0,
+			"byteLength": 688,
+			"byteOffset": 172408,
+			"target": 34962
+		},
+		{
+			"buffer": 0,
+			"byteLength": 688,
+			"byteOffset": 173096,
+			"target": 34962
+		}
+	],
+	"images": [
+		{
+			"uri": "Vehicles_Color_1_Mat_BaseColor.png"
+		},
+		{
+			"uri": "Vehicles_Emision_1_Mat_Emissive.png"
+		}
+	],
+	"materials": [
+		{
+			"name": "Vehicles_Color_1_Mat",
+			"pbrMetallicRoughness":
+			{
+				"baseColorTexture":
+				{
+					"index": 0
+				},
+				"metallicFactor": 0,
+				"roughnessFactor": 0.5
+			}
+		},
+		{
+			"name": "Vehicles_Emision_1_Mat",
+			"pbrMetallicRoughness":
+			{
+				"baseColorTexture":
+				{
+					"index": 1
+				},
+				"metallicFactor": 0,
+				"roughnessFactor": 0
+			},
+			"emissiveTexture":
+			{
+				"index": 2
+			},
+			"emissiveFactor": [ 2,
+				2,
+				2
+			]
+		}
+	],
+	"meshes": [
+		{
+			"name": "Cassini",
+			"primitives": [
+				{
+					"attributes":
+					{
+						"POSITION": 2,
+						"NORMAL": 3,
+						"TANGENT": 4,
+						"TEXCOORD_0": 5,
+						"JOINTS_0": 6,
+						"WEIGHTS_0": 7
+					},
+					"indices": 1,
+					"material": 0
+				},
+				{
+					"attributes":
+					{
+						"POSITION": 9,
+						"NORMAL": 10,
+						"TANGENT": 11,
+						"TEXCOORD_0": 12,
+						"JOINTS_0": 13,
+						"WEIGHTS_0": 14
+					},
+					"indices": 8,
+					"material": 1
+				}
+			]
+		}
+	],
+	"nodes": [
+		{
+			"name": "Cassini_26_SkeletalMeshComponent0",
+			"translation": [ 6,
+				0,
+				0
+			],
+			"rotation": [ -0,
+				-0.258819044,
+				0,
+				0.965925813
+			],
+			"skin": 0,
+			"mesh": 0,
+			"children": [ 1 ]
+		},
+		{
+			"name": "Root",
+			"translation": [ 0.12047226,
+				0.622056425,
+				0
+			],
+			"children": [ 2, 4, 6, 8 ]
+		},
+		{
+			"name": "RL",
+			"translation": [ -1.00911283,
+				-0.300391853,
+				-0.854781568
+			],
+			"children": [ 3 ]
+		},
+		{
+			"name": "RL_end",
+			"translation": [ 3.02182258e-07,
+				0,
+				-1
+			]
+		},
+		{
+			"name": "RR",
+			"translation": [ -1.00924551,
+				-0.300391853,
+				0.854781628
+			],
+			"children": [ 5 ]
+		},
+		{
+			"name": "RR_end",
+			"translation": [ 2.36590836e-08,
+				0,
+				-1.00000012
+			]
+		},
+		{
+			"name": "FL",
+			"translation": [ 0.792930067,
+				-0.300391853,
+				-0.819730222
+			],
+			"children": [ 7 ]
+		},
+		{
+			"name": "FL_end",
+			"translation": [ 2.96471683e-07,
+				0,
+				-0.999999821
+			]
+		},
+		{
+			"name": "FR",
+			"translation": [ 0.792797387,
+				-0.300391853,
+				0.81973052
+			],
+			"children": [ 9 ]
+		},
+		{
+			"name": "FR_end",
+			"translation": [ 2.93696107e-08,
+				0,
+				-0.999999821
+			]
+		}
+	],
+	"samplers": [
+		{
+			"name": "Vehicles_Color_1_Mat_BaseColor",
+			"minFilter": 9987,
+			"magFilter": 9729
+		},
+		{
+			"name": "Vehicles_Emision_1_Mat_BaseColor",
+			"minFilter": 9987,
+			"magFilter": 9729
+		},
+		{
+			"name": "Vehicles_Emision_1_Mat_Emissive",
+			"minFilter": 9987,
+			"magFilter": 9729
+		}
+	],
+	"scenes": [
+		{
+			"name": "Overview",
+			"nodes": [ 0 ]
+		}
+	],
+	"skins": [
+		{
+			"name": "Cassini_Skeleton",
+			"inverseBindMatrices": 0,
+			"skeleton": 0,
+			"joints": [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+		}
+	],
+	"textures": [
+		{
+			"name": "Vehicles_Color_1_Mat_BaseColor",
+			"sampler": 0,
+			"source": 0
+		},
+		{
+			"name": "Vehicles_Emision_1_Mat_BaseColor",
+			"sampler": 1,
+			"source": 0
+		},
+		{
+			"name": "Vehicles_Emision_1_Mat_Emissive",
+			"sampler": 2,
+			"source": 1
+		}
+	]
+}
