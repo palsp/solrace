@@ -96,17 +96,17 @@ const KartCard: React.FC<Props> = ({ nft }) => {
   };
 
   return (
-    <Card>
-      <WrapperCardContent>
-        {/* <h3>Mint: {shortenIfAddress(nft.mint.toBase58())}</h3>
+    <Card type="kart">
+      {/* <WrapperCardContent> */}
+      {/* <h3>Mint: {shortenIfAddress(nft.mint.toBase58())}</h3>
         <p>Max Speed: {kartInfo?.masSpeed || 0}</p> */}
-        <AppImage src="/kart-template.png" height="300px" width="350px" />
-        {/* {selectedGarage ? (
+      {/* <AppImage src="/kart-template.png" height="300px" width="350px" /> */}
+      {/* {selectedGarage ? (
           <p>{shortenIfAddress(selectedGarage.toBase58())}</p>
         ) : (
           <p>SELECT GARAGE</p>
         )} */}
-        {/* <Select onChange={handleGarageChange}>
+      {/* <Select onChange={handleGarageChange}>
           <option value="">Please Select Garage</option>
           {stakers.map((staker) => (
             <option
@@ -117,7 +117,7 @@ const KartCard: React.FC<Props> = ({ nft }) => {
             </option>
           ))}
         </Select> */}
-        {/* {loading || loadingKart ? (
+      {/* {loading || loadingKart ? (
           <ReactLoading type="bubbles" color="#512da8" />
         ) : (
           <Button
@@ -132,44 +132,21 @@ const KartCard: React.FC<Props> = ({ nft }) => {
           </Button>
         )} */}
 
-        <WrapperDescription>
-          <TextDescription>
-            <Paragraph>Model: ZGMF-X42F Helios</Paragraph>
-            <Paragraph>Rarity: AR</Paragraph>
-            <Paragraph>Max Speed: 5</Paragraph>
-          </TextDescription>
-          <PriceDescription>
-            <AppImage src="/sol-logo.png" width="25px" height="25px"></AppImage>
+      {/* <WrapperDescription>
+        <TextDescription>
+          <Paragraph>Model: ZGMF-X42F Helios</Paragraph>
+          <Paragraph>Rarity: AR</Paragraph>
+          <Paragraph>Max Speed: 5</Paragraph>
+        </TextDescription>
+        <PriceDescription>
+          <AppImage src="/sol-logo.png" width="25px" height="25px"></AppImage>
 
-            <Paragraph>5.43</Paragraph>
-          </PriceDescription>
-        </WrapperDescription>
-      </WrapperCardContent>
+          <Paragraph>5.43</Paragraph>
+        </PriceDescription>
+      </WrapperDescription> */}
+      {/* </WrapperCardContent> */}
     </Card>
   );
 };
-
-const WrapperCardContent = styled.div`
-  // needs this or else the background will be on top
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const WrapperDescription = styled.div`
-  width: 100%;
-  padding: 0.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const TextDescription = styled.div``;
-const PriceDescription = styled.div`
-  display: flex;
-  gap: 0.5rem;
-`;
 
 export default KartCard;

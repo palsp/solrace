@@ -22,10 +22,6 @@ import { useMintInfo } from "~/hooks/useMintInfo";
 import CircularProgress from "~/ui/circularProgress/CircularProgress";
 import { useCountdown } from "~/hooks/useCountdown";
 
-const MainCard = styled(Card)`
-  position: relative;
-`;
-
 const ProgressSection = styled.div`
   position: absolute;
   top: 10px;
@@ -159,8 +155,8 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
   }, [reward]);
 
   return (
-    <MainCard>
-      <WrapperCardContent>
+    <Card type="garage">
+      {/* <WrapperCardContent>
         <h3>Mint: {shortenIfAddress(nft.mint.toBase58())}</h3>
         <ProgressSection>
           {stakeInfo?.isBond && (
@@ -185,8 +181,8 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
             {buttonContent}
           </Button>
         )}
-      </WrapperCardContent>
-    </MainCard>
+      </WrapperCardContent> */}
+    </Card>
   );
 };
 
