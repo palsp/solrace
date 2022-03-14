@@ -11,10 +11,11 @@ interface Props
   color: string;
   border?: string;
   icon?: string;
+  padding?: string;
   outline?: boolean;
 }
 
-const Button = ({ width, color, children, icon, outline }: Props) => {
+const Button = ({ width, color, children, icon, outline, padding }: Props) => {
   let Icon;
   if (icon) {
     Icon = (
@@ -26,7 +27,12 @@ const Button = ({ width, color, children, icon, outline }: Props) => {
     );
   }
   return (
-    <WrapperButton width={width} color={color} outline={outline}>
+    <WrapperButton
+      width={width}
+      color={color}
+      outline={outline}
+      padding={padding}
+    >
       <Span>
         {Icon}
         {children}
@@ -49,7 +55,7 @@ const Span = styled.span`
 
 const WrapperButton = styled.button`
   border: none;
-  padding: 1rem;
+  padding: ${(props: Props) => props.padding || "1rem"};
   width: ${(props: Props) => props.width || "auto"};
   background-color: ${(props: Props) => `var(--color-${props.color})`};
   color: var(--color-black);
