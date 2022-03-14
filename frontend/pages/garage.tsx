@@ -67,7 +67,15 @@ const GaragePage = () => {
             {poolInfo && (
               <Main>
                 {nfts.map((nft) => (
-                  <Link href={`/garage/${nft.tokenAccountAddress.toBase58()}`}>
+                  <Link
+                    href={{
+                      pathname: `/garage/${nft.tokenAccountAddress.toBase58()}`,
+                      query: {
+                        mint: nft.mint.toString(),
+                        tokenAccountAddress: nft.tokenAccountAddress.toString(),
+                      },
+                    }}
+                  >
                     <a>
                       <GarageCard
                         key={nft.tokenAccountAddress.toBase58()}
