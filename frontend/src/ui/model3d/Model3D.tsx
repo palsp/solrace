@@ -28,7 +28,10 @@ function Ground(props: any) {
 }
 
 const Car = () => {
-  const fbx = useLoader(GLTFLoader, "/Cassini.gltf");
+  const fbx = useLoader(
+    GLTFLoader,
+    "https://sol-race.s3.ap-southeast-1.amazonaws.com/kart/0/Cassini.gltf"
+  );
   return (
     <mesh>
       <primitive
@@ -50,7 +53,12 @@ const Model3D = () => {
         far: 1000,
       }}
       style={{
-        background: "var(--background-gradient-1)",
+        background: "var(--background-gradient-2)",
+        height: `calc(100vh - 7rem)`,
+        marginBlock: "1rem",
+        border: "0.1rem solid var(--color-primary-dark)",
+        borderRadius: "0.5rem",
+        boxShadow: "var(--shadow-elevation-medium-primary)",
       }}
     >
       <Suspense fallback={null}>
