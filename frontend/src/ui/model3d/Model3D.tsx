@@ -1,52 +1,16 @@
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { TGALoader } from "three/examples/jsm/loaders/TGALoader";
 
 import * as THREE from "three";
 import React, { Suspense } from "react";
 import { OrbitControls, Reflector, useTexture } from "@react-three/drei";
-
-function Ground(props: any) {
-  const [floor, normal] = useTexture([
-    "/SurfaceImperfections003_1K_var1.jpg",
-    "/marble-surface.jpeg",
-  ]);
-  return (
-    <Reflector resolution={256} args={[8, 8]} {...props}>
-      {(Material: any, props: any) => (
-        <Material
-          color="white"
-          metalness={0}
-          roughnessMap={floor}
-          normalMap={normal}
-          normalScale={[2, 2]}
-          {...props}
-        />
-      )}
-    </Reflector>
-  );
-}
-
-const Car = () => {
-  const fbx = useLoader(
-    GLTFLoader,
-    "https://sol-race.s3.ap-southeast-1.amazonaws.com/kart/0/Cassini.gltf"
-  );
-  return (
-    <mesh>
-      <primitive
-        object={fbx.scene}
-        scale={1}
-        rotation={[0, 0, 0]}
-        position={[-6, -0.75, 0]}
-      />
-    </mesh>
-  );
-};
+import CarModel3D from "./carModel3D/CarModel3D";
+import Ground from "./ground/Ground";
 interface Props {
   height?: string;
+  model: string;
 }
-const Model3D: React.FC<Props> = ({ height }) => {
+const Model3D: React.FC<Props> = ({ height, model }) => {
   return (
     <Canvas
       camera={{
@@ -68,11 +32,11 @@ const Model3D: React.FC<Props> = ({ height }) => {
           maxPolarAngle={Math.PI / 2}
           maxDistance={5}
           minDistance={3.5}
-          autoRotate
+          // autoRotate
         />
         <ambientLight />
         <pointLight position={[10, 10, 10]} />
-        <Car />
+        <CarModel3D model={model} />
         <Ground
           mirror={0.99}
           blur={[500, 100]}

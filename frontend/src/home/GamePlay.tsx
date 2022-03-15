@@ -9,16 +9,16 @@ const GamePlay = () => {
         <TitleText>Are you ready for an all-out race?</TitleText>
         <WrapperItems>
           <WrapperItem>
-            <p>Own the garage</p>
-            <Model3D height="65vh" />
+            {/* <p>Own the garage</p> */}
+            <Model3D height="65vh" model="Apollo" />
           </WrapperItem>
           <WrapperItem>
-            <p>Choose your kart</p>
-            <Model3D height="65vh" />
+            {/* <p>Choose your kart</p> */}
+            <Model3D height="65vh" model="Cassini" />
           </WrapperItem>
           <WrapperItem>
-            <p>Drop your weapons</p>
-            <Model3D height="65vh" />
+            {/* <p>Drop your weapons</p> */}
+            <Model3D height="65vh" model="Ariel" />
           </WrapperItem>
         </WrapperItems>
       </WrapperContent>

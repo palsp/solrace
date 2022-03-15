@@ -82,6 +82,6 @@ const QuoteAuthor = styled.p`
   padding-inline: 0.5rem;
   margin-bottom: 1rem;
 `;
-const TitleDescription = styled.p``;
+const TitleDescription = styled.div``;
 
 export default GameDetail;
