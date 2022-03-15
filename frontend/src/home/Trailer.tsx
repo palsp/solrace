@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { AppImage, Button } from "~/ui";
+import { AppImage, Button, Input } from "~/ui";
+import { Bell } from "react-feather";
 
 const Trailer = () => {
   return (
@@ -24,7 +25,14 @@ const Trailer = () => {
           Start
         </Button>
       </TitleDiv>
-      <InputDiv></InputDiv>
+      <InputDiv>
+        <WrapperInput>
+          <Input placeholder="Enter your email address... " />
+          <IconWrapper style={{ "--size": 24 + "px" }}>
+            <Bell />
+          </IconWrapper>
+        </WrapperInput>
+      </InputDiv>
     </WrapperTrailer>
   );
 };
@@ -75,7 +83,31 @@ const SocialDiv = styled.div`
   }
 `;
 
-const InputDiv = styled.div``;
+const InputDiv = styled.div`
+  position: absolute;
+  z-index: 1;
+  top: 70%;
+  left: 0;
+  right: 0;
+  width: 400px;
+  margin-inline: auto;
+`;
+
+const WrapperInput = styled.div`
+  position: relative;
+`;
+
+const IconWrapper = styled.div`
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  display: inline-block;
+  width: var(--size);
+  height: var(--size);
+  margin: 0 0.2rem;
+  pointer-events: none;
+`;
+
 const VideoWrapper = styled.div`
   /* margin-left: -3rem; */
   position: absolute;

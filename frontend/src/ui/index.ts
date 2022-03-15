@@ -10,3 +10,4 @@ export { default as Title } from "./title";
 export { Paragraph, ParagraphItalic, ParagraphItalicBold } from "./paragraph";
 export { default as Model3D } from "./model3d";
 export { default as Select } from "./select";
+export { default as Input } from "./input";
