@@ -12,7 +12,7 @@ const cardType = {
     description: {
       model: "ZGMF-X42F Cassini",
       rarity: "AR",
-      attributes: "Max Speed: 5",
+      // attributes: "Max Speed: 5",
       price: "5.43",
     },
   },
@@ -21,7 +21,7 @@ const cardType = {
     description: {
       model: "ZX-00 Pegasus",
       rarity: "SSR",
-      attributes: "Chances of Success: 88",
+      // attributes: "Chances of Success: 88",
       price: "8.69",
     },
   },
@@ -37,7 +37,6 @@ const Card: React.FC<Props> = ({ type, children }) => {
           <TextDescription>
             <Paragraph>Model: {card.description.model}</Paragraph>
             <Paragraph>Rarity: {card.description.rarity}</Paragraph>
-            <Paragraph>{card.description.attributes}</Paragraph>
           </TextDescription>
           <PriceDescription>
             <AppImage src="/sol-logo.png" width="25px" height="25px"></AppImage>
