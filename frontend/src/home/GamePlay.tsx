@@ -9,15 +9,15 @@ const GamePlay = () => {
         <TitleText>Are you ready for an all-out race?</TitleText>
         <WrapperItems>
           <WrapperItem>
-            {/* <p>Own the garage</p> */}
+            <p>Own the garage</p>
             <Model3D height="65vh" model="Apollo" />
           </WrapperItem>
           <WrapperItem>
-            {/* <p>Choose your kart</p> */}
+            <p>Choose your kart</p>
             <Model3D height="65vh" model="Cassini" />
           </WrapperItem>
           <WrapperItem>
-            {/* <p>Drop your weapons</p> */}
+            <p>Drop your weapons</p>
             <Model3D height="65vh" model="Ariel" />
           </WrapperItem>
         </WrapperItems>
@@ -36,12 +36,15 @@ const WrapperContent = styled.div`
 const WrapperItems = styled.div`
   display: flex;
   justify-content: center;
-  gap: 2rem;
+  gap: 3rem;
+  width: 90%;
+  margin: 0 auto;
   /* margin-bottom: 5rem; */
 `;
 const WrapperItem = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
 `;
 const TitleText = styled.h1`
   font-weight: 400;
