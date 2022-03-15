@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { AppImage, Button, Input } from "~/ui";
 import { Bell } from "react-feather";
+import Link from "next/link";
 
 const Trailer = () => {
   return (
@@ -21,9 +22,13 @@ const Trailer = () => {
           Ace the race with your speed in a world where everything conflicts
           decided by racing, not wars..
         </TitleDescription>
-        <Button color="primary" width="200px" padding="0.75rem">
-          Start
-        </Button>
+        <Link href="/">
+          <a>
+            <Button color="primary" width="200px" padding="0.75rem">
+              Start
+            </Button>
+          </a>
+        </Link>
       </TitleDiv>
       <InputDiv>
         <WrapperInput>
