@@ -15,68 +15,97 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import ConnectWalletButton from "~/wallet/ConnectWalletButton";
 import { usePool } from "~/pool/hooks";
 import Link from "next/link";
-
-const Main = styled(Row)`
-  justify-content: space-around;
-  flex-wrap: wrap;
-`;
+import InventoryLayout from "~/inventory";
 
 const KartPage = () => {
   const { provider, wallet } = useWorkspace();
   const { connected } = useWallet();
   const { nfts, revalidate: revalidateNFTs } = useAllNFT(wallet?.publicKey);
   const { poolInfo } = usePool();
-
+  let cards = poolInfo && (
+    <Main>
+      {nfts.map((nft) => (
+        <Link
+          href={{
+            pathname: `/kart/${nft.tokenAccountAddress.toBase58()}`,
+            query: {
+              mint: nft.mint.toString(),
+              tokenAccountAddress: nft.tokenAccountAddress.toString(),
+            },
+          }}
+        >
+          <a>
+            <KartCard key={nft.tokenAccountAddress.toBase58()} nft={nft} />
+          </a>
+        </Link>
+      ))}
+    </Main>
+  );
   return (
-    <AppLayout>
-      <WrapperKart>
-        <TitleDiv>
-          <h3>KART - your karts collection</h3>
-        </TitleDiv>
-        {!connected ? (
-          <Paragraph>Please Connect Your Wallet</Paragraph>
-        ) : (
-          <>
-            {/* <Button onClick={handleMint} color="primary">
+    <InventoryLayout direction="row" cards={cards}>
+      <TitleDiv>
+        <h3>KART - your karts collection</h3>
+      </TitleDiv>
+      <ParagraphDiv>
+        <Paragraph>
+          &nbsp; &nbsp; &nbsp; &nbsp; Lorem ipsum dolor sit amet consectetur
+          adipisicing elit. Sed inventore repellendus doloremque quam earum quia
+          magni quo blanditiis vitae doloribus incidunt quasi minus fugiat, sint
+          voluptatem facere deleniti tempore, veritatis assumenda! Eos fugit
+          magni recusandae ipsum nostrum debitis,
+        </Paragraph>
+        <Paragraph>
+          &nbsp; &nbsp; &nbsp; &nbsp;Molestias aliquid accusantium, dolores
+          consequuntur officia soluta placeat, l abore ex ipsam doloremque
+          nostrum et ea rerum animi, omnis esse vel. Quis aspernatur quibusdam
+          maxime velit explicabo aut? Commodi asperiores,
+        </Paragraph>
+        <Paragraph>
+          &nbsp; &nbsp; &nbsp; &nbsp;Molestias aliquid accusantium, dolores
+          consequuntur officia soluta placeat, l abore ex ipsam doloremque
+          nostrum et ea rerum animi, omnis esse.
+        </Paragraph>
+      </ParagraphDiv>
+      {!connected ? (
+        <Paragraph>Please Connect Your Wallet</Paragraph>
+      ) : (
+        <>
+          {/* <Button onClick={handleMint} color="primary">
               MOCK MINT
             </Button> */}
-            {poolInfo && (
-              <Main>
-                {nfts.map((nft) => (
-                  <Link
-                    href={{
-                      pathname: `/kart/${nft.tokenAccountAddress.toBase58()}`,
-                      query: {
-                        mint: nft.mint.toString(),
-                        tokenAccountAddress: nft.tokenAccountAddress.toString(),
-                      },
-                    }}
-                  >
-                    <a>
-                      <KartCard
-                        key={nft.tokenAccountAddress.toBase58()}
-                        nft={nft}
-                      />
-                    </a>
-                  </Link>
-                ))}
-              </Main>
-            )}
-          </>
-        )}
-      </WrapperKart>
-    </AppLayout>
+        </>
+      )}
+    </InventoryLayout>
   );
 };
 
-const WrapperKart = styled.div`
-  margin-top: 2rem;
+const Main = styled(Row)`
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: space-between;
+  align-content: space-between;
+  & > * {
+    margin-bottom: 1rem;
+  }
 `;
 
 const TitleDiv = styled.div`
   background: var(--color-primary-light);
-  width: fit-content;
-  margin: 2rem 0;
+  width: 100%;
+  padding: 0.5rem;
+  box-shadow: var(--shadow-elevation-medium-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 0.5rem;
+  gap: 2rem;
+  margin-bottom: 1rem;
+`;
+
+const ParagraphDiv = styled.div`
+  background: var(--color-primary-light);
+  width: 100%;
   padding: 0.5rem;
   box-shadow: var(--shadow-elevation-medium-primary);
   display: flex;

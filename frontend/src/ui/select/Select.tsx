@@ -28,7 +28,7 @@ const Select: React.FC<Props> = ({ label, value, onChange, children }) => {
 
 const Wrapper = styled.div`
   position: relative;
-  width: 300px;
+  width: 350px;
 `;
 
 const NativeSelect = styled.select`
@@ -46,6 +46,7 @@ const PresentationalBit = styled.div`
   color: var(--color-black);
   background-color: var(--color-primary-light);
   font-size: ${16 / 16}rem;
+  font-weight: 700;
   padding: 12px 16px;
   padding-right: 52px;
   border-radius: 8px;
