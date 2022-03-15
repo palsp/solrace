@@ -17,6 +17,9 @@ import { useMemo } from "react";
 import { BN } from "@project-serum/anchor";
 import { usePool } from "~/pool/hooks";
 import InventoryLayout from "~/inventory";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import { CardSkeleton } from "~/ui/card";
 
 const GaragePage = () => {
   const { provider, wallet } = useWorkspace();
@@ -24,7 +27,7 @@ const GaragePage = () => {
   const { connected } = useWallet();
   const { nfts, revalidate: revalidateNFTs } = useAllNFT(wallet?.publicKey);
 
-  let cards = poolInfo && (
+  let cards = poolInfo ? (
     <Main>
       {nfts.map((nft) => (
         <Link
@@ -42,6 +45,8 @@ const GaragePage = () => {
         </Link>
       ))}
     </Main>
+  ) : (
+    <Skeleton wrapper={CardSkeleton} count={1} />
   );
 
   return (

@@ -33,6 +33,7 @@
     "react-feather": "^2.0.9",
     "react-hook-form": "^7.27.1",
     "react-loading": "^2.0.3",
+    "react-loading-skeleton": "^3.0.3",
     "react-toastify": "^8.2.0",
     "styled-components": "^5.3.3",
     "swr": "^1.2.2",
