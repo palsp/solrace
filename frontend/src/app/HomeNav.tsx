@@ -58,12 +58,12 @@ const NavContainer = styled.div`
   z-index: 10;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 100vw;
   min-height: 5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: transparent;
-  /* border-bottom: 2px solid var(--color-white); */
+  border-bottom: 1px solid var(--color-white);
 `;
 export default HomeNav;
