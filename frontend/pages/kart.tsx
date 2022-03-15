@@ -66,15 +66,7 @@ const KartPage = () => {
           nostrum et ea rerum animi, omnis esse.
         </Paragraph>
       </ParagraphDiv>
-      {!connected ? (
-        <Paragraph>Please Connect Your Wallet</Paragraph>
-      ) : (
-        <>
-          {/* <Button onClick={handleMint} color="primary">
-              MOCK MINT
-            </Button> */}
-        </>
-      )}
+      {!connected ? <Paragraph>Please Connect Your Wallet</Paragraph> : ""}
     </InventoryLayout>
   );
 };

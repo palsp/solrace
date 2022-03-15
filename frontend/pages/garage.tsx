@@ -16,11 +16,7 @@ import ConnectWalletButton from "~/wallet/ConnectWalletButton";
 import { useMemo } from "react";
 import { BN } from "@project-serum/anchor";
 import { usePool } from "~/pool/hooks";
-
-const Main = styled(Row)`
-  justify-content: space-around;
-  flex-wrap: wrap;
-`;
+import InventoryLayout from "~/inventory";
 
 const GaragePage = () => {
   const { provider, wallet } = useWorkspace();
@@ -28,74 +24,79 @@ const GaragePage = () => {
   const { connected } = useWallet();
   const { nfts, revalidate: revalidateNFTs } = useAllNFT(wallet?.publicKey);
 
-  const handleMint = async () => {
-    if (!provider || !wallet) {
-      toast("Please connect wallet", { type: "warning" });
-      return;
-    }
-
-    try {
-      const tx = await mint(wallet.publicKey, provider);
-      const resp = await provider.connection.confirmTransaction(tx);
-      if (resp.value.err) {
-        toast("Mint Failed", { type: "error" });
-      } else {
-        toast("Mint Succeed", { type: "success" });
-      }
-      await revalidateNFTs();
-    } catch (e) {
-      console.log(e);
-      toast("Mint Failed", { type: "error" });
-    }
-  };
+  let cards = poolInfo && (
+    <Main>
+      {nfts.map((nft) => (
+        <Link
+          href={{
+            pathname: `/garage/${nft.tokenAccountAddress.toBase58()}`,
+            query: {
+              mint: nft.mint.toString(),
+              tokenAccountAddress: nft.tokenAccountAddress.toString(),
+            },
+          }}
+        >
+          <a>
+            <GarageCard key={nft.tokenAccountAddress.toBase58()} nft={nft} />
+          </a>
+        </Link>
+      ))}
+    </Main>
+  );
 
   return (
-    <AppLayout>
-      <WrapperGarage>
-        <TitleDiv>
-          <h3>GARAGE - stake your karts and earn passive rewards</h3>
-        </TitleDiv>
-        {!connected ? (
-          <Paragraph>Please Connect Your Wallet</Paragraph>
-        ) : (
-          <>
-            {poolInfo && (
-              <Main>
-                {nfts.map((nft) => (
-                  <Link
-                    href={{
-                      pathname: `/garage/${nft.tokenAccountAddress.toBase58()}`,
-                      query: {
-                        mint: nft.mint.toString(),
-                        tokenAccountAddress: nft.tokenAccountAddress.toString(),
-                      },
-                    }}
-                  >
-                    <a>
-                      <GarageCard
-                        key={nft.tokenAccountAddress.toBase58()}
-                        nft={nft}
-                      />
-                    </a>
-                  </Link>
-                ))}
-              </Main>
-            )}
-          </>
-        )}
-      </WrapperGarage>
-    </AppLayout>
+    <InventoryLayout direction="row-reverse" cards={cards}>
+      <TitleDiv>
+        <h3>GARAGE - stake your karts and earn passive rewards</h3>
+      </TitleDiv>
+      <ParagraphDiv>
+        <Paragraph>
+          &nbsp; &nbsp; &nbsp; &nbsp; Lorem ipsum dolor sit amet consectetur
+          adipisicing elit. Sed inventore repellendus doloremque quam earum quia
+          magni quo blanditiis vitae doloribus incidunt quasi minus fugiat, sint
+          voluptatem facere deleniti tempore, veritatis assumenda! Eos fugit
+          magni recusandae ipsum nostrum debitis,
+        </Paragraph>
+        <Paragraph>
+          &nbsp; &nbsp; &nbsp; &nbsp;Molestias aliquid accusantium, dolores
+          consequuntur officia soluta placeat, l abore ex ipsam doloremque
+          nostrum et ea rerum animi, omnis esse vel. Quis aspernatur quibusdam
+          maxime velit explicabo aut? Commodi asperiores,
+        </Paragraph>
+        <Paragraph>
+          &nbsp; &nbsp; &nbsp; &nbsp;Molestias aliquid accusantium, dolores
+          consequuntur officia soluta placeat, l abore ex ipsam doloremque
+          nostrum et ea rerum animi, omnis esse.
+        </Paragraph>
+      </ParagraphDiv>
+      {!connected ? <Paragraph>Please Connect Your Wallet</Paragraph> : ""}
+    </InventoryLayout>
   );
 };
 
-const WrapperGarage = styled.div`
-  margin-top: 2rem;
+const Main = styled(Row)`
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: space-between;
+  align-content: space-between;
 `;
 
 const TitleDiv = styled.div`
   background: var(--color-primary-light);
   width: fit-content;
-  margin: 2rem 0;
+  padding: 0.5rem;
+  box-shadow: var(--shadow-elevation-medium-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 0.5rem;
+  gap: 2rem;
+`;
+
+const ParagraphDiv = styled.div`
+  background: var(--color-primary-light);
+  width: 100%;
   padding: 0.5rem;
   box-shadow: var(--shadow-elevation-medium-primary);
   display: flex;
