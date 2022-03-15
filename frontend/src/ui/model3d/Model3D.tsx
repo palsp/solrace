@@ -43,8 +43,10 @@ const Car = () => {
     </mesh>
   );
 };
-
-const Model3D = () => {
+interface Props {
+  height?: string;
+}
+const Model3D: React.FC<Props> = ({ height }) => {
   return (
     <Canvas
       camera={{
@@ -54,7 +56,7 @@ const Model3D = () => {
       }}
       style={{
         background: "var(--background-gradient-2)",
-        height: `calc(100vh - 7rem)`,
+        height: `${height ? height : "calc(100vh - 7rem)"}`,
         marginBlock: "1rem",
         border: "0.1rem solid var(--color-primary-dark)",
         borderRadius: "0.5rem",
