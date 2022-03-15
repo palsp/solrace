@@ -7,6 +7,8 @@ const Team = () => {
 const WrapperTeam = styled.div`
   width: 100vw;
   height: 100vh;
-  background: var(--background-gradient-1);
+  background: var(--background-gradient-1-flipped);
+  scroll-snap-align: start;
+  flex: none;
 `;
 export default Team;
