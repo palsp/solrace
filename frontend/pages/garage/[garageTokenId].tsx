@@ -19,7 +19,10 @@ const GarageDetail = () => {
   const { poolInfo, apr } = usePool();
 
   return (
-    <TokenDetailLayout direction="row-reverse" token3D={<Model3D />}>
+    <TokenDetailLayout
+      direction="row-reverse"
+      token3D={<Model3D model="Apollo" />}
+    >
       <TitleDiv>
         <Title fontStyle="italic">ZX-00 Pegasus</Title>
         <h3>APR - {apr}% </h3>

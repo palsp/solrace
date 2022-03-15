@@ -110,7 +110,7 @@ const KartDetail = () => {
     }
   };
   return (
-    <TokenDetailLayout direction="row" token3D={<Model3D />}>
+    <TokenDetailLayout direction="row" token3D={<Model3D model="Cassini" />}>
       <TitleDiv>
         <Title fontStyle="italic">ZGMF-X42F Cassini</Title>
         <ParagraphItalic>ID: {tokenId}</ParagraphItalic>
