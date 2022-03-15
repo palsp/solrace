@@ -7,3 +7,7 @@ export const Paragraph = styled.p`
 export const ParagraphItalic = styled(Paragraph)`
   font-style: italic;
 `;
+
+export const ParagraphItalicBold = styled(ParagraphItalic)`
+  font-weight: 700;
+`;

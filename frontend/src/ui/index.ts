@@ -7,6 +7,6 @@ export { default as AppImage } from "./appImage";
 export { default as AppLink } from "./appLink";
 export { default as Row } from "./row";
 export { default as Title } from "./title";
-export { Paragraph, ParagraphItalic } from "./paragraph";
+export { Paragraph, ParagraphItalic, ParagraphItalicBold } from "./paragraph";
 export { default as Model3D } from "./model3d";
 export { default as Select } from "./select";

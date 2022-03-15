@@ -1,1 +1,1 @@
-export { Paragraph, ParagraphItalic } from "./Paragraph";
+export { Paragraph, ParagraphItalic, ParagraphItalicBold } from "./Paragraph";
