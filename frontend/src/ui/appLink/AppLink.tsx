@@ -5,8 +5,9 @@ import styled from "styled-components";
 interface Props {
   href: string;
   color?: string;
+  textColor?: string;
 }
-const AppLink: React.FC<Props> = ({ children, href, color }) => {
+const AppLink: React.FC<Props> = ({ children, href, color, textColor }) => {
   const { pathname } = useRouter();
 
   const getActiveClassName = () => {
@@ -16,17 +17,18 @@ const AppLink: React.FC<Props> = ({ children, href, color }) => {
   return (
     <Link href={href} passHref>
       <A className={getActiveClassName()} color={color}>
-        <Span>{children}</Span>
+        <Span textColor={textColor}>{children}</Span>
       </A>
     </Link>
   );
 };
 
-const Span = styled.span``;
+const Span = styled.span`
+  color: ${(props: Props) => `var(--color-${props.textColor})`};
+`;
 const A = styled.a`
   position: relative;
   cursor: pointer;
-
   ${Span} {
     position: relative;
   }
@@ -42,7 +44,9 @@ const A = styled.a`
     transition: transform 0.6s cubic-bezier(0.53, 0.21, 0, 1);
     transform-origin: bottom;
     background-color: ${(props) =>
-      props.color ? `var(--color-${props.color})` : "var(--color-secondary)"};
+      props.color
+        ? `var(--color-${props.color}-dark)`
+        : "var(--color-secondary-dark)"};
     opacity: 0.6;
   }
 
