@@ -17,9 +17,7 @@ const TokenDetailLayout: React.FC<Props> = ({
         <Wrapper3D>
           <WrapperInner3D>{token3D}</WrapperInner3D>
         </Wrapper3D>
-        <WrapperTokenDetail>
-          <WrapperCard>{children}</WrapperCard>
-        </WrapperTokenDetail>
+        <WrapperTokenDetail>{children}</WrapperTokenDetail>
       </TokenDetailLayoutContainer>
     </AppLayout>
   );
@@ -44,7 +42,10 @@ const WrapperTokenDetail = styled.div`
   flex: 6;
   /* height: 75%; */
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1rem 0;
 `;
 
 const WrapperCard = styled.div`
@@ -54,8 +55,5 @@ const WrapperCard = styled.div`
   padding: 1rem;
 
   width: fit-content;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
 `;
 export default TokenDetailLayout;
