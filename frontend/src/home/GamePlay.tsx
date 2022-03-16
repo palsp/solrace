@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Model3D } from "~/ui";
+import { Button, Model3D } from "~/ui";
 
 const GamePlay = () => {
   return (
@@ -10,15 +10,42 @@ const GamePlay = () => {
         <WrapperItems>
           <WrapperItem>
             <p>Own the garage</p>
-            <Model3D height="65vh" model="Apollo" />
+            {/* <Model3D height="65vh" model="Apollo" /> */}
+            <FirstCardContent>
+              <p>
+                An exclusive 888 plots of garage plays an important role in
+                Solrace economic chain as a solid kart performance boost could
+                destine solracers’ success in the ride. Become the owner of
+                these garages to earn passive income via a fair share of upgrade
+                fee
+              </p>
+              <Button color="primary">View Garage</Button>
+            </FirstCardContent>
           </WrapperItem>
           <WrapperItem>
-            <p>Choose your kart</p>
-            <Model3D height="65vh" model="Cassini" />
+            <p>Get your Solakart</p>
+            {/* <Model3D height="65vh" model="Cassini" /> */}
+
+            <SecondCardContent>
+              <p>
+                It is not only about the speed or raw heat of competition that
+                matters; but the design. A unique 8,888 Genesis Solakarts are
+                ready to onboard all solracers for an immersive race
+              </p>
+              <Button color="primary">Browse solakart</Button>
+            </SecondCardContent>
           </WrapperItem>
           <WrapperItem>
-            <p>Drop your weapons</p>
-            <Model3D height="65vh" model="Ariel" />
+            <p>Explore the Solravese</p>
+            {/* <Model3D height="65vh" model="Ariel" /> */}
+            <ThirdCardContent>
+              <p>
+                There are so much more in the Solraverse... Not limited to only
+                the enjoyment from the ride, solracers and garage owners could
+                boost their benefits and earn governace rights via $SOLR staking
+              </p>
+              <Button color="primary"> $SOLR staking</Button>
+            </ThirdCardContent>
           </WrapperItem>
         </WrapperItems>
       </WrapperContent>
@@ -46,7 +73,40 @@ const WrapperItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex: 1;
+  max-width: 300px;
+  gap: 1rem;
 `;
+
+const CardContent = styled.div`
+  position: relative;
+  width: 300px;
+  height: 400px;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  text-align: center;
+  color: var(--color-white);
+  box-shadow: var(--shadow-elevation-medium-black);
+`;
+
+const FirstCardContent = styled(CardContent)`
+  background: url("/game-1.png");
+  background-position: center;
+`;
+const SecondCardContent = styled(CardContent)`
+  background: url("/game-2.png");
+  background-position: center;
+`;
+const ThirdCardContent = styled(CardContent)`
+  background: url("/game-3.png");
+  background-position: center;
+`;
+
 const TitleText = styled.h1`
   font-weight: 400;
   font-size: 2.5rem;
