@@ -32,13 +32,11 @@ const GameDetail = () => {
             </p>
           </TitleDescription>
         </WrapperDescription>
-        <WrapperImage>
-          <AppImage
-            src="/garage-template.jpeg"
-            height="80%"
-            border="0.5rem"
-          ></AppImage>
-        </WrapperImage>
+        <WrapperVideo>
+          <VideoDiv>
+            <Video src="/solrace-run.mp4" controls autoPlay></Video>
+          </VideoDiv>
+        </WrapperVideo>
       </WrapperContent>
       <Star>&#10022;</Star>
     </WrapperGameDetail>
@@ -52,19 +50,19 @@ const WrapperGameDetail = styled.div`
 `;
 const WrapperContent = styled.div`
   display: flex;
-  padding: 3rem 4rem;
+  padding: 3rem 1rem 3rem 4rem;
   gap: 2rem;
 `;
 const WrapperDescription = styled.div`
   flex: 4;
 `;
-const WrapperImage = styled.div`
+const WrapperVideo = styled.div`
   flex: 6;
   display: flex;
   align-items: center;
-  & > * {
+  /* & > * {
     box-shadow: var(--shadow-elevation-high-secondary);
-  }
+  } */
   /* border-radius: 4rem; */
 `;
 
@@ -99,5 +97,14 @@ const Star = styled.div`
   background: var(--background-gradient-2);
 `;
 const TitleDescription = styled.div``;
-
+const Video = styled.video`
+  /* min-width: 100%;
+  min-height: 100%; */
+`;
+const VideoDiv = styled.div`
+  background: red;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-elevation-medium-black);
+`;
 export default GameDetail;
