@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import AppLayout from "~/app/AppLayout";
+import { Filter } from "~/ui";
 
 interface Props {
   direction: string;
@@ -10,7 +11,11 @@ const InventoryLayout: React.FC<Props> = ({ direction, children, cards }) => {
   return (
     <AppLayout>
       <InventoryLayoutContainer direction={direction}>
-        <WrapperDescription>{children}</WrapperDescription>
+        <WrapperDescription>
+          {children}
+
+          <Filter />
+        </WrapperDescription>
         <WrapperCards>{cards}</WrapperCards>
       </InventoryLayoutContainer>
     </AppLayout>
