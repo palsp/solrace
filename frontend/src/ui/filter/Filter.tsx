@@ -7,7 +7,9 @@ const Filter = () => {
     <WrapperFilter>
       <TitleDiv>
         <FilterDiv>
-          <FilterIcon />
+          <WrapperIcon>
+            <FilterIcon />
+          </WrapperIcon>
           <h3>Filter</h3>
         </FilterDiv>
         <ApplyDiv>
@@ -76,10 +78,144 @@ const Filter = () => {
       <WrapperAbility>
         <p>Ability</p>
         <AbilityDiv>
-          <div>Max Speed</div>
-          <div>Acceleration</div>
-          <div>Drift</div>
-          <div>Handling</div>
+          <SmallDescription>Max Speed</SmallDescription>
+          <DivCheckbox>
+            <CheckboxDiv>
+              <CheckboxInput type="checkbox" />
+              <CheckboxLabel>
+                <SmallDescription>1</SmallDescription>
+              </CheckboxLabel>
+            </CheckboxDiv>
+            <CheckboxDiv>
+              <CheckboxInput type="checkbox" />
+              <CheckboxLabel>
+                <SmallDescription>2</SmallDescription>
+              </CheckboxLabel>
+            </CheckboxDiv>
+            <CheckboxDiv>
+              <CheckboxInput type="checkbox" />
+              <CheckboxLabel>
+                <SmallDescription>3</SmallDescription>
+              </CheckboxLabel>
+            </CheckboxDiv>
+            <CheckboxDiv>
+              <CheckboxInput type="checkbox" />
+              <CheckboxLabel>
+                <SmallDescription>4</SmallDescription>
+              </CheckboxLabel>
+            </CheckboxDiv>
+            <CheckboxDiv>
+              <CheckboxInput type="checkbox" />
+              <CheckboxLabel>
+                <SmallDescription>5</SmallDescription>
+              </CheckboxLabel>
+            </CheckboxDiv>
+          </DivCheckbox>
+          <div>
+            <SmallDescription>Acceleration</SmallDescription>
+            <DivCheckbox>
+              <CheckboxDiv>
+                <CheckboxInput type="checkbox" />
+                <CheckboxLabel>
+                  <SmallDescription>1</SmallDescription>
+                </CheckboxLabel>
+              </CheckboxDiv>
+              <CheckboxDiv>
+                <CheckboxInput type="checkbox" />
+                <CheckboxLabel>
+                  <SmallDescription>2</SmallDescription>
+                </CheckboxLabel>
+              </CheckboxDiv>
+              <CheckboxDiv>
+                <CheckboxInput type="checkbox" />
+                <CheckboxLabel>
+                  <SmallDescription>3</SmallDescription>
+                </CheckboxLabel>
+              </CheckboxDiv>
+              <CheckboxDiv>
+                <CheckboxInput type="checkbox" />
+                <CheckboxLabel>
+                  <SmallDescription>4</SmallDescription>
+                </CheckboxLabel>
+              </CheckboxDiv>
+              <CheckboxDiv>
+                <CheckboxInput type="checkbox" />
+                <CheckboxLabel>
+                  <SmallDescription>5</SmallDescription>
+                </CheckboxLabel>
+              </CheckboxDiv>
+            </DivCheckbox>
+          </div>
+          <div>
+            <SmallDescription>Drift</SmallDescription>
+            <DivCheckbox>
+              <CheckboxDiv>
+                <CheckboxInput type="checkbox" />
+                <CheckboxLabel>
+                  <SmallDescription>1</SmallDescription>
+                </CheckboxLabel>
+              </CheckboxDiv>
+              <CheckboxDiv>
+                <CheckboxInput type="checkbox" />
+                <CheckboxLabel>
+                  <SmallDescription>2</SmallDescription>
+                </CheckboxLabel>
+              </CheckboxDiv>
+              <CheckboxDiv>
+                <CheckboxInput type="checkbox" />
+                <CheckboxLabel>
+                  <SmallDescription>3</SmallDescription>
+                </CheckboxLabel>
+              </CheckboxDiv>
+              <CheckboxDiv>
+                <CheckboxInput type="checkbox" />
+                <CheckboxLabel>
+                  <SmallDescription>4</SmallDescription>
+                </CheckboxLabel>
+              </CheckboxDiv>
+              <CheckboxDiv>
+                <CheckboxInput type="checkbox" />
+                <CheckboxLabel>
+                  <SmallDescription>5</SmallDescription>
+                </CheckboxLabel>
+              </CheckboxDiv>
+            </DivCheckbox>
+          </div>
+          <div>
+            <SmallDescription>Handling</SmallDescription>
+            <DivCheckbox>
+              <CheckboxDiv>
+                <CheckboxInput type="checkbox" />
+                <CheckboxLabel>
+                  <SmallDescription>1</SmallDescription>
+                </CheckboxLabel>
+              </CheckboxDiv>
+              <CheckboxDiv>
+                <CheckboxInput type="checkbox" />
+                <CheckboxLabel>
+                  <SmallDescription>2</SmallDescription>
+                </CheckboxLabel>
+              </CheckboxDiv>
+              <CheckboxDiv>
+                <CheckboxInput type="checkbox" />
+                <CheckboxLabel>
+                  <SmallDescription>3</SmallDescription>
+                </CheckboxLabel>
+              </CheckboxDiv>
+              <CheckboxDiv>
+                <CheckboxInput type="checkbox" />
+                <CheckboxLabel>
+                  <SmallDescription>4</SmallDescription>
+                </CheckboxLabel>
+              </CheckboxDiv>
+              <CheckboxDiv>
+                <CheckboxInput type="checkbox" />
+                <CheckboxLabel>
+                  <SmallDescription>5</SmallDescription>
+                </CheckboxLabel>
+              </CheckboxDiv>
+            </DivCheckbox>
+          </div>
         </AbilityDiv>
       </WrapperAbility>
     </WrapperFilter>
@@ -94,9 +230,18 @@ const WrapperFilter = styled.form`
 `;
 const WrapperRarity = styled.div``;
 const WrapperAbility = styled.div``;
+const WrapperIcon = styled.div`
+  display: inline-block;
+  width: var(--size);
+  height: var(--size);
+  margin: 0.25rem 0.2rem;
+  pointer-events: none;
+`;
+
 const TitleDiv = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
 const FilterDiv = styled.div`
   display: flex;
@@ -123,12 +268,16 @@ const RarityDiv = styled.div`
 const AbilityDiv = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 0.25rem 1rem;
+`;
+
+const DivCheckbox = styled.div`
+  display: flex;
   gap: 1rem;
 `;
 
 const CheckboxInput = styled.input``;
 const CheckboxLabel = styled.label``;
-
 const SmallDescription = styled.p`
   font-size: 0.7rem;
 `;
