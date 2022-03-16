@@ -14,8 +14,8 @@ staking_gov="DrkYUKUUrdgznKjh6mFmM8dyXaMuhRqgi2F9u9QGxzf5"
 url = "https://anchor.projectserum.com"
 
 [provider]
-cluster = "testnet"
-wallet = "/Users/supasinliulaks/.config/solana/testnet.json"
+cluster = "devnet"
+wallet = "/Users/supasinliulaks/.config/solana/devnet.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"

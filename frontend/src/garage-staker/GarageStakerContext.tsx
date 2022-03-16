@@ -4,18 +4,20 @@ import { SOL_RACE_CORE_PROGRAM_ID } from '~/api/solana/addresses'
 import { SolRaceCore, IDL } from '~/api/solana/types/sol_race_core'
 import { useProgram } from '~/hooks/useProgram'
 
-interface IStakerContext {
+interface IGarageStakerContext {
   stakers: Staker[]
   revalidate: () => Promise<void>
 }
 
-const defaultStakerContext: IStakerContext = {
+const defaultGarageStakerContext: IGarageStakerContext = {
   stakers: [],
   revalidate: Promise.resolve,
 }
-export const StakerContext = React.createContext(defaultStakerContext)
+export const GarageStakerContext = React.createContext(
+  defaultGarageStakerContext,
+)
 
-export const StakerProvider: React.FC = ({ children }) => {
+export const GarageStakerProvider: React.FC = ({ children }) => {
   const program = useProgram<SolRaceCore>(IDL, SOL_RACE_CORE_PROGRAM_ID)
 
   const [stakers, setStakers] = useState<Staker[]>([])
@@ -33,13 +35,13 @@ export const StakerProvider: React.FC = ({ children }) => {
   }, [revalidate])
 
   return (
-    <StakerContext.Provider
+    <GarageStakerContext.Provider
       value={{
         stakers,
         revalidate,
       }}
     >
       {children}
-    </StakerContext.Provider>
+    </GarageStakerContext.Provider>
   )
 }

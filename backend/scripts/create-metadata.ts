@@ -38,7 +38,8 @@ async function createMetadata(
       name: collection.name,
       family: collection.family,
       symbol: collection.symbol,
-      publicAddress: collectionAddress,
+      expectedCreatorAddress: collectionAddress,
+      baseImageUri: imageBaseURI,
     }).save()
   }
 

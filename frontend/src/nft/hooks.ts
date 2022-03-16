@@ -3,11 +3,21 @@ import { PublicKey } from '@solana/web3.js'
 import { useConnection } from '@solana/wallet-adapter-react'
 import { NFTContext } from '~/nft/NFTContext'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import { programs } from '@metaplex/js'
+const {
+  metadata: { MetadataData },
+} = programs
 
 export const useNFT = () => useContext(NFTContext)
 export interface NFTAccount {
   tokenAccountAddress: PublicKey
   mint: PublicKey
+}
+
+export interface NFTAccountData {
+  tokenAccountAddress: string
+  mint: string
+  data: typeof MetadataData
 }
 
 /**

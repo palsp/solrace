@@ -11,16 +11,39 @@ import { SOLR_MINT_ADDRESS } from "~/api/solana/addresses";
 import { Row } from "~/ui";
 import Button from "~/ui/button/Button";
 import Image from "~/ui/appImage/AppImage";
-import { NFTAccount } from "~/nft/hooks";
+
+import { NFTAccountData } from "~/nft/hooks";
 import { POOL_NAME } from "~/api/solana/constants";
 import { usePool } from "~/pool/hooks";
-import { useStaker } from "~/staker/hooks";
+import { useGarageStaker } from "~/garage-staker/hooks";
 import { toastAPIError } from "~/utils";
 import Card from "~/ui/card/Card";
 import { calculateReward } from "~/pool/utils";
 import { useMintInfo } from "~/hooks/useMintInfo";
 import CircularProgress from "~/ui/circularProgress/CircularProgress";
 import { useCountdown } from "~/hooks/useCountdown";
+import { PublicKey } from "@solana/web3.js";
+
+// import { verifyNFT } from '~/mint/services'
+
+const CTAButton = styled(Button)`
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+  margin: 1rem;
+
+  &:hover {
+    background-color: #1a1f2e;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: #ccc;
+  }
+`;
+
+const MainCard = styled(Card)`
+  position: relative;
+`;
 
 const ProgressSection = styled.div`
   position: absolute;
@@ -29,7 +52,7 @@ const ProgressSection = styled.div`
   justify-content: space-evenly;
 `;
 interface Props {
-  nft: NFTAccount;
+  nft: NFTAccountData;
 }
 
 const AUTO_REFRESH_TIME = 10 * 1000;
@@ -43,6 +66,12 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
     publicAddress: poolAccount,
   } = usePool();
   const mintInfo = useMintInfo(poolInfo?.solrMint);
+  const mintPubkey = useMemo(() => new PublicKey(mint), [mint]);
+  const tokenAccount = useMemo(
+    () => new PublicKey(tokenAccountAddress),
+    [tokenAccountAddress]
+  );
+
   const {
     stakeInfo,
     isStaked,
@@ -51,8 +80,8 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
     publicAddress: stakingAccount,
     bump: stakingAccountBump,
     revalidate: revalidateStakeAccount,
-  } = useStakeAccount(POOL_NAME, mint);
-  const { revalidate: revalidateStaker } = useStaker();
+  } = useStakeAccount(POOL_NAME, mintPubkey);
+  const { revalidate: revalidateStaker } = useGarageStaker();
   const [loading, setLoading] = useState(false);
   const [reward, setReward] = useState<string>();
   // const [countdown, setCountdown] = useState(AUTO_REFRESH_TIME)
@@ -85,8 +114,8 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
           user: wallet.publicKey,
           poolAccount,
           solrMint: SOLR_MINT_ADDRESS,
-          nftMint: mint,
-          nftTokenAccount: tokenAccountAddress,
+          nftMint: mintPubkey,
+          nftTokenAccount: tokenAccount,
           stakingAccount: stakingAccount!,
           stakingAccountBump: stakingAccountBump!,
           isInitialized: isInitialize!,
@@ -134,6 +163,19 @@ const GarageCard: React.FC<Props> = ({ nft }) => {
     setLoading(false);
     resetCountdown();
   };
+
+  // const handleVerify = async () => {
+  //   try {
+  //     await verifyNFT({
+  //       provider,
+  //       nftMint: mintPubkey,
+  //       nftTokenAccount: tokenAccount,
+  //     })
+  //     toast('Your Garage is Verified', { type: 'success' })
+  //   } catch (e) {
+  //     console.log(e)
+  //   }
+  // }
 
   // calculate for the first time all data is loaded from blockchain
   useEffect(() => {

@@ -7,6 +7,7 @@ import auth from 'auth/routes'
 import user from 'user/routes'
 import wallet from 'wallet/routes'
 import nft from 'nft/routes'
+import kart from 'kart/routes'
 import health from 'health/routes'
 import { getErrorAndStatusCode } from 'error'
 
@@ -31,6 +32,7 @@ routes.use('/auth', auth)
 routes.use('/user', user)
 routes.use('/wallet', wallet)
 routes.use('/nft', nft)
+routes.use('/kart', kart)
 
 app.use(routes)
 

@@ -6,7 +6,7 @@ import {
   TOKEN_METADATA_PROGRAM_ID,
 } from '~/api/solana/addresses'
 import { IDL, SolRaceCore } from '~/api/solana/types/sol_race_core'
-import { POOL_NAME } from '~/api/solana/constants'
+import { getMetadata, getMasterEdition } from '~/api/solana/utils'
 interface UpgradeKart {
   provider: anchor.Provider
   poolAccount: PublicKey
@@ -38,9 +38,8 @@ export const upgradeKart = async ({
   const transaction = new Transaction()
 
   if (!isInitialize) {
-    // TODO: fetch real meta
-    const kartMetadataAccount = anchor.web3.Keypair.generate().publicKey
-    const creatureEdition = anchor.web3.Keypair.generate().publicKey
+    const kartMetadataAccount = await getMetadata(kartMint)
+    const creatureEdition = await getMasterEdition(kartMint)
     transaction.add(
       program.instruction.initKart(kartAccountBump, {
         accounts: {

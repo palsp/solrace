@@ -6,15 +6,12 @@ import { useWorkspace } from "~/workspace/hooks";
 import { useAllNFT } from "~/nft/hooks";
 import { POOL_NAME } from "~/api/solana/constants";
 import { usePoolAccount } from "~/hooks/useAccount";
-import { mint } from "~/mint/services";
 import GarageCard from "~/garage/GarageCard";
 import Button from "~/ui/button/Button";
 import Title from "~/ui/title/Title";
 import { Paragraph, ParagraphItalic, Row } from "~/ui";
 import { useWallet } from "@solana/wallet-adapter-react";
-import ConnectWalletButton from "~/wallet/ConnectWalletButton";
-import { useMemo } from "react";
-import { BN } from "@project-serum/anchor";
+
 import { usePool } from "~/pool/hooks";
 import InventoryLayout from "~/inventory";
 import Skeleton from "react-loading-skeleton";
