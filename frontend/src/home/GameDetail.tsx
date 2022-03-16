@@ -62,6 +62,9 @@ const WrapperImage = styled.div`
   flex: 6;
   display: flex;
   align-items: center;
+  & > * {
+    box-shadow: var(--shadow-elevation-high-secondary);
+  }
   /* border-radius: 4rem; */
 `;
 

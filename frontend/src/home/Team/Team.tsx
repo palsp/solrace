@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import Footer from "./Footer";
 
 const Team = () => {
   return (
@@ -22,6 +23,7 @@ const Team = () => {
           simultaneously, “a crypto game!!!” followed by a limitless long laugh
           of an endless friendship…
         </TitleDescription>
+        <Footer />
       </WrapperContent>
     </WrapperTeam>
   );
@@ -36,6 +38,7 @@ const WrapperTeam = styled.div`
 `;
 const WrapperContent = styled.div`
   padding: 3rem 6rem;
+  height: 100%;
 `;
 
 const TitleText = styled.h1`
