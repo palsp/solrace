@@ -26,10 +26,10 @@ const Footer = () => {
         <FooterCommunity>
           <p>Community</p>
           <SocialDiv>
-            <AppImage src="/twitter.png" width="34px" height="34px" />
-            <AppImage src="/discord.png" width="34px" height="34px" />
-            <AppImage src="/telegram.png" width="34px" height="34px" />
-            <AppImage src="/medium.png" width="34px" height="34px" />
+            <AppImage src="/twitter-black.png" width="34px" height="34px" />
+            <AppImage src="/discord-black.png" width="34px" height="34px" />
+            <AppImage src="/telegram-black.png" width="34px" height="34px" />
+            <AppImage src="/medium-black.png" width="34px" height="34px" />
           </SocialDiv>
           <p>Join us!</p>
           <SmallDescription>
@@ -55,12 +55,13 @@ const Footer = () => {
 };
 const WrapperFooter = styled.div`
   background: var(--background-gradient-2);
-  border-radius: 1rem 1rem 0 0;
+  border-radius: 0.5rem 0.5rem 0 0;
   /* height: 45%; */
   /* color: white; */
   margin-top: 5rem;
   /* height: 100px; */
   /* width: 100vw; */
+  color: black;
 `;
 const WrapperFlex = styled.div`
   display: flex;

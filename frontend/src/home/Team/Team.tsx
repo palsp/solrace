@@ -45,21 +45,28 @@ const WrapperTeam = styled.div`
   height: 100vh;
   background: url("/team-background.png");
   flex: none;
-  color: white;
+  color: var(--color-white);
 `;
 const WrapperContent = styled.div`
-  padding: 3rem 6rem 0 6rem;
+  padding: 3rem 2rem 0 2rem;
   height: 60%;
 `;
 const TeamDescription = styled.div`
   display: flex;
+  justify-content: center;
 `;
 const TeamPic = styled.div`
   display: flex;
   /* max-width: 40%; */
   flex-wrap: wrap;
+  justify-content: center;
   flex: 3.5;
   gap: 1rem;
+
+  & > * {
+    box-shadow: var(--shadow-elevation-medium-primary);
+    border-radius: 1.5rem;
+  }
 `;
 const TitleText = styled.h1`
   width: 100%;
@@ -67,12 +74,15 @@ const TitleText = styled.h1`
   font-size: 2.5rem;
   line-height: 1.2;
   margin-bottom: 2rem;
-  text-align: start;
+  text-align: center;
 `;
 
 const TitleDescription = styled.p`
-  padding: 0 1rem;
+  padding: 1rem 1rem;
   flex: 6;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-elevation-medium-black);
 `;
 
 const Star = styled.div`
