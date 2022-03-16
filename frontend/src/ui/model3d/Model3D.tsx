@@ -32,7 +32,7 @@ const Model3D: React.FC<Props> = ({ height, model }) => {
           maxPolarAngle={Math.PI / 2}
           maxDistance={5}
           minDistance={3.5}
-          // autoRotate
+          autoRotate
         />
         <ambientLight />
         <pointLight position={[10, 10, 10]} />

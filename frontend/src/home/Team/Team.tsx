@@ -1,30 +1,41 @@
 import React from "react";
 import styled from "styled-components";
+import { AppImage } from "~/ui";
 import Footer from "./Footer";
 
 const Team = () => {
   return (
     <WrapperTeam>
       <Star>&#10022;</Star>
+
       <WrapperContent>
         <TitleText>Team</TitleText>
-        <TitleDescription>
-          &emsp;One night at a famous Ramen shop in one of the busiest city in
-          the world, a group of 4 crypto-enthusiast friends gather around for
-          their long awaited casual catch up after the pandemic. Each was
-          sharing their unexpected stories and hilarious moments in crypto
-          space. One drink after another, the timeline of the talks was
-          gradually traced back to the good old childhood days, reminiscenting
-          their night playing Nintendo games. Despite being in the same group of
-          friend, they all have different uniqueness in characters and talents
-          in technical field. an unexpected thought popped up in 0xPaul mind’s…,
-          why don’t we start to BUIDL something? 0xMicky replied, what would
-          that be? 0xNae raised, our mutual passion…? All four said
-          simultaneously, “a crypto game!!!” followed by a limitless long laugh
-          of an endless friendship…
-        </TitleDescription>
-        <Footer />
+
+        <TeamDescription>
+          <TeamPic>
+            <AppImage src="/0xAkira.png" width="150px" height="150px" />
+            <AppImage src="/0xReki.png" width="150px" height="150px" />
+            <AppImage src="/0xYuna.png" width="150px" height="150px" />
+            <AppImage src="/0xKazane.png" width="150px" height="150px" />
+          </TeamPic>
+          <TitleDescription>
+            &emsp;One night at a famous Ramen shop in one of the busiest city in
+            the world, a group of 4 crypto-enthusiast friends gather around for
+            their long awaited casual catch up after the pandemic. Each was
+            sharing their unexpected stories and hilarious moments in crypto
+            space. One drink after another, the timeline of the talks was
+            gradually traced back to the good old childhood days, reminiscenting
+            their night playing Nintendo games. Despite being in the same group
+            of friend, they all have different uniqueness in characters and
+            talents in technical field. an unexpected thought popped up in
+            0xPaul mind’s…, why don’t we start to BUIDL something? 0xMicky
+            replied, what would that be? 0xNae raised, our mutual passion…? All
+            four said simultaneously, “a crypto game!!!” followed by a limitless
+            long laugh of an endless friendship…
+          </TitleDescription>
+        </TeamDescription>
       </WrapperContent>
+      <Footer />
     </WrapperTeam>
   );
 };
@@ -32,27 +43,36 @@ const Team = () => {
 const WrapperTeam = styled.div`
   width: 100vw;
   height: 100vh;
-  background: var(--background-gradient-1-flipped);
-  scroll-snap-align: start;
+  background: url("/team-background.png");
   flex: none;
+  color: white;
 `;
 const WrapperContent = styled.div`
-  padding: 3rem 6rem;
-  height: 100%;
+  padding: 3rem 6rem 0 6rem;
+  height: 60%;
 `;
-
+const TeamDescription = styled.div`
+  display: flex;
+`;
+const TeamPic = styled.div`
+  display: flex;
+  /* max-width: 40%; */
+  flex-wrap: wrap;
+  flex: 3.5;
+  gap: 1rem;
+`;
 const TitleText = styled.h1`
   width: 100%;
   font-weight: 400;
   font-size: 2.5rem;
   line-height: 1.2;
   margin-bottom: 2rem;
-  text-align: center;
-  color: black;
+  text-align: start;
 `;
 
 const TitleDescription = styled.p`
-  padding: 0 5rem;
+  padding: 0 1rem;
+  flex: 6;
 `;
 
 const Star = styled.div`

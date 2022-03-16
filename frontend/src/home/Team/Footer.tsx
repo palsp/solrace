@@ -55,22 +55,24 @@ const Footer = () => {
 };
 const WrapperFooter = styled.div`
   background: var(--background-gradient-2);
-  border-radius: 1rem;
-  height: 55%;
-  margin: 2rem 0;
+  border-radius: 1rem 1rem 0 0;
+  /* height: 45%; */
+  /* color: white; */
+  margin-top: 5rem;
+  /* height: 100px; */
   /* width: 100vw; */
 `;
 const WrapperFlex = styled.div`
   display: flex;
   gap: 4rem;
   justify-content: center;
-  padding-top: 3rem;
+  padding-top: 1rem;
   align-items: center;
 `;
 const WrapperLegal = styled.div`
   display: flex;
   gap: 1rem;
-  margin: 2.5rem 0;
+  margin: 0.75rem 0;
   padding: 0 2rem;
   & > * {
     cursor: pointer;
