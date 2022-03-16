@@ -49,7 +49,7 @@ const LoginPage = () => {
       <TitleDiv>
         <h1>Login</h1>
 
-        <Paragraph>It's good to see you again!</Paragraph>
+        <Paragraph>Its good to see you again!</Paragraph>
       </TitleDiv>
       <LoginForm onSubmit={handleSubmit(onSubmit)}>
         <FormInput
@@ -74,7 +74,7 @@ const LoginPage = () => {
           Login
         </Button>
         <RegisterDiv>
-          <ParagraphItalic>Haven't registered? </ParagraphItalic>
+          <ParagraphItalic>Havent registered? </ParagraphItalic>
           <AppLink href="/register" color="primary">
             Register
           </AppLink>

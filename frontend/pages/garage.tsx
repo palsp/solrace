@@ -39,6 +39,7 @@ const GaragePage = () => {
     <Main>
       {garages.map((garage) => (
         <Link
+          key={garage.tokenAccountAddress}
           href={{
             pathname: `/garage/${garage.tokenAccountAddress}`,
             query: {

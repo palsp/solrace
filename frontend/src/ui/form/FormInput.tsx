@@ -1,4 +1,8 @@
-import { RegisterOptions, UseFormRegister } from "react-hook-form";
+import {
+  RegisterOptions,
+  UseFormRegister,
+  UseFormRegisterReturn,
+} from "react-hook-form";
 import styled from "styled-components";
 
 interface Props
@@ -34,6 +38,9 @@ const FormInput: React.FC<Props> = ({
   );
 };
 
+interface InputProps extends UseFormRegisterReturn {
+  [key: string]: any;
+}
 const Input = styled.input`
   width: 100%;
   border: none;
@@ -41,7 +48,8 @@ const Input = styled.input`
   border-radius: 0.175rem;
 
   &:focus {
-    outline: 1px solid ${(props: Props) => `var(--color-${props.color}-dark)`};
+    outline: 1px solid
+      ${(props: InputProps) => `var(--color-${props.color}-dark)`};
   }
 `;
 

@@ -18,7 +18,7 @@ const Select: React.FC<Props> = ({ label, value, onChange, children }) => {
       </NativeSelect>
       <PresentationalBit>
         {displayedValue ? displayedValue : "Select Garage"}
-        <IconWrapper style={{ "--size": 24 + "px" }}>
+        <IconWrapper size="24px">
           <ChevronDown />
         </IconWrapper>
       </PresentationalBit>
@@ -59,14 +59,17 @@ const PresentationalBit = styled.div`
   }
 `;
 
+interface Props {
+  size?: string;
+}
 const IconWrapper = styled.div`
   position: absolute;
   top: 0;
   bottom: 0;
   right: 10px;
   margin: auto;
-  width: var(--size);
-  height: var(--size);
+  width: ${(props: Props) => props.size};
+  height: ${(props: Props) => props.size};
   pointer-events: none;
 `;
 

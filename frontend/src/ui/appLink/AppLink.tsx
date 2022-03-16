@@ -22,9 +22,11 @@ const AppLink: React.FC<Props> = ({ children, href, color, textColor }) => {
     </Link>
   );
 };
-
+interface SpanProps {
+  textColor?: string;
+}
 const Span = styled.span`
-  color: ${(props: Props) => `var(--color-${props.textColor})`};
+  color: ${(props: SpanProps) => `var(--color-${props.textColor})`};
 `;
 const A = styled.a`
   position: relative;

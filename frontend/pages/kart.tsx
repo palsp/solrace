@@ -37,6 +37,7 @@ const KartPage = () => {
     <Main>
       {karts.map((kart) => (
         <Link
+          key={kart.tokenAccountAddress}
           href={{
             pathname: `/kart/${kart.tokenAccountAddress}`,
             query: {
@@ -46,7 +47,7 @@ const KartPage = () => {
           }}
         >
           <a>
-            <KartCard key={kart.tokenAccountAddress} kart={kart} />
+            <KartCard kart={kart} />
           </a>
         </Link>
       ))}
