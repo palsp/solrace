@@ -3,8 +3,8 @@ import { useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import ReactLoading from 'react-loading'
 import { PublicKey } from '@solana/web3.js'
-import { useStaker } from '~/staker/hooks'
-import { NFTAccount } from '~/nft/hooks'
+import { useGarageStaker } from '~/garage-staker/hooks'
+import { NFTAccount, NFTAccountData } from '~/nft/hooks'
 import { POOL_NAME } from '~/api/solana/constants'
 import { upgradeKart } from '~/kart/services'
 import { shortenIfAddress } from '~/wallet/utils'
@@ -39,12 +39,18 @@ const CTAButton = styled(Button)`
 `
 
 interface Props {
-  nft: NFTAccount
+  nft: NFTAccountData
 }
 
 const KartCard: React.FC<Props> = ({ nft }) => {
-  const { mint: kartMint, tokenAccountAddress: kartTokenAccount } = nft
-  const { stakers } = useStaker()
+  const { mint, tokenAccountAddress } = nft
+
+  const kartMint = useMemo(() => new PublicKey(mint), [mint])
+  const kartTokenAccount = useMemo(() => new PublicKey(tokenAccountAddress), [
+    tokenAccountAddress,
+  ])
+
+  const { stakers } = useGarageStaker()
   const { provider } = useWorkspace()
   const { publicAddress: poolAccount } = usePool()
 
@@ -112,7 +118,7 @@ const KartCard: React.FC<Props> = ({ nft }) => {
 
   return (
     <Card>
-      <h3>Mint: {shortenIfAddress(nft.mint.toBase58())}</h3>
+      <h3>{nft.data.name}</h3>
       <p>Max Speed: {kartInfo?.masSpeed || 0}</p>
       <Image
         src="/kart-template.png"

@@ -33,7 +33,7 @@ import { WorkspaceProvider } from '~/workspace/WorkspaceContext'
 import { NFTProvider } from '~/nft/NFTContext'
 import { AuthProvider } from '~/auth/AuthContext'
 import { LinkedWalletProvider } from '~/wallet/LinkedWalletContext'
-import { StakerProvider } from '~/staker/StakerContext'
+import { GarageStakerProvider } from '~/garage-staker/GarageStakerContext'
 import { PoolProvider } from '~/pool/PoolContext'
 
 const swrOption: Partial<PublicConfiguration> = {
@@ -62,7 +62,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             <WorkspaceProvider>
               <WalletModalProvider>
                 <PoolProvider>
-                  <StakerProvider>
+                  <GarageStakerProvider>
                     <NFTProvider>
                       <AuthProvider>
                         <LinkedWalletProvider>
@@ -70,7 +70,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                         </LinkedWalletProvider>
                       </AuthProvider>
                     </NFTProvider>
-                  </StakerProvider>
+                  </GarageStakerProvider>
                 </PoolProvider>
               </WalletModalProvider>
             </WorkspaceProvider>

@@ -75,9 +75,11 @@ export const getNFTAccountByCollection = async (owner: string) => {
       if (collection) {
         const index = userNFTAccountIndexMap[symbol]
         // when creator (candy machine public address ) is registered, we select only our registered creator
-        if (collection.publicAddress) {
+        if (collection.expectedCreatorAddress) {
           const hasCreator = metaData.data.creators.find(
-            (creator) => creator.address === collection.publicAddress,
+            (creator) =>
+              creator.address.toLowerCase() ===
+              collection.expectedCreatorAddress?.toLowerCase(),
           )
           if (!hasCreator) continue
         }

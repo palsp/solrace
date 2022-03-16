@@ -1,1 +1,1 @@
-export const POOL_NAME = 'solakart'
+export const POOL_NAME = 'solland'

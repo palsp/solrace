@@ -63,14 +63,14 @@ pub mod sol_race_core {
         Ok(())
     }
 
-    // #[access_control(verify_nft(
-    //     &ctx.accounts.pool_account.garage_creator,
-    //     &ctx.accounts.garage_token_account,
-    //     &ctx.accounts.garage_metadata_account,
-    //     &ctx.accounts.garage_mint,
-    //     &ctx.accounts.creature_edition,
-    //     &ctx.accounts.token_metadata_program,
-    // ))]
+    #[access_control(verify_nft(
+        &ctx.accounts.pool_account.garage_creator,
+        &ctx.accounts.garage_token_account,
+        &ctx.accounts.garage_metadata_account,
+        &ctx.accounts.garage_mint,
+        &ctx.accounts.creature_edition,
+        &ctx.accounts.token_metadata_program,
+    ))]
     pub fn init_stake(ctx: Context<InitStake>, bump: u8) -> Result<()> {
         msg!("INIT STAKE");
         let staking_account = &mut ctx.accounts.staking_account;
@@ -84,14 +84,14 @@ pub mod sol_race_core {
         Ok(())
     }
 
-    // #[access_control(verify_nft(
-    //     &ctx.accounts.pool_account.kart_creator,
-    //     &ctx.accounts.kart_token_account,
-    //     &ctx.accounts.kart_metadata_account,
-    //     &ctx.accounts.kart_mint,
-    //     &ctx.accounts.creature_edition,
-    //     &ctx.accounts.token_metadata_program,
-    // ))]
+    #[access_control(verify_nft(
+        &ctx.accounts.pool_account.kart_creator,
+        &ctx.accounts.kart_token_account,
+        &ctx.accounts.kart_metadata_account,
+        &ctx.accounts.kart_mint,
+        &ctx.accounts.creature_edition,
+        &ctx.accounts.token_metadata_program,
+    ))]
     pub fn init_kart(ctx: Context<InitKart>, bump: u8) -> Result<()> {
         let kart_account = &mut ctx.accounts.kart_account;
         kart_account.bump = bump;

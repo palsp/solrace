@@ -85,20 +85,20 @@ solana airdrop 1
 upload and deploy candy machine. in `scripts/metaplex` folder, run
 ```sh
 yarn --cwd js install
-ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts upload \
-    -e testnet \
+ts-node  js/packages/cli/src/candy-machine-v2-cli.ts upload \
+    -e devnet \
     -k ~/.config/solana/devnet.json \
-    -cp config.json \
-    -c example \
+    -cp config-kart.json \
+    -c kart \
     ./assets
 ```
 
 verify upload
 ```
 ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts verify_upload \
-    -e testnet \
+    -e devnet \
     -k ~/.config/solana/devnet.json \
-    -c example
+    -c garage
 ```
 
 
@@ -108,9 +108,9 @@ in `scripts/metaplex`
 mint one token
 ```
 ts-node  --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts mint_one_token \
-    -e testnet \
+    -e devnet \
     -k  ~/.config/solana/devnet.json \
-    -c example
+    -c garage
 ```
 
 mint multiple token
@@ -118,7 +118,7 @@ mint multiple token
 ts-node js/packages/cli/src/candy-machine-v2-cli.ts mint_multiple_tokens \
     -e devnet \
     -k ~/.config/solana/devnet.json \
-    -c example \
+    -c garage \
     --number 2
 ```
 
@@ -143,7 +143,7 @@ ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts update_cand
 show config 
 ```
 ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts show \
-    -e testnet \
+    -e devnet \
     -k ~/.config/solana/devnet.json \
     -c example
 ```
