@@ -97,6 +97,7 @@ const TitleDiv = styled.div`
   align-items: center;
   border-radius: 0.5rem;
   gap: 2rem;
+  margin-bottom: 1rem;
 `;
 
 const ParagraphDiv = styled.div`
