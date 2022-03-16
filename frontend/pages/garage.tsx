@@ -54,7 +54,7 @@ const GaragePage = () => {
       <TitleDiv>
         <h3>GARAGE - stake your karts and earn passive rewards</h3>
       </TitleDiv>
-      <ParagraphDiv>
+      {/* <ParagraphDiv>
         <Paragraph>
           &nbsp; &nbsp; &nbsp; &nbsp; Lorem ipsum dolor sit amet consectetur
           adipisicing elit. Sed inventore repellendus doloremque quam earum quia
@@ -73,7 +73,7 @@ const GaragePage = () => {
           consequuntur officia soluta placeat, l abore ex ipsam doloremque
           nostrum et ea rerum animi, omnis esse.
         </Paragraph>
-      </ParagraphDiv>
+      </ParagraphDiv> */}
       {!connected ? <Paragraph>Please Connect Your Wallet</Paragraph> : ""}
     </InventoryLayout>
   );

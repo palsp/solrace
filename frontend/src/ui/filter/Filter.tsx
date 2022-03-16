@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Filter as FilterIcon } from "react-feather";
+import Button from "../button";
 const Filter = () => {
   return (
     <WrapperFilter>
@@ -10,21 +11,66 @@ const Filter = () => {
           <h3>Filter</h3>
         </FilterDiv>
         <ApplyDiv>
-          <p>Apply</p>
-          <p>Clear</p>
+          <Button color="secondary" padding="0.25rem 0.4rem">
+            Apply
+          </Button>
+          <Button color="secondary" padding="0.25rem 0.4rem">
+            Clear
+          </Button>
         </ApplyDiv>
       </TitleDiv>
       <WrapperRarity>
         <p>Rarity</p>
         <RarityDiv>
-          <div>C</div>
-          <div>CS</div>
-          <div>B</div>
-          <div>BS</div>
-          <div>A</div>
-          <div>AS</div>
-          <div>S</div>
-          <div>SS</div>
+          <CheckboxDiv>
+            <CheckboxInput type="checkbox" />
+            <CheckboxLabel>
+              <SmallDescription>C</SmallDescription>
+            </CheckboxLabel>
+          </CheckboxDiv>
+
+          <CheckboxDiv>
+            <CheckboxInput type="checkbox" />
+            <CheckboxLabel>
+              <SmallDescription>CS</SmallDescription>
+            </CheckboxLabel>
+          </CheckboxDiv>
+          <CheckboxDiv>
+            <CheckboxInput type="checkbox" />
+            <CheckboxLabel>
+              <SmallDescription>B</SmallDescription>
+            </CheckboxLabel>
+          </CheckboxDiv>
+          <CheckboxDiv>
+            <CheckboxInput type="checkbox" />
+            <CheckboxLabel>
+              <SmallDescription>BS</SmallDescription>
+            </CheckboxLabel>
+          </CheckboxDiv>
+          <CheckboxDiv>
+            <CheckboxInput type="checkbox" />
+            <CheckboxLabel>
+              <SmallDescription>A</SmallDescription>
+            </CheckboxLabel>
+          </CheckboxDiv>
+          <CheckboxDiv>
+            <CheckboxInput type="checkbox" />
+            <CheckboxLabel>
+              <SmallDescription>AS</SmallDescription>
+            </CheckboxLabel>
+          </CheckboxDiv>
+          <CheckboxDiv>
+            <CheckboxInput type="checkbox" />
+            <CheckboxLabel>
+              <SmallDescription>S</SmallDescription>
+            </CheckboxLabel>
+          </CheckboxDiv>
+          <CheckboxDiv>
+            <CheckboxInput type="checkbox" />
+            <CheckboxLabel>
+              <SmallDescription>SS</SmallDescription>
+            </CheckboxLabel>
+          </CheckboxDiv>
         </RarityDiv>
       </WrapperRarity>
       <WrapperAbility>
@@ -40,7 +86,7 @@ const Filter = () => {
   );
 };
 
-const WrapperFilter = styled.div`
+const WrapperFilter = styled.form`
   background: var(--color-white);
   padding: 1rem;
   border-radius: 0.75rem;
@@ -57,14 +103,33 @@ const FilterDiv = styled.div`
 `;
 const ApplyDiv = styled.div`
   display: flex;
+  gap: 0.4rem;
 `;
+const CheckboxDiv = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+`;
+
 const RarityDiv = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: 0 2rem;
+  flex-wrap: wrap;
+  & > ${CheckboxDiv} {
+    min-width: 30px;
+  }
 `;
+
 const AbilityDiv = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+`;
+
+const CheckboxInput = styled.input``;
+const CheckboxLabel = styled.label``;
+
+const SmallDescription = styled.p`
+  font-size: 0.7rem;
 `;
 export default Filter;
