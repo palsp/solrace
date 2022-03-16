@@ -10,7 +10,7 @@ const {
   metadata: { MetadataData },
 } = programs
 
-const getMetadata = async (
+export const getMetadata = async (
   mint: anchor.web3.PublicKey,
 ): Promise<anchor.web3.PublicKey> => {
   return (
@@ -25,7 +25,9 @@ const getMetadata = async (
   )[0]
 }
 
-const getParsedNFTAccountByOwner = async (owner: anchor.web3.PublicKey) => {
+export const getParsedNFTAccountByOwner = async (
+  owner: anchor.web3.PublicKey,
+) => {
   const { value: splAccounts } = await connection.getParsedTokenAccountsByOwner(
     owner,
     {

@@ -28,7 +28,7 @@ interface MetadataResponse {
   externalUrl?: string
   edition?: number
   attributes: MetadataAttribute[]
-  symbol: string
+  symbol?: string
   properties: {
     creators: {
       address: string
@@ -36,7 +36,7 @@ interface MetadataResponse {
     }[]
     files: MetadataFile[]
   }
-  collection: {
+  collection?: {
     name: string
     family?: string
   }
