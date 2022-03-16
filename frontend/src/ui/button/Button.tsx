@@ -15,7 +15,15 @@ interface Props
   outline?: boolean;
 }
 
-const Button = ({ width, color, children, icon, outline, padding }: Props) => {
+const Button = ({
+  width,
+  color,
+  children,
+  icon,
+  outline,
+  padding,
+  ...delegates
+}: Props) => {
   let Icon;
   if (icon) {
     Icon = (
@@ -32,6 +40,7 @@ const Button = ({ width, color, children, icon, outline, padding }: Props) => {
       color={color}
       outline={outline}
       padding={padding}
+      {...delegates}
     >
       <Span>
         {Icon}

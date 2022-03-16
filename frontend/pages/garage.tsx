@@ -3,7 +3,7 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import AppLayout from "~/app/AppLayout";
 import { useWorkspace } from "~/workspace/hooks";
-import { useAllNFT } from "~/nft/hooks";
+import { useAllNFT, useNFT } from "~/nft/hooks";
 import { POOL_NAME } from "~/api/solana/constants";
 import { usePoolAccount } from "~/hooks/useAccount";
 import GarageCard from "~/garage/GarageCard";
@@ -17,27 +17,38 @@ import InventoryLayout from "~/inventory";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { CardSkeleton } from "~/ui/card";
+import { GatewayStatus } from "@civic/solana-gateway-react";
+import { useMemo } from "react";
+import { GARAGE_COLLECTION_NAME } from "~/garage/constants";
+import { handleMintError } from "~/mint/services";
+import { toastAPIError } from "~/utils";
+import mint from "./mint";
 
 const GaragePage = () => {
   const { provider, wallet } = useWorkspace();
   const { poolInfo, apr } = usePool();
   const { connected } = useWallet();
-  const { nfts, revalidate: revalidateNFTs } = useAllNFT(wallet?.publicKey);
+  // const { nfts, revalidate: revalidateNFTs } = useAllNFT(wallet?.publicKey);
+  const { getNFTOfCollection, revalidateNFTs } = useNFT();
+
+  const garages = useMemo(() => {
+    return getNFTOfCollection(GARAGE_COLLECTION_NAME);
+  }, [getNFTOfCollection]);
 
   let cards = poolInfo ? (
     <Main>
-      {nfts.map((nft) => (
+      {garages.map((garage) => (
         <Link
           href={{
-            pathname: `/garage/${nft.tokenAccountAddress.toBase58()}`,
+            pathname: `/garage/${garage.tokenAccountAddress}`,
             query: {
-              mint: nft.mint.toString(),
-              tokenAccountAddress: nft.tokenAccountAddress.toString(),
+              mint: garage.mint.toString(),
+              tokenAccountAddress: garage.tokenAccountAddress,
             },
           }}
         >
           <a>
-            <GarageCard key={nft.tokenAccountAddress.toBase58()} nft={nft} />
+            <GarageCard key={garage.tokenAccountAddress} garage={garage} />
           </a>
         </Link>
       ))}

@@ -52,13 +52,13 @@ const ProgressSection = styled.div`
   justify-content: space-evenly;
 `;
 interface Props {
-  nft: NFTAccountData;
+  garage: NFTAccountData;
 }
 
 const AUTO_REFRESH_TIME = 10 * 1000;
 
-const GarageCard: React.FC<Props> = ({ nft }) => {
-  const { mint, tokenAccountAddress } = nft;
+const GarageCard: React.FC<Props> = ({ garage }) => {
+  const { mint, tokenAccountAddress } = garage;
   const { provider, wallet } = useWorkspace();
   const {
     poolInfo,

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useMemo, useState } from "react";
 import { PublicKey } from "@solana/web3.js";
-import { NFTAccount } from "~/nft/hooks";
+import { NFTAccountData } from "~/nft/hooks";
 import { POOL_NAME } from "~/api/solana/constants";
 import { shortenIfAddress } from "~/wallet/utils";
 import { useWorkspace } from "~/workspace/hooks";
@@ -11,10 +11,10 @@ import { usePool } from "~/pool/hooks";
 import Card from "~/ui/card/Card";
 
 interface Props {
-  nft: NFTAccount;
+  kart: NFTAccountData;
 }
 
-const KartCard: React.FC<Props> = ({ nft }) => {
+const KartCard: React.FC<Props> = ({ kart }) => {
   const { provider } = useWorkspace();
 
   return (

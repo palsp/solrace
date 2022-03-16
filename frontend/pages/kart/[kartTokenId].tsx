@@ -23,7 +23,7 @@ import {
 import TokenDetailLayout from "~/tokenDetail/TokenDetailLayout";
 import { shortenIfAddress } from "~/wallet/utils";
 import Button from "~/ui/button/Button";
-import { useStaker } from "~/staker/hooks";
+import { useGarageStaker } from "~/garage-staker/hooks";
 import { NFTAccount } from "~/nft/hooks";
 import { useKartAccount } from "~/hooks/useAccount";
 
@@ -49,7 +49,7 @@ const KartDetail = () => {
   const { kartTokenId: tokenId } = query;
   const { provider, wallet } = useWorkspace();
   const { connected } = useWallet();
-  const { stakers } = useStaker();
+  const { stakers } = useGarageStaker();
   const { publicAddress: poolAccount } = usePool();
   const {
     kartInfo,

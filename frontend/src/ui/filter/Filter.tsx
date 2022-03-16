@@ -303,12 +303,12 @@ const AbilityDiv = styled.div`
 
 const DivCheckbox = styled.div`
   display: flex;
-  gap: 0.5rem;
+  gap: 0.25rem;
 `;
 
 const CheckboxInput = styled.input``;
 const CheckboxLabel = styled.label``;
-const SmallDescription = styled.p`
+const SmallDescription = styled.div`
   font-size: 0.7rem;
 `;
 const IconWrapper = styled.div`
