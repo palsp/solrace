@@ -1,6 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import { Filter as FilterIcon } from "react-feather";
+import {
+  Filter as FilterIcon,
+  ChevronsUp,
+  Wind,
+  CloudDrizzle,
+  Feather,
+} from "react-feather";
 import Button from "../button";
 const Filter = () => {
   return (
@@ -78,140 +84,160 @@ const Filter = () => {
       <WrapperAbility>
         <p>Ability</p>
         <AbilityDiv>
-          <SmallDescription>Max Speed</SmallDescription>
+          <SmallDescription>
+            Max Speed
+            <IconWrapper style={{ "--size": 18 + "px" }}>
+              <ChevronsUp />
+            </IconWrapper>
+          </SmallDescription>
           <DivCheckbox>
             <CheckboxDiv>
               <CheckboxInput type="checkbox" />
               <CheckboxLabel>
-                <SmallDescription>1</SmallDescription>
+                <SmallDescription>1-19</SmallDescription>
               </CheckboxLabel>
             </CheckboxDiv>
             <CheckboxDiv>
               <CheckboxInput type="checkbox" />
               <CheckboxLabel>
-                <SmallDescription>2</SmallDescription>
+                <SmallDescription>20-39</SmallDescription>
               </CheckboxLabel>
             </CheckboxDiv>
             <CheckboxDiv>
               <CheckboxInput type="checkbox" />
               <CheckboxLabel>
-                <SmallDescription>3</SmallDescription>
+                <SmallDescription>40-59</SmallDescription>
               </CheckboxLabel>
             </CheckboxDiv>
             <CheckboxDiv>
               <CheckboxInput type="checkbox" />
               <CheckboxLabel>
-                <SmallDescription>4</SmallDescription>
+                <SmallDescription>60-79</SmallDescription>
               </CheckboxLabel>
             </CheckboxDiv>
             <CheckboxDiv>
               <CheckboxInput type="checkbox" />
               <CheckboxLabel>
-                <SmallDescription>5</SmallDescription>
+                <SmallDescription>80-99</SmallDescription>
               </CheckboxLabel>
             </CheckboxDiv>
           </DivCheckbox>
           <div>
-            <SmallDescription>Acceleration</SmallDescription>
+            <SmallDescription>
+              Acceleration
+              <IconWrapper style={{ "--size": 18 + "px" }}>
+                <Wind />
+              </IconWrapper>
+            </SmallDescription>
             <DivCheckbox>
               <CheckboxDiv>
                 <CheckboxInput type="checkbox" />
                 <CheckboxLabel>
-                  <SmallDescription>1</SmallDescription>
+                  <SmallDescription>1-19</SmallDescription>
                 </CheckboxLabel>
               </CheckboxDiv>
               <CheckboxDiv>
                 <CheckboxInput type="checkbox" />
                 <CheckboxLabel>
-                  <SmallDescription>2</SmallDescription>
+                  <SmallDescription>20-39</SmallDescription>
                 </CheckboxLabel>
               </CheckboxDiv>
               <CheckboxDiv>
                 <CheckboxInput type="checkbox" />
                 <CheckboxLabel>
-                  <SmallDescription>3</SmallDescription>
+                  <SmallDescription>40-59</SmallDescription>
                 </CheckboxLabel>
               </CheckboxDiv>
               <CheckboxDiv>
                 <CheckboxInput type="checkbox" />
                 <CheckboxLabel>
-                  <SmallDescription>4</SmallDescription>
+                  <SmallDescription>60-79</SmallDescription>
                 </CheckboxLabel>
               </CheckboxDiv>
               <CheckboxDiv>
                 <CheckboxInput type="checkbox" />
                 <CheckboxLabel>
-                  <SmallDescription>5</SmallDescription>
+                  <SmallDescription>80-99</SmallDescription>
+                </CheckboxLabel>
+              </CheckboxDiv>{" "}
+            </DivCheckbox>
+          </div>
+          <div>
+            <SmallDescription>
+              Drift
+              <IconWrapper style={{ "--size": 18 + "px" }}>
+                <CloudDrizzle />
+              </IconWrapper>
+            </SmallDescription>
+            <DivCheckbox>
+              <CheckboxDiv>
+                <CheckboxInput type="checkbox" />
+                <CheckboxLabel>
+                  <SmallDescription>1-19</SmallDescription>
+                </CheckboxLabel>
+              </CheckboxDiv>
+              <CheckboxDiv>
+                <CheckboxInput type="checkbox" />
+                <CheckboxLabel>
+                  <SmallDescription>20-39</SmallDescription>
+                </CheckboxLabel>
+              </CheckboxDiv>
+              <CheckboxDiv>
+                <CheckboxInput type="checkbox" />
+                <CheckboxLabel>
+                  <SmallDescription>40-59</SmallDescription>
+                </CheckboxLabel>
+              </CheckboxDiv>
+              <CheckboxDiv>
+                <CheckboxInput type="checkbox" />
+                <CheckboxLabel>
+                  <SmallDescription>60-79</SmallDescription>
+                </CheckboxLabel>
+              </CheckboxDiv>
+              <CheckboxDiv>
+                <CheckboxInput type="checkbox" />
+                <CheckboxLabel>
+                  <SmallDescription>80-99</SmallDescription>
                 </CheckboxLabel>
               </CheckboxDiv>
             </DivCheckbox>
           </div>
           <div>
-            <SmallDescription>Drift</SmallDescription>
+            <SmallDescription>
+              Handling
+              <IconWrapper style={{ "--size": 18 + "px" }}>
+                <Feather />
+              </IconWrapper>
+            </SmallDescription>
             <DivCheckbox>
               <CheckboxDiv>
                 <CheckboxInput type="checkbox" />
                 <CheckboxLabel>
-                  <SmallDescription>1</SmallDescription>
+                  <SmallDescription>1-19</SmallDescription>
                 </CheckboxLabel>
               </CheckboxDiv>
               <CheckboxDiv>
                 <CheckboxInput type="checkbox" />
                 <CheckboxLabel>
-                  <SmallDescription>2</SmallDescription>
+                  <SmallDescription>20-39</SmallDescription>
                 </CheckboxLabel>
               </CheckboxDiv>
               <CheckboxDiv>
                 <CheckboxInput type="checkbox" />
                 <CheckboxLabel>
-                  <SmallDescription>3</SmallDescription>
+                  <SmallDescription>40-59</SmallDescription>
                 </CheckboxLabel>
               </CheckboxDiv>
               <CheckboxDiv>
                 <CheckboxInput type="checkbox" />
                 <CheckboxLabel>
-                  <SmallDescription>4</SmallDescription>
+                  <SmallDescription>60-79</SmallDescription>
                 </CheckboxLabel>
               </CheckboxDiv>
               <CheckboxDiv>
                 <CheckboxInput type="checkbox" />
                 <CheckboxLabel>
-                  <SmallDescription>5</SmallDescription>
-                </CheckboxLabel>
-              </CheckboxDiv>
-            </DivCheckbox>
-          </div>
-          <div>
-            <SmallDescription>Handling</SmallDescription>
-            <DivCheckbox>
-              <CheckboxDiv>
-                <CheckboxInput type="checkbox" />
-                <CheckboxLabel>
-                  <SmallDescription>1</SmallDescription>
-                </CheckboxLabel>
-              </CheckboxDiv>
-              <CheckboxDiv>
-                <CheckboxInput type="checkbox" />
-                <CheckboxLabel>
-                  <SmallDescription>2</SmallDescription>
-                </CheckboxLabel>
-              </CheckboxDiv>
-              <CheckboxDiv>
-                <CheckboxInput type="checkbox" />
-                <CheckboxLabel>
-                  <SmallDescription>3</SmallDescription>
-                </CheckboxLabel>
-              </CheckboxDiv>
-              <CheckboxDiv>
-                <CheckboxInput type="checkbox" />
-                <CheckboxLabel>
-                  <SmallDescription>4</SmallDescription>
-                </CheckboxLabel>
-              </CheckboxDiv>
-              <CheckboxDiv>
-                <CheckboxInput type="checkbox" />
-                <CheckboxLabel>
-                  <SmallDescription>5</SmallDescription>
+                  <SmallDescription>80-99</SmallDescription>
                 </CheckboxLabel>
               </CheckboxDiv>
             </DivCheckbox>
@@ -228,8 +254,12 @@ const WrapperFilter = styled.form`
   border-radius: 0.75rem;
   box-shadow: var(--shadow-elevation-medium-secondary);
 `;
-const WrapperRarity = styled.div``;
-const WrapperAbility = styled.div``;
+const WrapperRarity = styled.div`
+  margin: 1rem 0;
+`;
+const WrapperAbility = styled.div`
+  margin: 1rem 0;
+`;
 const WrapperIcon = styled.div`
   display: inline-block;
   width: var(--size);
@@ -261,7 +291,7 @@ const RarityDiv = styled.div`
   gap: 0 2rem;
   flex-wrap: wrap;
   & > ${CheckboxDiv} {
-    min-width: 30px;
+    min-width: 40px;
   }
 `;
 
@@ -273,12 +303,19 @@ const AbilityDiv = styled.div`
 
 const DivCheckbox = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
 `;
 
 const CheckboxInput = styled.input``;
 const CheckboxLabel = styled.label``;
 const SmallDescription = styled.p`
   font-size: 0.7rem;
+`;
+const IconWrapper = styled.div`
+  display: inline-block;
+  width: var(--size);
+  height: var(--size);
+  margin: 0 0.2rem;
+  pointer-events: none;
 `;
 export default Filter;
