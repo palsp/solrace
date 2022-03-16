@@ -1,15 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components";
-import { backButton, backButtonPrimary, backButtonSecondary } from "~/assets";
+// import { backButton, backButtonPrimary, backButtonSecondary } from "~/assets";
 import { AppImage } from "~/ui";
+
 interface Props {
   direction: string;
 }
 
 const AuthLayout: React.FC<Props> = ({ children, direction }) => {
   let backButton =
-    direction === "row" ? backButtonPrimary : backButtonSecondary;
+    direction === "row"
+      ? "/back-button-primary.png"
+      : "/back-button-secondary.png";
 
   return (
     <AuthLayoutContainer direction={direction}>
