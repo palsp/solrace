@@ -1,19 +1,71 @@
 import _ from 'lodash'
 import { Wallet } from 'entity/Wallet'
 import { passportJwtMiddlewareAuth } from 'auth/middleware'
-
 import express from 'express'
-import {
-  getKartOfOwner,
-  getUpgradedKartOfOwner,
-  KartFromProgram,
-} from 'kart/services'
-import { badRequest } from '@hapi/boom'
-import { NFTMetaData } from 'entity/NFTMetadata'
+import { getKartOfOwner, getUpgradedKartOfOwner } from 'kart/services'
+import { badRequest, notFound } from '@hapi/boom'
 import { Kart } from 'entity/Kart'
+import { NFTMetaData } from 'entity/NFTMetadata'
 
 const router = express.Router()
 
+router.get('/:tokenId', async (req, res, next) => {
+  try {
+    const nftMetadata = await Kart.createQueryBuilder('kart')
+      .leftJoinAndSelect('kart.token', 'token')
+      .where('"token"."id" = :tokenId', {
+        tokenId: req.params.tokenId,
+      })
+      .getOne()
+
+    if (!nftMetadata) {
+      next(notFound())
+      return
+    }
+
+    const token = await NFTMetaData.createQueryBuilder('metadata')
+      .leftJoinAndSelect('metadata.collection', 'collection')
+      .where('metadata.name = :name', { name: nftMetadata.token.name })
+      .getOne()
+
+    if (!token) {
+      next(notFound())
+      return
+    }
+
+    const { token: __, ...attributes } = nftMetadata
+    const { files, creators, collection, ...metadata } = token
+
+    const parsedAttributes: MetadataAttribute[] = Object.entries(
+      _.omit(attributes, ['id', 'owner', 'mintTokenAccount', 'tokenAccount']),
+    ).reduce((prev, curr) => {
+      prev.push({
+        trait_type: curr[0],
+        value: curr[1],
+      })
+      return prev
+    }, [] as MetadataAttribute[])
+
+    const result: MetadataResponse = {
+      ...metadata,
+      symbol: token.collection.symbol,
+      attributes: parsedAttributes,
+      properties: {
+        files,
+        creators,
+      },
+      collection: {
+        name: collection.name,
+        family: collection.family,
+      },
+    }
+
+    res.send(result)
+  } catch (e) {
+    console.log(e)
+    next(e)
+  }
+})
 router.use(passportJwtMiddlewareAuth())
 
 router.get('/', async (req, res, next) => {
@@ -96,7 +148,7 @@ router.get('/', async (req, res, next) => {
       })
     }
 
-    res.send(results)
+    res.send({ results })
   } catch (e) {
     console.log(e)
     next(e)
