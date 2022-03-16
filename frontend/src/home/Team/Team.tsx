@@ -28,10 +28,10 @@ const Team = () => {
             their night playing Nintendo games. Despite being in the same group
             of friend, they all have different uniqueness in characters and
             talents in technical field. an unexpected thought popped up in
-            0xPaul mind’s…, why don’t we start to BUIDL something? 0xMicky
-            replied, what would that be? 0xNae raised, our mutual passion…? All
-            four said simultaneously, “a crypto game!!!” followed by a limitless
-            long laugh of an endless friendship…
+            0xAkira mind’s…, why don’t we start to BUIDL something? 0xReki
+            replied, what would that be? 0xKazane raised, our mutual passion…?
+            All four said simultaneously, “a crypto game!!!” followed by a
+            limitless long laugh of an endless friendship…
           </TitleDescription>
         </TeamDescription>
       </WrapperContent>
