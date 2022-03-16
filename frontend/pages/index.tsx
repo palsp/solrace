@@ -2,6 +2,7 @@ import Link from "next/link";
 import styled from "styled-components";
 
 import AppLayout from "~/app/AppLayout";
+import AppNav from "~/app/AppNav";
 import Card from "~/ui/card/Card";
 
 const MainCard = styled(Card)`
@@ -18,59 +19,65 @@ const NAV = styled.div`
 
 const Home = () => {
   return (
-    <AppLayout>
+    <>
+      <AppNav />
       {/* <NAV>
-        <Link href="/garage" passHref>
-          <MainCard>
-            <Image
-              src="/garage-template-2.jpeg"
-              height="25em"
-              style={{
-                borderRadius: '1rem',
-              }}
-            />
-            <Title>GARAGE</Title>
-          </MainCard>
-        </Link>
-        <Link href="/kart" passHref>
-          <MainCard>
-            <Image
-              src="/kart-template.png"
-              height="25em"
-              style={{
-                borderRadius: '1rem',
-              }}
-            />
-            <Title>KART</Title>
-          </MainCard>
-        </Link>
-      </NAV> */}
-      <Wrapper>
+          <Link href="/garage" passHref>
+            <MainCard>
+              <Image
+                src="/garage-template-2.jpeg"
+                height="25em"
+                style={{
+                  borderRadius: '1rem',
+                }}
+              />
+              <Title>GARAGE</Title>
+            </MainCard>
+          </Link>
+          <Link href="/kart" passHref>
+            <MainCard>
+              <Image
+                src="/kart-template.png"
+                height="25em"
+                style={{
+                  borderRadius: '1rem',
+                }}
+              />
+              <Title>KART</Title>
+            </MainCard>
+          </Link>
+        </NAV> */}
+      <WrapperIndex>
         <VideoWrapper>
           <Video src="/solrace-map.mp4" controls></Video>
         </VideoWrapper>
         {/* <Button width="300px" color="primary">
-          Mint
-        </Button> */}
-      </Wrapper>
-    </AppLayout>
+            Mint
+          </Button> */}
+      </WrapperIndex>
+    </>
   );
 };
 
-const Wrapper = styled.div``;
+const WrapperIndex = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+`;
 
 const VideoWrapper = styled.div`
   /* margin-left: -3rem; */
   position: absolute;
-  top: 5rem;
+  top: 0;
   left: 0;
   max-height: 100%;
-  width: 100%;
+  width: 100vw;
   /* height: 90%; */
 `;
 const Video = styled.video`
-  min-width: 100%;
-  max-height: calc(100vh - 5rem);
+  min-width: 100vw;
+  min-height: 100%;
 `;
 
 export default Home;
