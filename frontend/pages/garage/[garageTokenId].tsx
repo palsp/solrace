@@ -37,19 +37,19 @@ const GarageDetail = () => {
         <StatsDiv>
           <StatsDiv1>
             <ParagraphItalicBold>
-              <IconWrapper style={{ "--size": 18 + "px" }}>
+              <IconWrapper size="18px">
                 <Star />
               </IconWrapper>
               Rarity: SS
             </ParagraphItalicBold>
             <ParagraphItalicBold>
-              <IconWrapper style={{ "--size": 18 + "px" }}>
+              <IconWrapper size="18px">
                 <Award />
               </IconWrapper>
               Success: 88%
             </ParagraphItalicBold>
             <ParagraphItalicBold>
-              <IconWrapper style={{ "--size": 18 + "px" }}>
+              <IconWrapper size="18px">
                 <DollarSign />
               </IconWrapper>
               Price: 86
@@ -57,13 +57,13 @@ const GarageDetail = () => {
           </StatsDiv1>
           <StatsDiv2>
             <ParagraphItalicBold>
-              <IconWrapper style={{ "--size": 18 + "px" }}>
+              <IconWrapper size="18px">
                 <Shield />
               </IconWrapper>
               Fame: 7
             </ParagraphItalicBold>
             <ParagraphItalicBold>
-              <IconWrapper style={{ "--size": 18 + "px" }}>
+              <IconWrapper size="18px">
                 <Activity />
               </IconWrapper>
               Reputation: 6
@@ -101,11 +101,15 @@ const StatsDiv = styled.div`
 const StatsDiv1 = styled.div``;
 const StatsDiv2 = styled.div``;
 
+interface Props {
+  size: string;
+}
 const IconWrapper = styled.div`
   display: inline-block;
-  width: var(--size);
-  height: var(--size);
+  width: ${(props: Props) => props.size};
+  height: ${(props: Props) => props.size};
   margin: 0 0.2rem;
   pointer-events: none;
 `;
+
 export default GarageDetail;

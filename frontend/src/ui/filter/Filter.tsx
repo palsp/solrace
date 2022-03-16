@@ -86,7 +86,7 @@ const Filter = () => {
         <AbilityDiv>
           <SmallDescription>
             Max Speed
-            <IconWrapper style={{ "--size": 18 + "px" }}>
+            <IconWrapper size="18px">
               <ChevronsUp />
             </IconWrapper>
           </SmallDescription>
@@ -125,7 +125,7 @@ const Filter = () => {
           <div>
             <SmallDescription>
               Acceleration
-              <IconWrapper style={{ "--size": 18 + "px" }}>
+              <IconWrapper size="18px">
                 <Wind />
               </IconWrapper>
             </SmallDescription>
@@ -165,7 +165,7 @@ const Filter = () => {
           <div>
             <SmallDescription>
               Drift
-              <IconWrapper style={{ "--size": 18 + "px" }}>
+              <IconWrapper size="18px">
                 <CloudDrizzle />
               </IconWrapper>
             </SmallDescription>
@@ -205,7 +205,7 @@ const Filter = () => {
           <div>
             <SmallDescription>
               Handling
-              <IconWrapper style={{ "--size": 18 + "px" }}>
+              <IconWrapper size="18px">
                 <Feather />
               </IconWrapper>
             </SmallDescription>
@@ -311,10 +311,13 @@ const CheckboxLabel = styled.label``;
 const SmallDescription = styled.div`
   font-size: 0.7rem;
 `;
+interface Props {
+  size: string;
+}
 const IconWrapper = styled.div`
   display: inline-block;
-  width: var(--size);
-  height: var(--size);
+  width: ${(props: Props) => props.size};
+  height: ${(props: Props) => props.size};
   margin: 0 0.2rem;
   pointer-events: none;
 `;

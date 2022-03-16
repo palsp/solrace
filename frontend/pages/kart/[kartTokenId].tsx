@@ -123,19 +123,19 @@ const KartDetail = () => {
         <StatsDiv>
           <StatsDiv1>
             <ParagraphItalicBold>
-              <IconWrapper style={{ "--size": 18 + "px" }}>
+              <IconWrapper size="18px">
                 <Star />
               </IconWrapper>
               Rarity: AR
             </ParagraphItalicBold>
             <ParagraphItalicBold>
-              <IconWrapper style={{ "--size": 18 + "px" }}>
+              <IconWrapper size="18px">
                 <ChevronsUp />
               </IconWrapper>
               Max Speed: 5
             </ParagraphItalicBold>
             <ParagraphItalicBold>
-              <IconWrapper style={{ "--size": 18 + "px" }}>
+              <IconWrapper size="18px">
                 <Wind />
               </IconWrapper>
               Acceleration: 8
@@ -143,13 +143,13 @@ const KartDetail = () => {
           </StatsDiv1>
           <StatsDiv2>
             <ParagraphItalicBold>
-              <IconWrapper style={{ "--size": 18 + "px" }}>
+              <IconWrapper size="18px">
                 <CloudDrizzle />
               </IconWrapper>
               Drift: 7
             </ParagraphItalicBold>
             <ParagraphItalicBold>
-              <IconWrapper style={{ "--size": 18 + "px" }}>
+              <IconWrapper size="18px">
                 <Feather />
               </IconWrapper>
               Handling: 6
@@ -214,10 +214,13 @@ const StatsDiv = styled.div`
 const StatsDiv1 = styled.div``;
 const StatsDiv2 = styled.div``;
 
+interface Props {
+  size: string;
+}
 const IconWrapper = styled.div`
   display: inline-block;
-  width: var(--size);
-  height: var(--size);
+  width: ${(props: Props) => props.size};
+  height: ${(props: Props) => props.size};
   margin: 0 0.2rem;
   pointer-events: none;
 `;

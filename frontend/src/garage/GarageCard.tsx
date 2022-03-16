@@ -10,7 +10,6 @@ import { bond, unBond } from "~/garage/services";
 import { SOLR_MINT_ADDRESS } from "~/api/solana/addresses";
 import { Row } from "~/ui";
 import Button from "~/ui/button/Button";
-import Image from "~/ui/appImage/AppImage";
 
 import { NFTAccountData } from "~/nft/hooks";
 import { POOL_NAME } from "~/api/solana/constants";

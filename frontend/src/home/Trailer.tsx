@@ -33,7 +33,7 @@ const Trailer = () => {
       <InputDiv>
         <WrapperInput>
           <Input placeholder="Enter your email address... " />
-          <IconWrapper style={{ "--size": 24 + "px" }}>
+          <IconWrapper size="24px">
             <Bell />
           </IconWrapper>
         </WrapperInput>
@@ -102,17 +102,6 @@ const WrapperInput = styled.div`
   position: relative;
 `;
 
-const IconWrapper = styled.div`
-  position: absolute;
-  right: 8px;
-  top: 8px;
-  display: inline-block;
-  width: var(--size);
-  height: var(--size);
-  margin: 0 0.2rem;
-  pointer-events: none;
-`;
-
 const VideoWrapper = styled.div`
   /* margin-left: -3rem; */
   position: absolute;
@@ -126,4 +115,19 @@ const Video = styled.video`
   min-width: 100vw;
   min-height: 100%;
 `;
+
+interface Props {
+  size?: string;
+}
+const IconWrapper = styled.div`
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  display: inline-block;
+  width: ${(props: Props) => props.size};
+  height: ${(props: Props) => props.size};
+  margin: 0 0.2rem;
+  pointer-events: none;
+`;
+
 export default Trailer;

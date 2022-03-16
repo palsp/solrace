@@ -13,17 +13,10 @@ interface Props
   icon?: string;
   padding?: string;
   outline?: boolean;
+  onClick?: () => void;
 }
 
-const Button = ({
-  width,
-  color,
-  children,
-  icon,
-  outline,
-  padding,
-  ...delegates
-}: Props) => {
+const Button = ({ width, color, children, icon, outline, padding }: Props) => {
   let Icon;
   if (icon) {
     Icon = (
@@ -40,7 +33,6 @@ const Button = ({
       color={color}
       outline={outline}
       padding={padding}
-      {...delegates}
     >
       <Span>
         {Icon}
