@@ -40,6 +40,7 @@ const GameDetail = () => {
           ></AppImage>
         </WrapperImage>
       </WrapperContent>
+      <Star>&#10022;</Star>
     </WrapperGameDetail>
   );
 };
@@ -81,6 +82,18 @@ const QuoteAuthor = styled.p`
   margin-left: auto;
   padding-inline: 0.5rem;
   margin-bottom: 1rem;
+`;
+const Star = styled.div`
+  position: fixed;
+  z-index: 2;
+  top: calc(50vh - 128px);
+  transform: translateX(-50%);
+  color: var(--color-secondary-light);
+  opacity: 0.8;
+  border-radius: 50rem;
+  font-size: 128px;
+  box-shadow: var(--shadow-elevation-high-primary);
+  background: var(--background-gradient-2);
 `;
 const TitleDescription = styled.div``;
 
