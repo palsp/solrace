@@ -106,6 +106,19 @@ html {
   hsl(188deg 97% 73%) 66%,
   hsl(191deg 100% 76%) 99%
 );
+--background-gradient-2-flipped: linear-gradient(
+  235deg,
+  hsl(139deg 94% 75%) 1%,
+  hsl(150deg 94% 72%) 33%,
+  hsl(159deg 93% 69%) 41%,
+  hsl(166deg 92% 67%) 45%,
+  hsl(171deg 90% 66%) 48%,
+  hsl(176deg 88% 65%) 50%,
+  hsl(180deg 85% 66%) 53%,
+  hsl(184deg 91% 69%) 57%,
+  hsl(188deg 97% 73%) 66%,
+  hsl(191deg 100% 76%) 99%
+);
   --shadow-color-primary: 139deg 94% 75%;
   --shadow-color-secondary: 191deg 100% 76%;
   --shadow-color-black: 0deg 0% 0%;

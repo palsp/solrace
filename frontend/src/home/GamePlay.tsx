@@ -22,14 +22,14 @@ const GamePlay = () => {
           </WrapperItem>
         </WrapperItems>
       </WrapperContent>
-      <Star>&#10022;</Star>
+      {/* <Star>&#10022;</Star> */}
     </WrapperGamePlay>
   );
 };
 const WrapperGamePlay = styled.div`
   width: 100vw;
   height: 100vh;
-  background: var(--background-gradient-1-flipped);
+  background: var(--background-gradient-2-flipped);
 `;
 const WrapperContent = styled.div`
   padding: 3rem 1rem;

@@ -48,7 +48,7 @@ const GameDetail = () => {
 const WrapperGameDetail = styled.div`
   width: 100vw;
   height: 100vh;
-  background: var(--background-gradient-1);
+  background: var(--background-gradient-2);
 `;
 const WrapperContent = styled.div`
   display: flex;
@@ -76,11 +76,11 @@ const TitleText = styled.h1`
 `;
 
 const Quote = styled.p`
-  background: var(--color-primary);
+  background: var(--color-secondary);
 `;
 
 const QuoteAuthor = styled.p`
-  background: var(--color-primary);
+  background: var(--color-secondary);
   width: max-content;
   margin-left: auto;
   padding-inline: 0.5rem;
