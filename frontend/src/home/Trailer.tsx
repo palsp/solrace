@@ -22,7 +22,7 @@ const Trailer = () => {
           Ace the race with your speed in a world where everything conflicts
           decided by racing, not wars..
         </TitleDescription>
-        <Link href="/">
+        <Link href="/app">
           <a>
             <Button color="primary" width="200px" padding="0.75rem">
               Start
