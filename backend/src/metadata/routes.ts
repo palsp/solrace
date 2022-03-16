@@ -2,7 +2,6 @@ import express from 'express'
 import Boom from '@hapi/boom'
 import _ from 'lodash'
 
-import { NFTMetaData } from 'entity/NFTMetadata'
 import { NFTAttributes } from 'entity/NFTAttributes'
 import { NFTCollection } from 'entity/NFTCollection'
 

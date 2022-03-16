@@ -1,19 +1,23 @@
+import { NFTMetaData } from 'entity/NFTMetadata'
+import { extend } from 'lodash'
 import {
   BaseEntity,
   Column,
   Entity,
   JoinColumn,
   OneToOne,
+  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm'
-import { NFTMetaData } from './NFTMetadata'
 
 @Entity()
-export class NFTAttributes extends BaseEntity {
-  @PrimaryGeneratedColumn('increment')
+export class Kart extends BaseEntity {
+  @PrimaryGeneratedColumn()
   id!: number
 
-  @OneToOne(() => NFTMetaData, (token) => [token.id, token.collection])
+  @OneToOne(() => NFTMetaData, (token) => [token.id, token.collection], {
+    eager: true,
+  })
   @JoinColumn()
   token!: NFTMetaData
 
@@ -31,4 +35,13 @@ export class NFTAttributes extends BaseEntity {
 
   @Column()
   handling!: number
+
+  @Column({ nullable: true })
+  owner?: string
+
+  @Column({ nullable: true })
+  mintTokenAccount?: string
+
+  @Column({ nullable: true })
+  tokenAccount?: string
 }
