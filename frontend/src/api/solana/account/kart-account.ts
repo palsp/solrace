@@ -42,8 +42,6 @@ export const fetchKartInfo = async ({
   try {
     const accountInfo = await program.account.kartAccount.fetch(kartAccount);
 
-    console.log("fetch kart", accountInfo);
-
     const {
       maxSpeed,
       acceleration,

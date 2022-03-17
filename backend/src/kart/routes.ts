@@ -100,6 +100,7 @@ router.get('/', async (req, res, next) => {
     // // console.log(Object.values(karts))
 
     const upgradedKartByTokenAccount = {}
+
     upgradedKarts.forEach((upgradedKart) => {
       upgradedKartByTokenAccount[
         upgradedKart.account.kartTokenAccount.toBase58()

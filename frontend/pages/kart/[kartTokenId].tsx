@@ -37,6 +37,11 @@ const KartDetail = () => {
   const { data: kart } = useSWR(`/kart/${query.kartTokenId}`);
   const [modelUrl, setModelUrl] = useState<string>();
 
+  const [maxSpeed, setMaxSpeed] = useState(0);
+  const [acceleration, setAcceleration] = useState(0);
+  const [drift, setDrift] = useState(0);
+  const [handling, setHandling] = useState(0);
+
   const fetchModelUrl = useCallback(async () => {
     if (!kart) return;
 
@@ -134,6 +139,11 @@ const KartDetail = () => {
       } else {
         toast("Congratulation! upgrade succeed", { type: "success" });
         await revalidateKart();
+        // TODO: fetch state from blockchain
+        setMaxSpeed(1);
+        setAcceleration(25);
+        setDrift(0.02);
+        setHandling(10);
       }
     } catch (e) {
       console.log(e);
@@ -178,13 +188,13 @@ const KartDetail = () => {
               <IconWrapper size="18px">
                 <ChevronsUp />
               </IconWrapper>
-              Max Speed: {kart?.attributes[0].value || "..."}
+              Max Speed: {kart?.attributes[0].value + maxSpeed || "..."}
             </ParagraphItalicBold>
             <ParagraphItalicBold>
               <IconWrapper size="18px">
                 <Wind />
               </IconWrapper>
-              Acceleration: {kart?.attributes[1].value || "..."}
+              Acceleration: {kart?.attributes[1].value + acceleration || "..."}
             </ParagraphItalicBold>
           </StatsDiv1>
           <StatsDiv2>
@@ -192,13 +202,13 @@ const KartDetail = () => {
               <IconWrapper size="18px">
                 <CloudDrizzle />
               </IconWrapper>
-              Drift: {kart?.attributes[2].value || "..."}
+              Drift: {kart?.attributes[2].value + drift || "..."}
             </ParagraphItalicBold>
             <ParagraphItalicBold>
               <IconWrapper size="18px">
                 <Feather />
               </IconWrapper>
-              Handling: {kart?.attributes[4].value || "..."}
+              Handling: {kart?.attributes[4].value + handling || "..."}
             </ParagraphItalicBold>
           </StatsDiv2>
         </StatsDiv>

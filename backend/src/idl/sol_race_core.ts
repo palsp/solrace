@@ -307,6 +307,52 @@ export type SolRaceCore = {
       "args": []
     },
     {
+      "name": "withdraw",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "poolAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "stakingAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolSolr",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userSolr",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "solrMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "upgradeKart",
       "accounts": [
         {
@@ -498,11 +544,11 @@ export type SolRaceCore = {
           },
           {
             "name": "driftPowerGenerationRate",
-            "type": "u64"
+            "type": "f64"
           },
           {
             "name": "driftPowerConsumptionRate",
-            "type": "u64"
+            "type": "f64"
           },
           {
             "name": "handling",
@@ -903,6 +949,52 @@ export const IDL: SolRaceCore = {
       "args": []
     },
     {
+      "name": "withdraw",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "poolAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "stakingAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolSolr",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userSolr",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "solrMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "upgradeKart",
       "accounts": [
         {
@@ -1094,11 +1186,11 @@ export const IDL: SolRaceCore = {
           },
           {
             "name": "driftPowerGenerationRate",
-            "type": "u64"
+            "type": "f64"
           },
           {
             "name": "driftPowerConsumptionRate",
-            "type": "u64"
+            "type": "f64"
           },
           {
             "name": "handling",

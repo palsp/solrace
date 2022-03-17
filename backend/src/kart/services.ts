@@ -59,11 +59,11 @@ export const getKartOfOwner = async (owner: string): Promise<Karts> => {
 
 export const getUpgradedKartOfOwner = (ownerPublicAddress: string) => {
   return solraceProgram.account.kartAccount.all([
-    {
-      memcmp: {
-        offset: 8, // DISCRIMINATOR
-        bytes: ownerPublicAddress,
-      },
-    },
+    // {
+    //   memcmp: {
+    //     offset: 8, // DISCRIMINATOR
+    //     bytes: ownerPublicAddress,
+    //   },
+    // },
   ])
 }
