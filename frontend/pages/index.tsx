@@ -1,54 +1,30 @@
-import Link from 'next/link'
-import styled from 'styled-components'
+import React from "react";
+import HorizontalScroll from "react-scroll-horizontal";
+import styled from "styled-components";
+import {
+  Trailer,
+  GameDetail,
+  GamePortal,
+  Roadmap,
+  Team,
+  HomeNav,
+  Sneakpeek,
+} from "~/home";
 
-import AppLayout from '~/app/AppLayout'
-import Card from '~/ui/Card'
-import Title from '~/ui/Title'
-import Image from '~/ui/Image'
-
-const MainCard = styled(Card)`
-  cursor: pointer;
-  width: 50vh;
-  box-shadow: 1px 3px #ccc;
-`
-
-const NAV = styled.div`
-  width: 50%;
-  display: flex;
-  justify-content: space-around;
-`
-
-const Home = () => {
+const home = () => {
   return (
-    <AppLayout>
-      <NAV>
-        <Link href="/garage" passHref>
-          <MainCard>
-            <Image
-              src="/garage-template-2.jpeg"
-              height="25em"
-              style={{
-                borderRadius: '1rem',
-              }}
-            />
-            <Title>GARAGE</Title>
-          </MainCard>
-        </Link>
-        <Link href="/kart" passHref>
-          <MainCard>
-            <Image
-              src="/kart-template.png"
-              height="25em"
-              style={{
-                borderRadius: '1rem',
-              }}
-            />
-            <Title>KART</Title>
-          </MainCard>
-        </Link>
-      </NAV>
-    </AppLayout>
-  )
-}
+    // <div style={{ width: `100vw`, height: `100%`, overflow: "auto" }}>
+    <HorizontalScroll>
+      <HomeNav />
+      <Trailer />
+      <GameDetail />
+      <Sneakpeek />
+      <GamePortal />
+      <Roadmap />
+      <Team />
+    </HorizontalScroll>
+    // </div>
+  );
+};
 
-export default Home
+export default home;

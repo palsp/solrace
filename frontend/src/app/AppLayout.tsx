@@ -1,12 +1,13 @@
-import styled from 'styled-components'
-import AppNav from '~/app/AppNav'
+import styled from "styled-components";
+import AppNav from "~/app/AppNav";
 
 const AppLayoutContainer = styled.div`
-  margin-top: 10vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`
+  padding-top: 3rem;
+  padding: 5rem 3rem 1rem;
+  height: 100%;
+  background-image: var(--background-gradient-1);
+  overflow-x: hidden;
+`;
 
 const AppLayout: React.FC = ({ children }) => {
   return (
@@ -14,7 +15,7 @@ const AppLayout: React.FC = ({ children }) => {
       <AppNav />
       {children}
     </AppLayoutContainer>
-  )
-}
+  );
+};
 
-export default AppLayout
+export default AppLayout;
