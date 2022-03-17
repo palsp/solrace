@@ -2,9 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import { Button, Model3D } from "~/ui";
 
-const GamePlay = () => {
+const GamePortal = () => {
   return (
-    <WrapperGamePlay>
+    <WrapperGamePortal>
       <WrapperContent>
         <TitleText>Are you ready for an all-out race?</TitleText>
         <WrapperItems>
@@ -50,10 +50,10 @@ const GamePlay = () => {
         </WrapperItems>
       </WrapperContent>
       <Star>&#10022;</Star>
-    </WrapperGamePlay>
+    </WrapperGamePortal>
   );
 };
-const WrapperGamePlay = styled.div`
+const WrapperGamePortal = styled.div`
   width: 100vw;
   height: 100vh;
   background: url("/game-2.png");
@@ -133,4 +133,4 @@ const Star = styled.div`
   box-shadow: var(--shadow-elevation-high-primary);
   background: var(--background-gradient-2);
 `;
-export default GamePlay;
+export default GamePortal;

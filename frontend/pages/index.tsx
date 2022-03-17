@@ -4,7 +4,7 @@ import styled from "styled-components";
 import {
   Trailer,
   GameDetail,
-  GamePlay,
+  GamePortal,
   Roadmap,
   Team,
   HomeNav,
@@ -18,7 +18,7 @@ const home = () => {
       <HomeNav />
       <Trailer />
       <GameDetail />
-      <GamePlay />
+      <GamePortal />
       <Sneakpeek />
       <Roadmap />
       <Team />
