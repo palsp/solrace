@@ -21,8 +21,7 @@ const abilities = {
   },
   hack: {
     url: "/hack-v1.png",
-    description: `They say you suck? Suck them then! ...
-      Deploy a gravitational trap the deal small damage and pull the opponent to the center of the trap.`,
+    description: `Let’s wipe those grins of their faces with this! Intercept the top opponents with speed reduction and disrupt their visibility for a short duration`,
   },
   reinforce: {
     url: "/reinforce-v1.png",

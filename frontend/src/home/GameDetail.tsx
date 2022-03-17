@@ -125,7 +125,7 @@ const Video = styled.video`
   min-height: 100%; */
 `;
 const VideoDiv = styled.div`
-  background: red;
+  background: transparent;
   border-radius: 0.5rem;
   overflow: hidden;
   box-shadow: var(--shadow-elevation-medium-black);

@@ -23,7 +23,11 @@ const HomeNav = () => {
         <AppLink href="/" textColor="white">
           Home
         </AppLink>
-        <AppLink href="/litepaper" textColor="white">
+        <AppLink
+          href="https://drive.google.com/file/d/10FxikBiqguOP5KLIWHHQmvIPby_8Bt5m/view"
+          textColor="white"
+          target="_blank"
+        >
           Litepaper
         </AppLink>
         <AppLink href="/marketplace" textColor="white">

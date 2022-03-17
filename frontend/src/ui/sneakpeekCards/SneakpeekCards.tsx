@@ -82,7 +82,7 @@ const SneakpeekCards: React.FC<Props> = ({ type }) => {
     return (
       <WrapperCard>
         <TitleDiv>
-          <h2>Explore the abilities</h2>
+          <h2>Limitless possibilities</h2>
         </TitleDiv>
         <WrapperCarousel>
           <Carousel
@@ -92,14 +92,68 @@ const SneakpeekCards: React.FC<Props> = ({ type }) => {
             // showArrows={false}
             showStatus={false}
             showThumbs={false}
+            showArrows={false}
             interval={4500}
           >
-            <AbilityCard type="hack" />
-            <AbilityCard type="missile" />
-            <AbilityCard type="swap" />
-            <AbilityCard type="berserk" />
-            <AbilityCard type="reinforce" />
-            <AbilityCard type="arcTrap" />
+            <VideoDiv>
+              <h5>Ability - ARCTRAP</h5>
+
+              <Video
+                src="/arctrap-showcase-ns-com.mp4"
+                controls
+                autoPlay
+              ></Video>
+              <ParagraphDiv>
+                TIP - If you are lightning fast, you won't get stuck in the
+                ARCTRAP
+              </ParagraphDiv>
+            </VideoDiv>
+            <VideoDiv>
+              <h5>Ability - HACK</h5>
+
+              <Video src="/hack-showcase-ns-com.mp4" controls autoPlay></Video>
+              <ParagraphDiv>
+                TIP - Racer in the last position will have 50% chance of getting
+                HACK
+              </ParagraphDiv>
+            </VideoDiv>
+            <VideoDiv>
+              <h5>Ability - MISSILE</h5>
+
+              <Video
+                src="/missile-showcase-ns-com.mp4"
+                controls
+                autoPlay
+              ></Video>
+              <ParagraphDiv>
+                TIP - Getting out of the missile range is the only way to dodge
+                it
+              </ParagraphDiv>
+            </VideoDiv>
+            <VideoDiv>
+              <h5>Ability - BERSERK</h5>
+
+              <Video
+                src="/berserk-showcase-ns-com.mp4"
+                controls
+                autoPlay
+              ></Video>
+              <ParagraphDiv>
+                TIP - Racer who goes BERSERK will take double amount of damage
+              </ParagraphDiv>
+            </VideoDiv>
+            <VideoDiv>
+              <h5>Ability - REINFORCE</h5>
+
+              <Video
+                src="/reinforce-showcase-ns-com.mp4"
+                controls
+                autoPlay
+              ></Video>
+              <ParagraphDiv>
+                TIP - Racer that uses REINFORCE will have blue aura
+              </ParagraphDiv>
+            </VideoDiv>
           </Carousel>
         </WrapperCarousel>
       </WrapperCard>
@@ -137,12 +191,32 @@ const TitleDiv = styled.div`
 const ModelDiv = styled.div`
   position: relative;
 `;
-
+const ParagraphDiv = styled(Paragraph)`
+  padding: 0 1rem;
+`;
 const ModelH5 = styled.h5`
   position: absolute;
   top: 15%;
   left: 0px;
   right: 0px;
   font-style: italic;
+`;
+const Video = styled.video`
+  /* min-width: 100%;
+min-height: 100%; */
+`;
+const VideoDiv = styled.div`
+  background: var(--background-gradient-2);
+  overflow: hidden;
+  box-shadow: var(--shadow-elevation-medium-black);
+  min-height: 425px;
+  padding: 0rem 0rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  & > h5 {
+    /* margin-bottom: 1rem; */
+  }
 `;
 export default SneakpeekCards;
