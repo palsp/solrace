@@ -46,6 +46,7 @@ const WrapperTrailer = styled.div`
   position: relative;
   width: 100vw;
   height: 100%;
+  overflow: hidden;
 `;
 
 const TitleDiv = styled.div`
@@ -106,14 +107,14 @@ const VideoWrapper = styled.div`
   /* margin-left: -3rem; */
   position: absolute;
   top: 0;
-  left: 0;
+  left: -25px;
   max-height: 100%;
   width: 100vw;
   /* height: 90%; */
 `;
 const Video = styled.video`
-  min-width: 100vw;
-  min-height: 100%;
+  min-width: 111.5vw;
+  /* min-height: 20vh; */
 `;
 
 interface Props {
