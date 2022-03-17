@@ -3,7 +3,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import AppLayout from "~/app/AppLayout";
 import Title from "~/ui/title/Title";
 import ConnectWalletButton from "~/wallet/ConnectWalletButton";
-import { Button, Paragraph } from "~/ui";
+import { AppImage, Button, Paragraph } from "~/ui";
 import { useWorkspace } from "~/workspace/hooks";
 import { useAnchorWallet } from "~/wallet/hooks";
 import { BN } from "@project-serum/anchor";
@@ -19,6 +19,7 @@ import { useNFT } from "~/nft/hooks";
 import { usePool } from "~/pool/hooks";
 import { GARAGE_COLLECTION_NAME } from "~/garage/constants";
 import { KART_COLLECTION_NAME } from "~/kart/constants";
+import AppNav from "~/app/AppNav";
 
 const MintPage = () => {
   const { connected } = useWallet();
@@ -184,23 +185,108 @@ const MintPage = () => {
     console.log("click...");
   };
   return (
-    <AppLayout>
+    <>
+      <AppNav />
       <WrapperMint>
-        <Title>MINT</Title>
-        {!connected ? <Paragraph>Please Connect Your Wallet</Paragraph> : null}
-        <Button color="primary" onClick={handleMintKart}>
-          Mint Kart
-        </Button>
-        <Button color="primary" onClick={handleMintGarage}>
-          Mint Garage
-        </Button>
+        <WrapperTrack>
+          <AppImage src="/mint-track.png" width="100vw"></AppImage>
+        </WrapperTrack>
+        <TitleDiv>
+          <h3>MINT SolRace NFTs</h3>
+        </TitleDiv>
+        {!connected ? (
+          <Paragraph>Please Connect Your Wallet</Paragraph>
+        ) : (
+          <WrapperContent>
+            <WrapperMintKart>
+              <Button color="primary" onClick={handleMintKart} width="50%">
+                Mint Kart
+              </Button>
+              <h4>
+                A 8,888 Genesis Solakarts represent a heart of the game. Each
+                model comes with unique rarity and attributes
+              </h4>
+              <AppImage src="/kart-nft.png" width="60%" height="225px" />
+            </WrapperMintKart>
+            <WrapperMintGarage>
+              <AppImage src="/land-nft.png" width="60%" height="310px" />
+
+              <h4>
+                An exclusive 888 plots of garage where Kart performance upgrade
+                takes place. Garage owners could earn passive income via a fair
+                share of upgrading fee
+              </h4>
+              <Button
+                width="250px"
+                color="secondary"
+                onClick={handleMintGarage}
+                width="50%"
+              >
+                Mint Garage
+              </Button>
+            </WrapperMintGarage>
+          </WrapperContent>
+        )}
       </WrapperMint>
-    </AppLayout>
+    </>
   );
 };
 
 const WrapperMint = styled.div`
-  margin-top: 2rem;
+  position: relative;
+  padding: 5rem 3rem 1rem;
+  height: 100%;
+  /* background-image: var(--background-gradient-1); */
+  background-image: url("/game-4.png");
+
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  overflow-x: hidden;
+`;
+const WrapperTrack = styled.div`
+  position: absolute;
+  left: 0;
+  top: 47.5%;
 `;
 
+const WrapperContent = styled.div`
+  position: relative;
+  display: flex;
+  gap: 3rem;
+`;
+const WrapperMintKart = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  padding: 1rem 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-elevation-low-black);
+  color: var(--color-white);
+`;
+const WrapperMintGarage = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-elevation-low-black);
+  color: var(--color-white);
+`;
+
+const TitleDiv = styled.div`
+  background: var(--color-primary-light);
+  width: fit-content;
+  padding: 1rem;
+  box-shadow: var(--shadow-elevation-medium-primary);
+  border-radius: 0.25rem;
+  margin: 1.5rem auto;
+`;
 export default MintPage;
