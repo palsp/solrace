@@ -49,14 +49,17 @@ const GamePlay = () => {
           </WrapperItem>
         </WrapperItems>
       </WrapperContent>
-      {/* <Star>&#10022;</Star> */}
+      <Star>&#10022;</Star>
     </WrapperGamePlay>
   );
 };
 const WrapperGamePlay = styled.div`
   width: 100vw;
   height: 100vh;
-  background: var(--background-gradient-2-flipped);
+  background: url("/game-2.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: var(--color-white);
 `;
 const WrapperContent = styled.div`
   padding: 3rem 1rem;
@@ -66,7 +69,7 @@ const WrapperItems = styled.div`
   justify-content: center;
   gap: 3rem;
   width: 90%;
-  margin: 0 auto;
+  margin: 4.5rem auto;
   /* margin-bottom: 5rem; */
 `;
 const WrapperItem = styled.div`
@@ -92,6 +95,9 @@ const CardContent = styled.div`
   text-align: center;
   color: var(--color-white);
   box-shadow: var(--shadow-elevation-medium-black);
+  & > :first-child {
+    margin-top: 0.5rem;
+  }
 `;
 
 const FirstCardContent = styled(CardContent)`
@@ -111,7 +117,8 @@ const TitleText = styled.h1`
   font-weight: 400;
   font-size: 2.5rem;
   line-height: 1.2;
-  margin-bottom: 2rem;
+  margin: 1.5rem;
+
   text-align: center;
 `;
 const Star = styled.div`
