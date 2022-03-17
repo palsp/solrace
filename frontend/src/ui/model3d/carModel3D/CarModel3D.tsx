@@ -4,6 +4,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 interface Props {
   model: string;
+  modelUrl?: string;
 }
 
 const carModel = {
@@ -29,11 +30,13 @@ const carModel = {
   },
 };
 
-const CarModel3D: React.FC<Props> = ({ model }) => {
+const CarModel3D: React.FC<Props> = ({ model, modelUrl }) => {
   const car = carModel[model as keyof typeof carModel];
   const modelGLTF = useLoader(
     GLTFLoader,
-    `https://sol-race.s3.ap-southeast-1.amazonaws.com/kart/${car?.url}`
+    modelUrl
+      ? modelUrl
+      : `https://sol-race.s3.ap-southeast-1.amazonaws.com/kart/${car?.url}`
   );
   return (
     <mesh>

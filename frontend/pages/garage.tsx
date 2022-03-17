@@ -1,15 +1,10 @@
 import styled from "styled-components";
 import Link from "next/link";
-import { toast } from "react-toastify";
-import AppLayout from "~/app/AppLayout";
 import { useWorkspace } from "~/workspace/hooks";
-import { useAllNFT, useNFT } from "~/nft/hooks";
-import { POOL_NAME } from "~/api/solana/constants";
-import { usePoolAccount } from "~/hooks/useAccount";
+import { useNFT } from "~/nft/hooks";
 import GarageCard from "~/garage/GarageCard";
-import Button from "~/ui/button/Button";
-import Title from "~/ui/title/Title";
-import { Paragraph, ParagraphItalic, Row } from "~/ui";
+
+import { Paragraph, Row } from "~/ui";
 import { useWallet } from "@solana/wallet-adapter-react";
 
 import { usePool } from "~/pool/hooks";
@@ -17,12 +12,9 @@ import InventoryLayout from "~/inventory";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { CardSkeleton } from "~/ui/card";
-import { GatewayStatus } from "@civic/solana-gateway-react";
+
 import { useMemo } from "react";
 import { GARAGE_COLLECTION_NAME } from "~/garage/constants";
-import { handleMintError } from "~/mint/services";
-import { toastAPIError } from "~/utils";
-import mint from "./mint";
 
 const GaragePage = () => {
   const { provider, wallet } = useWorkspace();
@@ -41,7 +33,7 @@ const GaragePage = () => {
         <Link
           key={garage.tokenAccountAddress}
           href={{
-            pathname: `/garage/${garage.tokenAccountAddress}`,
+            pathname: `/garage/${garage.data.name.split("#")[1]}`,
             query: {
               mint: garage.mint.toString(),
               tokenAccountAddress: garage.tokenAccountAddress,

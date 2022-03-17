@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import AppLayout from "~/app/AppLayout";
 import TokenDetailLayout from "~/tokenDetail/TokenDetailLayout";
 import {
+  AppImage,
   Model3D,
   ParagraphItalic,
   ParagraphItalicBold,
@@ -12,21 +13,31 @@ import {
 } from "~/ui";
 import { usePool } from "~/pool/hooks";
 import { Star, Award, DollarSign, Shield, Activity } from "react-feather";
+import useSWR from "swr";
+import Skeleton from "react-loading-skeleton";
+import { CardSkeleton } from "~/ui/card";
 
 const GarageDetail = () => {
   const { query, isReady } = useRouter();
   const { garageTokenId: tokenId } = query;
   const { poolInfo, apr } = usePool();
 
+  const { data: garage } = useSWR(`/garage/${query.garageTokenId}`);
+
+  console.log(garage?.image);
   return (
     <TokenDetailLayout
       direction="row-reverse"
       token3D={
-        <Model3D model="Apollo" marginBlock="1rem" borderRadius="0.5rem" />
+        garage?.image ? (
+          <AppImage src={garage.image} width="500px" height="500px"></AppImage>
+        ) : (
+          <Skeleton wrapper={CardSkeleton} count={1} />
+        )
       }
     >
       <TitleDiv>
-        <Title fontStyle="italic">ZX-00 Pegasus</Title>
+        <Title fontStyle="italic">{garage?.name}</Title>
         <h3>APR - {apr}% </h3>
 
         <ParagraphItalic>ID: {tokenId}</ParagraphItalic>

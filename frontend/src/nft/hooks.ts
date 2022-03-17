@@ -1,66 +1,66 @@
-import { useContext, useState, useCallback, useEffect } from 'react'
-import { PublicKey } from '@solana/web3.js'
-import { useConnection } from '@solana/wallet-adapter-react'
-import { NFTContext } from '~/nft/NFTContext'
-import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
-import { programs } from '@metaplex/js'
+import { useContext, useState, useCallback, useEffect } from "react";
+import { PublicKey } from "@solana/web3.js";
+import { useConnection } from "@solana/wallet-adapter-react";
+import { NFTContext } from "~/nft/NFTContext";
+import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import { programs } from "@metaplex/js";
 const {
   metadata: { MetadataData },
-} = programs
+} = programs;
 
-export const useNFT = () => useContext(NFTContext)
+export const useNFT = () => useContext(NFTContext);
 export interface NFTAccount {
-  tokenAccountAddress: PublicKey
-  mint: PublicKey
+  tokenAccountAddress: PublicKey;
+  mint: PublicKey;
 }
 
 export interface NFTAccountData {
-  tokenAccountAddress: string
-  mint: string
-  data: typeof MetadataData
+  tokenAccountAddress: string;
+  mint: string;
+  data: any;
 }
 
 /**
  * @dev for mock nft ony, solana devnet is crash
  */
 export const useAllNFT = (owner?: PublicKey) => {
-  const [nfts, setNFTs] = useState<NFTAccount[]>([])
-  const { connection } = useConnection()
+  const [nfts, setNFTs] = useState<NFTAccount[]>([]);
+  const { connection } = useConnection();
 
   const revalidate = useCallback(async () => {
     if (!owner) {
-      setNFTs([])
-      return
+      setNFTs([]);
+      return;
     }
 
     const {
       value: splAccounts,
     } = await connection.getParsedTokenAccountsByOwner(owner, {
       programId: TOKEN_PROGRAM_ID,
-    })
+    });
 
     setNFTs(
       splAccounts
         .filter((t) => {
-          const amount = t.account?.data?.parsed?.info?.tokenAmount?.uiAmount
-          const decimals = t.account?.data?.parsed?.info?.tokenAmount?.decimals
+          const amount = t.account?.data?.parsed?.info?.tokenAmount?.uiAmount;
+          const decimals = t.account?.data?.parsed?.info?.tokenAmount?.decimals;
 
-          return decimals === 0 && amount >= 1
+          return decimals === 0 && amount >= 1;
         })
         .map((t) => {
-          const address = t.account?.data?.parsed?.info?.mint
+          const address = t.account?.data?.parsed?.info?.mint;
 
           return {
             tokenAccountAddress: t.pubkey,
             mint: new PublicKey(address),
-          }
-        }),
-    )
-  }, [owner, connection])
+          };
+        })
+    );
+  }, [owner, connection]);
 
   useEffect(() => {
-    revalidate()
-  }, [revalidate])
+    revalidate();
+  }, [revalidate]);
 
-  return { nfts, revalidate }
-}
+  return { nfts, revalidate };
+};

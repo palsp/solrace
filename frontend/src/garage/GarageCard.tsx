@@ -22,6 +22,7 @@ import { useMintInfo } from "~/hooks/useMintInfo";
 import CircularProgress from "~/ui/circularProgress/CircularProgress";
 import { useCountdown } from "~/hooks/useCountdown";
 import { PublicKey } from "@solana/web3.js";
+import axios from "axios";
 
 // import { verifyNFT } from '~/mint/services'
 
@@ -64,12 +65,18 @@ const GarageCard: React.FC<Props> = ({ garage }) => {
     revalidate: revalidatePool,
     publicAddress: poolAccount,
   } = usePool();
+  const [image, setImage] = useState<string>();
   const mintInfo = useMintInfo(poolInfo?.solrMint);
   const mintPubkey = useMemo(() => new PublicKey(mint), [mint]);
-  const tokenAccount = useMemo(
-    () => new PublicKey(tokenAccountAddress),
-    [tokenAccountAddress]
-  );
+  const tokenAccount = useMemo(() => new PublicKey(tokenAccountAddress), [
+    tokenAccountAddress,
+  ]);
+
+  const fetchGarageImage = useCallback(async () => {
+    const { data } = await axios.get(garage.data.uri);
+
+    setImage(data.image);
+  }, [garage]);
 
   const {
     stakeInfo,
@@ -181,6 +188,10 @@ const GarageCard: React.FC<Props> = ({ garage }) => {
     calcReward();
   }, [calcReward]);
 
+  useEffect(() => {
+    fetchGarageImage();
+  }, [fetchGarageImage]);
+
   const buttonContent = useMemo(() => {
     if (isStaked === undefined) return "...";
 
@@ -196,7 +207,7 @@ const GarageCard: React.FC<Props> = ({ garage }) => {
   }, [reward]);
 
   return (
-    <Card type="garage">
+    <Card type="garage" image={image} name={garage.data.name}>
       {/* <WrapperCardContent>
         <h3>Mint: {shortenIfAddress(nft.mint.toBase58())}</h3>
         <ProgressSection>

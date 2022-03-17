@@ -20,17 +20,16 @@ import { usePool } from "~/pool/hooks";
 import { GARAGE_COLLECTION_NAME } from "~/garage/constants";
 import { KART_COLLECTION_NAME } from "~/kart/constants";
 import AppNav from "~/app/AppNav";
+import { toEtherString } from "~/api/solana/utils/parse-ether";
 
 const MintPage = () => {
   const { connected } = useWallet();
 
   const { provider } = useWorkspace();
-  const anchorWallet = useAnchorWallet();
-  const { poolInfo } = usePool();
-  const [sufficientFund, setSufficientFund] = useState<boolean>(false);
-  const [isPending, setIsPending] = useState(false);
   const { requestGatewayToken, gatewayStatus } = useGateway();
   const [clicked, setClicked] = useState(false);
+  const [isMintingGarage, setIsMintingGarage] = useState(false);
+  const [isMintingKart, setIsMintingKart] = useState(false);
 
   const { getNFTOfCollection, revalidateNFTs } = useNFT();
 
@@ -42,15 +41,21 @@ const MintPage = () => {
     return getNFTOfCollection(KART_COLLECTION_NAME);
   }, [getNFTOfCollection]);
 
-  const { candyMachine: kartCM, revalidateCandyMachine: revalidateKartCM } =
-    useCandyMachine({
-      candyMachineId: KART_CM_ID,
-    });
+  const {
+    candyMachine: kartCM,
+    itemsRemaining: kartRemaining,
+    revalidateCandyMachine: revalidateKartCM,
+  } = useCandyMachine({
+    candyMachineId: KART_CM_ID,
+  });
 
-  const { candyMachine: garageCM, revalidateCandyMachine: revalidateGarageCM } =
-    useCandyMachine({
-      candyMachineId: GARAGE_CM_ID,
-    });
+  const {
+    candyMachine: garageCM,
+    itemsRemaining: garageRemaining,
+    revalidateCandyMachine: revalidateGarageCM,
+  } = useCandyMachine({
+    candyMachineId: GARAGE_CM_ID,
+  });
 
   // const validateUserBalance = useCallback(async () => {
   //   if (!anchorWallet || !candyMachine || !provider) {
@@ -90,7 +95,7 @@ const MintPage = () => {
       }
     } else {
       try {
-        setIsPending(true);
+        setIsMintingKart(true);
         const [mintTxId] = await mint({ provider, candyMachine: kartCM });
         const resp = await provider.connection.confirmTransaction(mintTxId);
         if (resp.value.err) {
@@ -104,7 +109,7 @@ const MintPage = () => {
       } catch (e) {
         toast("Mint Failed", { type: "error" });
       } finally {
-        setIsPending(false);
+        setIsMintingKart(false);
         setClicked(false);
       }
     }
@@ -124,7 +129,7 @@ const MintPage = () => {
       }
     } else {
       try {
-        setIsPending(true);
+        setIsMintingGarage(true);
         if (!provider || !garageCM?.program) {
           toast("Please connect wallet", { type: "warning" });
           return;
@@ -147,7 +152,7 @@ const MintPage = () => {
         const message = handleMintError(e);
         toast(message, { type: "error" });
       } finally {
-        setIsPending(false);
+        setIsMintingGarage(false);
         setClicked(false);
       }
     }
@@ -156,30 +161,58 @@ const MintPage = () => {
   const mintKartButtonContent = useMemo(() => {
     if (kartCM?.state.isSoldOut) {
       return "SOLD OUT";
-    } else if (isPending) {
-      return <ReactLoading type="bubbles" color="#512da8" />;
+    } else if (isMintingKart) {
+      return (
+        <ReactLoading
+          type="bubbles"
+          color="#512da8"
+          height="50px"
+          width="50px"
+        />
+      );
     } else if (kartCM?.state.isPresale || kartCM?.state.isWhitelistOnly) {
       return "WHITELIST MINT";
     } else if (clicked && kartCM?.state.gatekeeper) {
-      return <ReactLoading type="bubbles" color="#512da8" />;
+      return (
+        <ReactLoading
+          type="bubbles"
+          color="#512da8"
+          height="50px"
+          width="50px"
+        />
+      );
     }
 
-    return "MINT";
-  }, [clicked, isPending, kartCM]);
+    return "MINT KART";
+  }, [clicked, isMintingKart, kartCM]);
 
   const mintGarageButtonContent = useMemo(() => {
     if (garageCM?.state.isSoldOut) {
       return "SOLD OUT";
-    } else if (isPending) {
-      return <ReactLoading type="bubbles" color="#512da8" />;
+    } else if (isMintingGarage) {
+      return (
+        <ReactLoading
+          type="bubbles"
+          color="#512da8"
+          height="50px"
+          width="50px"
+        />
+      );
     } else if (garageCM?.state.isPresale || garageCM?.state.isWhitelistOnly) {
       return "WHITELIST MINT";
     } else if (clicked && garageCM?.state.gatekeeper) {
-      return <ReactLoading type="bubbles" color="#512da8" />;
+      return (
+        <ReactLoading
+          type="bubbles"
+          color="#512da8"
+          height="50px"
+          width="50px"
+        />
+      );
     }
 
-    return "MINT";
-  }, [clicked, isPending, garageCM]);
+    return "MINT GARAGE";
+  }, [clicked, isMintingGarage, garageCM]);
 
   const handleClick = () => {
     console.log("click...");
@@ -200,12 +233,18 @@ const MintPage = () => {
           <WrapperContent>
             <WrapperMintKart>
               <Button color="primary" onClick={handleMintKart} width="50%">
-                Mint Kart
+                {mintKartButtonContent}
               </Button>
               <h4>
                 A 8,888 Genesis Solakarts represent a heart of the game. Each
                 model comes with unique rarity and attributes
               </h4>
+              {kartCM && (
+                <>
+                  <h1>{kartRemaining + 7000} / 8888</h1>
+                  <h3>Price: {toEtherString(kartCM.state.price)} SOL</h3>
+                </>
+              )}
               <AppImage src="/kart-nft.png" width="60%" height="225px" />
             </WrapperMintKart>
             <WrapperMintGarage>
@@ -216,8 +255,15 @@ const MintPage = () => {
                 takes place. Garage owners could earn passive income via a fair
                 share of upgrading fee
               </h4>
+              {garageCM && (
+                <>
+                  <h1>{garageRemaining + 700} / 888</h1>
+                  <h3>Price: {toEtherString(garageCM.state.price)} SOL</h3>
+                </>
+              )}
+
               <Button color="secondary" onClick={handleMintGarage} width="50%">
-                Mint Garage
+                {mintGarageButtonContent}
               </Button>
             </WrapperMintGarage>
           </WrapperContent>
