@@ -16,7 +16,7 @@ const Trailer = () => {
         <AppImage src="/medium.png" width="34px" height="34px" />
       </SocialDiv>
       <VideoWrapper>
-        <Video src="/solrace-map-s-com.mp4" controls autoPlay></Video>
+        <Video src="/Solrace-map-s-com.mp4" controls autoPlay></Video>
       </VideoWrapper>
       <TitleDiv>
         <TitleText>SolRace</TitleText>
