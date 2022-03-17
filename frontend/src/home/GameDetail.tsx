@@ -37,7 +37,7 @@ const GameDetail = () => {
           </WrapperDescription>
           <WrapperVideo>
             <VideoDiv>
-              <Video src="/solrace-run.mp4" controls autoPlay></Video>
+              <Video src="/solrace-run-ns-com.mp4" controls autoPlay></Video>
             </VideoDiv>
           </WrapperVideo>
         </WrapperFlex>

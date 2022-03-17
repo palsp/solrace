@@ -49,7 +49,7 @@ const Home = () => {
         </NAV> */}
       <WrapperIndex>
         <VideoWrapper>
-          <Video src="/solrace-map.mp4" controls></Video>
+          <Video src="/solrace-race-s-com.mp4" controls></Video>
         </VideoWrapper>
         {/* <Button width="300px" color="primary">
             Mint
