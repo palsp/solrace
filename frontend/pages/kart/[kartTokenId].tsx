@@ -125,7 +125,7 @@ const KartDetail = () => {
       setLoading(false);
     }
   };
-  console.log(kart);
+
   return (
     <TokenDetailLayout
       direction="row"
@@ -139,7 +139,9 @@ const KartDetail = () => {
       }
     >
       <TitleDiv>
-        <Title fontStyle="italic">{kart?.name}</Title>
+        <Title fontStyle="italic">
+          {kart?.name} ( {kart?.attributes[5].value} )
+        </Title>
         <ParagraphItalic>ID: {tokenId}</ParagraphItalic>
         <ParagraphItalic>
           Owner: BuxRVqu8YndicdXV4KLXBR451GUug63BkgaVEgwpDwYA
@@ -159,13 +161,13 @@ const KartDetail = () => {
               <IconWrapper size="18px">
                 <ChevronsUp />
               </IconWrapper>
-              Max Speed: 5
+              Max Speed: {kart?.attributes[0].value || "..."}
             </ParagraphItalicBold>
             <ParagraphItalicBold>
               <IconWrapper size="18px">
                 <Wind />
               </IconWrapper>
-              Acceleration: 8
+              Acceleration: {kart?.attributes[1].value || "..."}
             </ParagraphItalicBold>
           </StatsDiv1>
           <StatsDiv2>
@@ -173,13 +175,13 @@ const KartDetail = () => {
               <IconWrapper size="18px">
                 <CloudDrizzle />
               </IconWrapper>
-              Drift: 7
+              Drift: {kart?.attributes[2].value || "..."}
             </ParagraphItalicBold>
             <ParagraphItalicBold>
               <IconWrapper size="18px">
                 <Feather />
               </IconWrapper>
-              Handling: 6
+              Handling: {kart?.attributes[4].value || "..."}
             </ParagraphItalicBold>
           </StatsDiv2>
         </StatsDiv>
