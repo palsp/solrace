@@ -17,9 +17,7 @@ const TokenDetailLayout: React.FC<Props> = ({
         <Wrapper3D>
           <WrapperInner3D>{token3D}</WrapperInner3D>
         </Wrapper3D>
-        <WrapperTokenDetail direction={direction}>
-          {children}
-        </WrapperTokenDetail>
+        <WrapperTokenDetail>{children}</WrapperTokenDetail>
       </TokenDetailLayoutContainer>
     </AppLayout>
   );
