@@ -17,7 +17,9 @@ const TokenDetailLayout: React.FC<Props> = ({
         <Wrapper3D>
           <WrapperInner3D>{token3D}</WrapperInner3D>
         </Wrapper3D>
-        <WrapperTokenDetail>{children}</WrapperTokenDetail>
+        <WrapperTokenDetail direction={direction}>
+          {children}
+        </WrapperTokenDetail>
       </TokenDetailLayoutContainer>
     </AppLayout>
   );
@@ -27,6 +29,11 @@ const TokenDetailLayoutContainer = styled.div`
   height: 100%;
   display: flex;
   flex-direction: ${(props: Props) => props.direction};
+  align-items: ${(props: Props) => {
+    if (props.direction === "row-reverse") {
+      return "center";
+    }
+  }};
   gap: 1rem;
 `;
 
@@ -44,6 +51,7 @@ const WrapperTokenDetail = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+
   gap: 1rem;
   margin: 1rem 0;
 `;

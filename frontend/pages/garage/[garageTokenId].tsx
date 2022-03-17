@@ -201,7 +201,9 @@ const GarageDetail = () => {
       direction="row-reverse"
       token3D={
         garage?.image ? (
-          <AppImage src={garage.image} width="500px" height="500px"></AppImage>
+          <WrapperGarageImage>
+            <AppImage src={garage.image} width="500px" height="500px" />
+          </WrapperGarageImage>
         ) : (
           <Skeleton wrapper={CardSkeleton} count={1} />
         )
@@ -266,7 +268,11 @@ const GarageDetail = () => {
     </TokenDetailLayout>
   );
 };
-
+const WrapperGarageImage = styled.div`
+  border-radius: 0.5rem;
+  width: 500px;
+  overflow: hidden;
+`;
 const TitleDiv = styled.div`
   /* background: var(--color-primary-light); */
   width: fit-content;
