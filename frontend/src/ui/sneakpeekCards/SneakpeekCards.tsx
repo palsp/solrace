@@ -18,11 +18,12 @@ const SneakpeekCards: React.FC<Props> = ({ type }) => {
         <WrapperCarousel>
           <Carousel
             infiniteLoop
-            //   autoPlay
+            autoPlay
             emulateTouch
-            showArrows={false}
+            // showArrows={false}
             showStatus={false}
             showThumbs={false}
+            interval={4500}
           >
             <AbilityCard type="hack" />
             <AbilityCard type="missile" />
@@ -43,15 +44,35 @@ const SneakpeekCards: React.FC<Props> = ({ type }) => {
         </TitleDiv>
         <WrapperCarousel>
           <Carousel
-            infiniteLoop
-            //   autoPlay
-            showArrows={false}
+            autoPlay
+            // showArrows={false}
             showStatus={false}
             showThumbs={false}
+            interval={4500}
           >
-            <Model3D model="Cassini" height="380px" />
-            <Model3D model="Voyager" height="380px" />
-            <Model3D model="Ariel" height="380px" />
+            <ModelDiv>
+              <Model3D model="Cassini" height="380px" />
+              <ModelH5>ZGMF-X42F Cassini</ModelH5>
+            </ModelDiv>
+            <ModelDiv>
+              <Model3D model="Apollo" height="380px" />
+              <ModelH5>ZGMF-X42F Apollo</ModelH5>
+            </ModelDiv>
+
+            <ModelDiv>
+              <Model3D model="Ariel" height="380px" />
+              <ModelH5>ZGMF-X42F Ariel</ModelH5>
+            </ModelDiv>
+            <ModelDiv>
+              <Model3D model="Voyager" height="380px" />
+              <ModelH5>ZGMF-X42F Voyager</ModelH5>
+            </ModelDiv>
+            <ModelDiv>
+              <Model3D model="Venera" height="380px" />
+              <ModelH5>ZGMF-X42F Venera</ModelH5>
+            </ModelDiv>
+
+            {/* <Model3D model="Ariel" height="380px" /> */}
           </Carousel>
         </WrapperCarousel>
       </WrapperCard>
@@ -72,6 +93,7 @@ const WrapperCard = styled(Column)`
   transition: box-shadow 1s ease;
   &:hover {
     box-shadow: var(--shadow-elevation-high-secondary);
+    cursor: pointer;
   }
 `;
 const WrapperCarousel = styled.div`
@@ -83,5 +105,17 @@ const TitleDiv = styled.div`
   width: 100%;
   padding: 1rem;
   text-align: center;
+`;
+
+const ModelDiv = styled.div`
+  position: relative;
+`;
+
+const ModelH5 = styled.h5`
+  position: absolute;
+  top: 15%;
+  left: 0px;
+  right: 0px;
+  font-style: italic;
 `;
 export default SneakpeekCards;
