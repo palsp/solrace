@@ -1,13 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import AbilityCard from "~/ui/abilityCards/AbilityCard/AbilityCard";
+import AbilityCards from "~/ui/abilityCards";
 const Sneakpeek = () => {
   return (
     <WrapperSneakpeek>
       <WrapperContent>
         <TitleText>Sneak Peek to our game</TitleText>
         <WrapperCards>
-          <AbilityCard />
+          <AbilityCards />
         </WrapperCards>
       </WrapperContent>
       <Star>&#10022;</Star>
