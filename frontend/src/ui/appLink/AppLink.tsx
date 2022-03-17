@@ -6,8 +6,15 @@ interface Props {
   href: string;
   color?: string;
   textColor?: string;
+  target?: string;
 }
-const AppLink: React.FC<Props> = ({ children, href, color, textColor }) => {
+const AppLink: React.FC<Props> = ({
+  children,
+  href,
+  color,
+  textColor,
+  target,
+}) => {
   const { pathname } = useRouter();
 
   const getActiveClassName = () => {
@@ -16,7 +23,7 @@ const AppLink: React.FC<Props> = ({ children, href, color, textColor }) => {
 
   return (
     <Link href={href} passHref>
-      <A className={getActiveClassName()} color={color}>
+      <A className={getActiveClassName()} color={color} target={target}>
         <Span textColor={textColor}>{children}</Span>
       </A>
     </Link>
