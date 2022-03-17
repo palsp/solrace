@@ -79,6 +79,7 @@ const KartDetail = () => {
   const handleGarageChange: React.ChangeEventHandler<HTMLSelectElement> = (
     e
   ) => {
+    console.log(e.target.value);
     if (e.target.value !== "") {
       setSelectedGarage(new PublicKey(e.target.value));
     } else {
@@ -125,7 +126,8 @@ const KartDetail = () => {
       setLoading(false);
     }
   };
-  console.log(kart);
+
+  console.log(selectedGarage);
   return (
     <TokenDetailLayout
       direction="row"
@@ -192,7 +194,8 @@ const KartDetail = () => {
               key={staker.publicAddress.toBase58()}
               value={staker.publicAddress.toBase58()}
             >
-              {shortenIfAddress(staker.publicAddress.toBase58())} (100%)
+              {shortenIfAddress(staker.publicAddress.toBase58())} (
+              {(50 + Math.random() * 20).toFixed(2)} %)
             </option>
           ))}
         </Select>
