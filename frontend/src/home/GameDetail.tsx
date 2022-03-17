@@ -6,37 +6,41 @@ const GameDetail = () => {
   return (
     <WrapperGameDetail>
       <WrapperContent>
-        <WrapperDescription>
-          <TitleText>Explore the world where every conflicts...</TitleText>
-          <TitleDescription>
-            <Quote>
-              &nbsp;&nbsp;&nbsp;&nbsp;"Humans are no strangers to wars. After
-              all, we have been fighting for as long as we remember"&nbsp;&nbsp;
-            </Quote>
-            <QuoteAuthor>
-              <i> —Chairman Richard Prescott.</i>
-            </QuoteAuthor>
-            <p>
-              &nbsp;&nbsp;&nbsp;&nbsp;Yet, we all know what happens in the after
-              wars… casualties, damages, endless grief and bereavement. Same
-              thing happened here in the Solraverse, a small village in Honshū
-              comprising three powerful factions.
-            </p>
-            <p>
-              &nbsp;&nbsp;&nbsp;&nbsp; While the earth was celebrating the
-              successful launch of Super Mario kart in 1992, Solraverse was
-              experiencing its greatest nightmare; the greatest war of San
-              Tairitsu 三対立. Villagers are battling for its faction to rule
-              the village like usual. Except that this time, things are
-              different ...
-            </p>
-          </TitleDescription>
-        </WrapperDescription>
-        <WrapperVideo>
-          <VideoDiv>
-            <Video src="/solrace-run.mp4" controls autoPlay></Video>
-          </VideoDiv>
-        </WrapperVideo>
+        <TitleText>Explore the world where every conflicts...</TitleText>
+
+        <WrapperFlex>
+          <WrapperDescription>
+            <TitleDescription>
+              <Quote>
+                &nbsp;&nbsp;&nbsp;&nbsp;"Humans are no strangers to wars. After
+                all, we have been fighting for as long as we
+                remember"&nbsp;&nbsp;
+              </Quote>
+              <QuoteAuthor>
+                <i> —Chairman Richard Prescott.</i>
+              </QuoteAuthor>
+              <p>
+                &nbsp;&nbsp;&nbsp;&nbsp;Yet, we all know what happens in the
+                after wars… casualties, damages, endless grief and bereavement.
+                Same thing happened here in the Solraverse, a small village in
+                Honshū comprising three powerful factions.
+              </p>
+              <p>
+                &nbsp;&nbsp;&nbsp;&nbsp; While the earth was celebrating the
+                successful launch of Super Mario kart in 1992, Solraverse was
+                experiencing its greatest nightmare; the greatest war of San
+                Tairitsu 三対立. Villagers are battling for its faction to rule
+                the village like usual. Except that this time, things are
+                different ...
+              </p>
+            </TitleDescription>
+          </WrapperDescription>
+          <WrapperVideo>
+            <VideoDiv>
+              <Video src="/solrace-run.mp4" controls autoPlay></Video>
+            </VideoDiv>
+          </WrapperVideo>
+        </WrapperFlex>
       </WrapperContent>
       <Star>&#10022;</Star>
     </WrapperGameDetail>
@@ -46,13 +50,21 @@ const GameDetail = () => {
 const WrapperGameDetail = styled.div`
   width: 100vw;
   height: 100vh;
-  background: var(--background-gradient-2);
+  background: url("/game-1.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: var(--color-white);
 `;
 const WrapperContent = styled.div`
-  display: flex;
-  padding: 3rem 1rem 3rem 4rem;
-  gap: 2rem;
+  padding: 3rem 4rem 3rem 4rem;
 `;
+const WrapperFlex = styled.div`
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  margin: 4.5rem 0;
+`;
+
 const WrapperDescription = styled.div`
   flex: 4;
 `;
@@ -70,11 +82,13 @@ const TitleText = styled.h1`
   font-weight: 400;
   font-size: 2.5rem;
   line-height: 1.2;
-  margin-bottom: 2rem;
+  margin: 1.5rem;
+  text-align: center;
 `;
 
 const Quote = styled.p`
   background: var(--color-secondary);
+  color: var(--color-black);
 `;
 
 const QuoteAuthor = styled.p`
@@ -83,6 +97,7 @@ const QuoteAuthor = styled.p`
   margin-left: auto;
   padding-inline: 0.5rem;
   margin-bottom: 1rem;
+  color: var(--color-black);
 `;
 const Star = styled.div`
   position: fixed;
@@ -96,7 +111,12 @@ const Star = styled.div`
   box-shadow: var(--shadow-elevation-high-primary);
   background: var(--background-gradient-2);
 `;
-const TitleDescription = styled.div``;
+const TitleDescription = styled.div`
+  padding: 1rem 1rem;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-elevation-low-black);
+`;
 const Video = styled.video`
   /* min-width: 100%;
   min-height: 100%; */
