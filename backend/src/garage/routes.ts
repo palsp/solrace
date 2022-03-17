@@ -4,6 +4,7 @@ import { notFound } from '@hapi/boom'
 import { Kart } from 'entity/Kart'
 import { NFTMetaData } from 'entity/NFTMetadata'
 import { Garage } from 'entity/Garage'
+import { passportJwtMiddlewareAuth } from 'auth/middleware'
 
 const router = express.Router()
 

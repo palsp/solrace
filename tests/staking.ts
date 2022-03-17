@@ -12,6 +12,7 @@ import chai from 'chai'
 import CBN from 'chai-bn'
 import CAP from 'chai-as-promised'
 import { SystemProgram, Transaction } from '@solana/web3.js'
+import { BaseManager } from 'discord.js'
 
 const TOKEN_METADATA_PROGRAM_ID = new anchor.web3.PublicKey(
   'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s',
@@ -161,6 +162,17 @@ describe('Sol Race Core Program', () => {
     expect(poolAccountInfo.kartCreator.equals(kartCreator.publicKey)).to.be.true
 
     expect(poolAccountInfo.solrMint.equals(solrMint)).to.be.true
+
+    const poolAuthorityTokenAccountInfo = await getTokenAccount(
+      provider,
+      poolAuthority,
+    )
+
+    expect(poolAuthorityTokenAccountInfo.amount).to.be.bignumber.eq(new BN(0))
+
+    const poolSolrTokenAccountInfo = await getTokenAccount(provider, poolSolr)
+
+    expect(poolSolrTokenAccountInfo.amount).to.be.bignumber.eq(solrAmount)
   })
 
   const staker = anchor.web3.Keypair.generate()
@@ -583,141 +595,195 @@ describe('Sol Race Core Program', () => {
     staker1PendingReward = stakerInfo.pendingReward
   })
 
-  // it('allow user to restake', async () => {
-  //   const [stakingAccount] = await anchor.web3.PublicKey.findProgramAddress(
-  //     [
-  //       Buffer.from('staking_account'),
-  //       // TODO: delete poolName
-  //       Buffer.from(poolName),
-  //       staker.publicKey.toBuffer(),
-  //       garageMintAccount.publicKey.toBuffer(),
-  //     ],
-  //     program.programId,
-  //   )
+  it('allow user to restake', async () => {
+    const [stakingAccount] = await anchor.web3.PublicKey.findProgramAddress(
+      [
+        Buffer.from('staking_account'),
+        // TODO: delete poolName
+        Buffer.from(poolName),
+        staker.publicKey.toBuffer(),
+        garageMintAccount.publicKey.toBuffer(),
+      ],
+      program.programId,
+    )
 
-  //   const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
-  //     [Buffer.from(poolName), Buffer.from('pool_account')],
-  //     program.programId,
-  //   )
+    const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(poolName), Buffer.from('pool_account')],
+      program.programId,
+    )
 
-  //   await program.rpc.bond({
-  //     accounts: {
-  //       user: staker.publicKey,
-  //       poolAccount,
-  //       stakingAccount,
-  //       solrMint,
-  //       systemProgram: anchor.web3.SystemProgram.programId,
-  //     },
-  //     signers: [staker],
-  //   })
+    await program.rpc.bond({
+      accounts: {
+        user: staker.publicKey,
+        poolAccount,
+        stakingAccount,
+        solrMint,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      },
+      signers: [staker],
+    })
 
-  //   const stakerInfo = await program.account.stakingAccount.fetch(
-  //     stakingAccount,
-  //   )
+    const stakerInfo = await program.account.stakingAccount.fetch(
+      stakingAccount,
+    )
 
-  //   expect(stakerInfo.pendingReward).to.be.bignumber.equals(
-  //     staker1PendingReward,
-  //   )
-  //   expect(stakerInfo.isBond).to.be.true
-  // })
+    expect(stakerInfo.pendingReward).to.be.bignumber.equals(
+      staker1PendingReward,
+    )
+    expect(stakerInfo.isBond).to.be.true
+  })
 
-  // const lateStaker = anchor.web3.Keypair.generate()
-  // it('not distribute reward if distribution period is end', async () => {
-  //   if (Date.now() < endTime.toNumber() * 1000 + 1000) {
-  //     await sleep(endTime.toNumber() * 1000 - Date.now() + 4000)
-  //   }
+  it('withdraw', async () => {
+    const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(poolName), Buffer.from('pool_account')],
+      program.programId,
+    )
+    const [stakingAccount] = await anchor.web3.PublicKey.findProgramAddress(
+      [
+        Buffer.from('staking_account'),
+        // TODO: delete poolName
+        Buffer.from(poolName),
+        staker.publicKey.toBuffer(),
+        garageMintAccount.publicKey.toBuffer(),
+      ],
+      program.programId,
+    )
 
-  //   // request sol
-  //   const tx = await provider.connection.requestAirdrop(
-  //     lateStaker.publicKey,
-  //     100000000000,
-  //   )
-  //   await provider.connection.confirmTransaction(tx)
+    const [poolSolr] = await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(poolName), Buffer.from('pool_solr')],
+      program.programId,
+    )
 
-  //   // create nft
-  //   const lateStakerNftMintAccount = await createMint(provider, 0)
-  //   const lateStakerNftTokenAccount = await createTokenAccount(
-  //     provider,
-  //     lateStakerNftMintAccount.publicKey,
-  //     lateStaker.publicKey,
-  //   )
-  //   await lateStakerNftMintAccount.mintTo(
-  //     lateStakerNftTokenAccount,
-  //     provider.wallet.publicKey,
-  //     [],
-  //     1,
-  //   )
-  //   const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
-  //     [Buffer.from(poolName), Buffer.from('pool_account')],
-  //     program.programId,
-  //   )
+    const stakerTokenAccount = await createTokenAccount(
+      provider,
+      solrMint,
+      staker.publicKey,
+    )
 
-  //   const [
-  //     stakingAccount,
-  //     stakingAccountBump,
-  //   ] = await anchor.web3.PublicKey.findProgramAddress(
-  //     [
-  //       Buffer.from('staking_account'),
-  //       // TODO: delete poolName
-  //       Buffer.from(poolName),
-  //       lateStaker.publicKey.toBuffer(),
-  //       lateStakerNftMintAccount.publicKey.toBuffer(),
-  //     ],
-  //     program.programId,
-  //   )
+    await program.rpc.withdraw({
+      accounts: {
+        user: staker.publicKey,
+        poolAccount,
+        stakingAccount,
+        poolSolr,
+        solrMint,
+        userSolr: stakerTokenAccount,
+        systemProgram: SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      },
+      signers: [staker],
+    })
 
-  //   // mock
-  //   const metadataAccount = anchor.web3.Keypair.generate()
-  //   const masterEdition = anchor.web3.Keypair.generate()
+    const stakerAccountInfo = await getTokenAccount(
+      provider,
+      stakerTokenAccount,
+    )
 
-  //   const instructions = [
-  //     program.instruction.initStake(stakingAccountBump, {
-  //       accounts: {
-  //         user: lateStaker.publicKey,
-  //         poolAccount,
-  //         stakingAccount,
-  //         solrMint,
-  //         garageMint: lateStakerNftMintAccount.publicKey,
-  //         garageTokenAccount: lateStakerNftTokenAccount,
-  //         garageMetadataAccount: metadataAccount.publicKey,
-  //         creatureEdition: masterEdition.publicKey,
-  //         tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
-  //         systemProgram: anchor.web3.SystemProgram.programId,
-  //       },
-  //       signers: [lateStaker],
-  //     }),
-  //     program.instruction.bond({
-  //       accounts: {
-  //         user: lateStaker.publicKey,
-  //         poolAccount,
-  //         stakingAccount,
-  //         solrMint,
-  //         systemProgram: anchor.web3.SystemProgram.programId,
-  //       },
-  //       signers: [lateStaker],
-  //     }),
-  //   ]
+    expect(stakerAccountInfo.amount).to.be.bignumber.greaterThan(new BN(0))
 
-  //   const transaction = new Transaction()
-  //   instructions.forEach((instruction) => transaction.add(instruction))
+    const stakingAccountInfo = await program.account.stakingAccount.fetch(
+      stakingAccount,
+    )
 
-  //   const signature = await provider.send(transaction, [lateStaker])
-  //   await provider.connection.confirmTransaction(signature)
+    expect(stakingAccountInfo.pendingReward).to.be.bignumber.eq(new BN(0))
+  })
+  const lateStaker = anchor.web3.Keypair.generate()
+  it('not distribute reward if distribution period is end', async () => {
+    if (Date.now() < endTime.toNumber() * 1000 + 1000) {
+      await sleep(endTime.toNumber() * 1000 - Date.now() + 4000)
+    }
 
-  //   const poolAccountInfo = await program.account.poolAccount.fetch(poolAccount)
+    // request sol
+    const tx = await provider.connection.requestAirdrop(
+      lateStaker.publicKey,
+      100000000000,
+    )
+    await provider.connection.confirmTransaction(tx)
 
-  //   const lateStakerStakingAccountInfo = await program.account.stakingAccount.fetch(
-  //     stakingAccount,
-  //   )
+    // create nft
+    const lateStakerNftMintAccount = await createMint(provider, 0)
+    const lateStakerNftTokenAccount = await createTokenAccount(
+      provider,
+      lateStakerNftMintAccount.publicKey,
+      lateStaker.publicKey,
+    )
+    await lateStakerNftMintAccount.mintTo(
+      lateStakerNftTokenAccount,
+      provider.wallet.publicKey,
+      [],
+      1,
+    )
+    const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(poolName), Buffer.from('pool_account')],
+      program.programId,
+    )
 
-  //   expect(lateStakerStakingAccountInfo.isBond).to.be.true
+    const [
+      stakingAccount,
+      stakingAccountBump,
+    ] = await anchor.web3.PublicKey.findProgramAddress(
+      [
+        Buffer.from('staking_account'),
+        // TODO: delete poolName
+        Buffer.from(poolName),
+        lateStaker.publicKey.toBuffer(),
+        lateStakerNftMintAccount.publicKey.toBuffer(),
+      ],
+      program.programId,
+    )
 
-  //   expect(lateStakerStakingAccountInfo.pendingReward).to.be.bignumber.equals(
-  //     new BN(0),
-  //   )
+    // mock
+    const metadataAccount = anchor.web3.Keypair.generate()
+    const masterEdition = anchor.web3.Keypair.generate()
 
-  //   expect(lateStakerStakingAccountInfo.rewardIndex).to.equals(
-  //     poolAccountInfo.globalRewardIndex,
-  //   )
-  // })
+    const instructions = [
+      program.instruction.initStake(stakingAccountBump, {
+        accounts: {
+          user: lateStaker.publicKey,
+          poolAccount,
+          stakingAccount,
+          solrMint,
+          garageMint: lateStakerNftMintAccount.publicKey,
+          garageTokenAccount: lateStakerNftTokenAccount,
+          garageMetadataAccount: metadataAccount.publicKey,
+          creatureEdition: masterEdition.publicKey,
+          tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
+          systemProgram: anchor.web3.SystemProgram.programId,
+        },
+        signers: [lateStaker],
+      }),
+      program.instruction.bond({
+        accounts: {
+          user: lateStaker.publicKey,
+          poolAccount,
+          stakingAccount,
+          solrMint,
+          systemProgram: anchor.web3.SystemProgram.programId,
+        },
+        signers: [lateStaker],
+      }),
+    ]
+
+    const transaction = new Transaction()
+    instructions.forEach((instruction) => transaction.add(instruction))
+
+    const signature = await provider.send(transaction, [lateStaker])
+    await provider.connection.confirmTransaction(signature)
+
+    const poolAccountInfo = await program.account.poolAccount.fetch(poolAccount)
+
+    const lateStakerStakingAccountInfo = await program.account.stakingAccount.fetch(
+      stakingAccount,
+    )
+
+    expect(lateStakerStakingAccountInfo.isBond).to.be.true
+
+    expect(lateStakerStakingAccountInfo.pendingReward).to.be.bignumber.equals(
+      new BN(0),
+    )
+
+    expect(lateStakerStakingAccountInfo.rewardIndex).to.equals(
+      poolAccountInfo.globalRewardIndex,
+    )
+  })
 })
