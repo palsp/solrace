@@ -5,12 +5,11 @@ import _ from 'lodash'
 
 import path from 'path'
 import { DeepPartial } from 'typeorm'
-import { NFTAttributes } from 'entity/NFTAttributes'
+import { Kart } from 'entity/Kart'
 
 const collectionPath = path.join(process.cwd(), 'assets', `collection.json`)
 
 const collection = require(collectionPath)
-console.log(collection)
 
 async function createMetadata(
   id: number,
@@ -46,7 +45,7 @@ async function createMetadata(
   const token = await NFTMetaData.create({
     ...meta,
     id,
-    image: `${imageBaseURI}/${nft.image}`,
+    image: `${imageBaseURI}/${id}/${nft.image}`,
     sellerFeeBasisPoints: nft.seller_fee_basis_points,
     externalUrl: nft.external_url,
     collection: nftCollection,
@@ -57,13 +56,14 @@ async function createMetadata(
     creators: properties.creators,
   }).save()
 
-  await NFTAttributes.create({
+  await Kart.create({
     token,
-    maxSpeed: 50 + Math.floor(Math.random() * 50),
-    acceleration: 50 + Math.floor(Math.random() * 50),
-    driftPowerGenerationRate: 20 + Math.floor(Math.random() * 20),
-    driftPowerConsumptionRate: 10 + Math.floor(Math.random() * 20),
-    handling: 50 + Math.floor(Math.random() * 50),
+    maxSpeed: 200 + Math.floor(Math.random() * 16),
+    acceleration: 3000 + Math.floor(Math.random() * 600),
+    driftPowerGenerationRate: 0.5 - Math.floor(Math.random() * 0.2),
+    driftPowerConsumptionRate: 0.2 + Math.floor(Math.random() * 0.01),
+    handling: 600 + Math.floor(Math.random() * 100),
+    model: nft.attributes[0].value,
   }).save()
 }
 

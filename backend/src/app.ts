@@ -1,6 +1,5 @@
 import express, { ErrorRequestHandler } from 'express'
 import cors from 'cors'
-import path from 'path'
 
 import metadata from 'metadata/routes'
 import auth from 'auth/routes'
