@@ -43,7 +43,7 @@ const WrapperTokenDetail = styled.div`
   /* height: 75%; */
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   gap: 1rem;
   margin: 1rem 0;
 `;
