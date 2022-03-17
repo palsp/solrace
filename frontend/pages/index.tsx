@@ -18,8 +18,8 @@ const home = () => {
       <HomeNav />
       <Trailer />
       <GameDetail />
-      <GamePortal />
       <Sneakpeek />
+      <GamePortal />
       <Roadmap />
       <Team />
     </HorizontalScroll>

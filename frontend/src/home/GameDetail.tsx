@@ -60,6 +60,7 @@ const WrapperContent = styled.div`
 `;
 const WrapperFlex = styled.div`
   display: flex;
+  flex-direction: row-reverse;
   gap: 2rem;
   align-items: center;
   margin: 4.5rem 0;
