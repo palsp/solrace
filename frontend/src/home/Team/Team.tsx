@@ -46,6 +46,7 @@ const WrapperTeam = styled.div`
   background: url("/team-background.png");
   flex: none;
   color: var(--color-white);
+  position: relative;
 `;
 const WrapperContent = styled.div`
   padding: 3rem 2rem 0 2rem;
@@ -82,7 +83,7 @@ const TitleDescription = styled.p`
   flex: 6;
   background: rgba(0, 0, 0, 0.5);
   border-radius: 0.5rem;
-  box-shadow: var(--shadow-elevation-medium-black);
+  box-shadow: var(--shadow-elevation-low-black);
 `;
 
 const Star = styled.div`

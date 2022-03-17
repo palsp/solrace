@@ -55,10 +55,13 @@ const Footer = () => {
 };
 const WrapperFooter = styled.div`
   background: var(--background-gradient-2);
-  border-radius: 0.5rem 0.5rem 0 0;
+  border-radius: 0.25rem 0.25rem 0 0;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
   /* height: 45%; */
   /* color: white; */
-  margin-top: 5rem;
+  /* margin-top: 6.5rem; */
   /* height: 100px; */
   /* width: 100vw; */
   color: black;
@@ -73,7 +76,7 @@ const WrapperFlex = styled.div`
 const WrapperLegal = styled.div`
   display: flex;
   gap: 1rem;
-  margin: 0.75rem 0;
+  margin: 0.75rem 0 0.25rem;
   padding: 0 2rem;
   & > * {
     cursor: pointer;

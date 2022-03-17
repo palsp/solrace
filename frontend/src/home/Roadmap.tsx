@@ -10,7 +10,7 @@ const Roadmap = () => {
         <AppImage
           src="/roadmap-track.png"
           width="100vw"
-          height="350px"
+          height="400px"
           style={{ cursor: "pointer", marginBottom: "0.5rem" }}
         />
       </WrapperImage>
@@ -69,6 +69,8 @@ const WrapperRoadmap = styled.div`
   width: 100vw;
   height: 100vh;
   background: url("/roadmap-background.png");
+  background-repeat: no-repeat;
+  background-size: cover;
   color: var(--color-white);
   position: relative;
 `;
@@ -96,7 +98,7 @@ const ThirdQuarter = styled.div`
 const FourthQuarter = styled.div`
   position: absolute;
   top: 42%;
-  left: 73.5%;
+  left: 75%;
 `;
 const FutureQuarter = styled.div`
   position: absolute;
@@ -128,7 +130,12 @@ const TitleText = styled.h1`
   text-align: center;
 `;
 
-const TitleDescription = styled.p``;
+const TitleDescription = styled.p`
+  padding: 1rem 1rem;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-elevation-low-black);
+`;
 
 const Star = styled.div`
   position: fixed;
