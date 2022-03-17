@@ -103,20 +103,32 @@ const SneakpeekCards: React.FC<Props> = ({ type }) => {
                 controls
                 autoPlay
               ></Video>
+              <ParagraphDiv>
+                TIP - If you are lightning fast, you won't get stuck in the
+                ARCTRAP
+              </ParagraphDiv>
             </VideoDiv>
             <VideoDiv>
               <h5>Ability - HACK</h5>
 
               <Video src="/hack-showcase-ns-com.mp4" controls autoPlay></Video>
+              <ParagraphDiv>
+                TIP - Racer in the last position will have 50% chance of getting
+                HACK
+              </ParagraphDiv>
             </VideoDiv>
             <VideoDiv>
-              <h5>Ability - HOMING</h5>
+              <h5>Ability - MISSILE</h5>
 
               <Video
-                src="/homing-showcase-ns-com.mp4"
+                src="/missile-showcase-ns-com.mp4"
                 controls
                 autoPlay
               ></Video>
+              <ParagraphDiv>
+                TIP - Getting out of the missile range is the only way to dodge
+                it
+              </ParagraphDiv>
             </VideoDiv>
             <VideoDiv>
               <h5>Ability - BERSERK</h5>
@@ -126,6 +138,9 @@ const SneakpeekCards: React.FC<Props> = ({ type }) => {
                 controls
                 autoPlay
               ></Video>
+              <ParagraphDiv>
+                TIP - Racer who goes BERSERK will take double amount of damage
+              </ParagraphDiv>
             </VideoDiv>
             <VideoDiv>
               <h5>Ability - REINFORCE</h5>
@@ -135,6 +150,9 @@ const SneakpeekCards: React.FC<Props> = ({ type }) => {
                 controls
                 autoPlay
               ></Video>
+              <ParagraphDiv>
+                TIP - Racer that uses REINFORCE will have blue aura
+              </ParagraphDiv>
             </VideoDiv>
           </Carousel>
         </WrapperCarousel>
@@ -173,7 +191,9 @@ const TitleDiv = styled.div`
 const ModelDiv = styled.div`
   position: relative;
 `;
-
+const ParagraphDiv = styled(Paragraph)`
+  padding: 0 1rem;
+`;
 const ModelH5 = styled.h5`
   position: absolute;
   top: 15%;
