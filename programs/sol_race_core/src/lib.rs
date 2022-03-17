@@ -1,4 +1,5 @@
 use anchor_lang::prelude::*;
+use anchor_spl::token::Transfer;
 
 anchor_lang::declare_id!("4tcD8pgdaSn4yzWQybKuKzSXpW3uoDugFY6owNUhhexd");
 
@@ -46,6 +47,15 @@ pub mod sol_race_core {
         pool_account.total_distribution = total_distribution;
         pool_account.start_time = start_time;
         pool_account.end_time = end_time;
+
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.pool_authority.to_account_info(),
+            to: ctx.accounts.pool_solr.to_account_info(),
+            authority: ctx.accounts.signer.to_account_info(),
+        };
+        let cpi_program = ctx.accounts.token_program.to_account_info();
+        let cpi_ctx = CpiContext::new(cpi_program, cpi_accounts);
+        anchor_spl::token::transfer(cpi_ctx, total_distribution as u64)?;
 
         Ok(())
     }
@@ -135,16 +145,45 @@ pub mod sol_race_core {
         Ok(())
     }
 
+    pub fn withdraw(ctx: Context<Withdraw>) -> Result<()> {
+        msg!("Withdraw");
+        let clock = Clock::get()?;
+        let current_time = clock.unix_timestamp;
+        let pool_account = &mut ctx.accounts.pool_account;
+        let staking_account = &mut ctx.accounts.staking_account;
+
+        compute_reward(pool_account, current_time);
+        compute_staker_reward(staking_account, pool_account);
+        let amount = staking_account.pending_reward;
+        staking_account.pending_reward = 0;
+
+        let pool_name = pool_account.pool_name.as_ref();
+        let seeds = &[
+            pool_name.trim_ascii_whitespace(),
+            b"pool_account",
+            &[pool_account.bumps.pool_account],
+        ];
+        let signer = &[&seeds[..]];
+        // Compute global reward & staker reward
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.pool_solr.to_account_info(),
+            to: ctx.accounts.user_solr.to_account_info(),
+            authority: pool_account.to_account_info(),
+        };
+        let cpi_program = ctx.accounts.token_program.to_account_info();
+        let cpi_ctx = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer);
+        anchor_spl::token::transfer(cpi_ctx, amount as u64)?;
+        Ok(())
+    }
+
     pub fn upgrade_kart(ctx: Context<UpgradeKart>) -> Result<()> {
-        // we can let user stake even if the distribution period is end,
-        // they will only receive fee from upgrading
         let kart_account = &mut ctx.accounts.kart_account;
         // TODO: random
         kart_account.max_speed += 1;
-        kart_account.acceleration += 1;
-        kart_account.drift_power_consumption_rate += 1;
-        kart_account.drift_power_generation_rate += 1;
-        kart_account.handling += 1;
+        kart_account.acceleration += 25;
+        kart_account.drift_power_consumption_rate += 0.02;
+        kart_account.drift_power_generation_rate += 0.02;
+        kart_account.handling += 10;
 
         Ok(())
     }

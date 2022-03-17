@@ -50,7 +50,7 @@ pub struct KartAccount {
   pub kart_master_edition: Pubkey,
   pub max_speed: u64,
   pub acceleration: u64,
-  pub drift_power_generation_rate: u64,
-  pub drift_power_consumption_rate: u64,
+  pub drift_power_generation_rate: f64,
+  pub drift_power_consumption_rate: f64,
   pub handling: u64,
 }

@@ -14,7 +14,7 @@ staking_gov="DrkYUKUUrdgznKjh6mFmM8dyXaMuhRqgi2F9u9QGxzf5"
 url = "https://anchor.projectserum.com"
 
 [provider]
-cluster = "devnet"
+cluster = "localnet"
 wallet = "/Users/supasinliulaks/.config/solana/devnet.json"
 
 [scripts]
