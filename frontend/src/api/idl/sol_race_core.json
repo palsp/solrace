@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "name": "sol_race_staking",
+  "name": "sol_race_core",
   "instructions": [
     {
       "name": "initialize",
@@ -27,6 +27,11 @@
         },
         {
           "name": "garageCreator",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "kartCreator",
           "isMut": false,
           "isSigner": false
         },
@@ -184,6 +189,62 @@
       ]
     },
     {
+      "name": "initKart",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "poolAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "kartAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "kartMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "kartTokenAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "kartMetadataAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "creatureEdition",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMetadataProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "bump",
+          "type": "u8"
+        }
+      ]
+    },
+    {
       "name": "bond",
       "accounts": [
         {
@@ -203,31 +264,6 @@
         },
         {
           "name": "solrMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "garageMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "garageTokenAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "garageMetadataAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "creatureEdition",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMetadataProgram",
           "isMut": false,
           "isSigner": false
         },
@@ -263,22 +299,79 @@
           "isSigner": false
         },
         {
-          "name": "garageMint",
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "withdraw",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "poolAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "stakingAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolSolr",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userSolr",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "solrMint",
           "isMut": false,
           "isSigner": false
         },
         {
-          "name": "garageTokenAccount",
+          "name": "systemProgram",
           "isMut": false,
           "isSigner": false
         },
         {
-          "name": "garageMetadataAccount",
+          "name": "tokenProgram",
           "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "upgradeKart",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "poolAccount",
+          "isMut": true,
           "isSigner": false
         },
         {
-          "name": "creatureEdition",
+          "name": "kartAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "stakingAccount",
           "isMut": false,
           "isSigner": false
         },
@@ -317,6 +410,10 @@
           },
           {
             "name": "garageCreator",
+            "type": "publicKey"
+          },
+          {
+            "name": "kartCreator",
             "type": "publicKey"
           },
           {
@@ -386,20 +483,76 @@
             "type": "publicKey"
           },
           {
-            "name": "bump",
-            "type": "u8"
+            "name": "garageMasterEdition",
+            "type": "publicKey"
           },
           {
             "name": "isBond",
             "type": "bool"
           },
           {
-            "name": "pendingReward",
-            "type": "u128"
+            "name": "bump",
+            "type": "u8"
           },
           {
             "name": "rewardIndex",
             "type": "f64"
+          },
+          {
+            "name": "pendingReward",
+            "type": "u128"
+          }
+        ]
+      }
+    },
+    {
+      "name": "KartAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "publicKey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "kartMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "kartTokenAccount",
+            "type": "publicKey"
+          },
+          {
+            "name": "kartMetadataAccount",
+            "type": "publicKey"
+          },
+          {
+            "name": "kartMasterEdition",
+            "type": "publicKey"
+          },
+          {
+            "name": "maxSpeed",
+            "type": "u64"
+          },
+          {
+            "name": "acceleration",
+            "type": "u64"
+          },
+          {
+            "name": "driftPowerGenerationRate",
+            "type": "f64"
+          },
+          {
+            "name": "driftPowerConsumptionRate",
+            "type": "f64"
+          },
+          {
+            "name": "handling",
+            "type": "u64"
           }
         ]
       }
@@ -486,6 +639,6 @@
     }
   ],
   "metadata": {
-    "address": "u9vRU6Cb4kogHgVGofQKdSSsrCyhjHKKtQ7Uf7NX498"
+    "address": "4mnaEgh2oejHoHW6dTVNGrAK1ZmMV3SfBQ2mmmaXgFz5"
   }
 }

@@ -1,27 +1,27 @@
-import _ from 'lodash'
-import { PublicKey } from '@solana/web3.js'
-import { Program } from '@project-serum/anchor'
-import { SolRaceCore } from '~/api/solana/types/sol_race_core'
+import _ from "lodash";
+import { PublicKey } from "@solana/web3.js";
+import { Program } from "@project-serum/anchor";
+import { SolRaceCore } from "~/api/solana/types/sol_race_core";
 
 interface KartInfo {
-  owner: PublicKey
-  kartMint: PublicKey
-  kartTokenAccount: PublicKey
-  kartMetadataAccount: PublicKey
-  kartMasterEdition: PublicKey
-  masSpeed: number
-  acceleration: number
-  driftPowerGenerationRate: number
-  driftPowerConsumptionRate: number
-  handling: number
+  owner: PublicKey;
+  kartMint: PublicKey;
+  kartTokenAccount: PublicKey;
+  kartMetadataAccount: PublicKey;
+  kartMasterEdition: PublicKey;
+  masSpeed: number;
+  acceleration: number;
+  driftPowerGenerationRate: number;
+  driftPowerConsumptionRate: number;
+  handling: number;
 }
 
 type FetchKartInfo = {
-  program: Program<SolRaceCore>
-  poolName: string
-  user: PublicKey
-  kartMint: PublicKey
-}
+  program: Program<SolRaceCore>;
+  poolName: string;
+  user: PublicKey;
+  kartMint: PublicKey;
+};
 
 export const fetchKartInfo = async ({
   program,
@@ -31,16 +31,18 @@ export const fetchKartInfo = async ({
 }: FetchKartInfo): Promise<[PublicKey, number, KartInfo | undefined]> => {
   const [kartAccount, kartAccountBump] = await PublicKey.findProgramAddress(
     [
-      Buffer.from('kart_account'),
+      Buffer.from("kart_account"),
       Buffer.from(poolName),
       user.toBuffer(),
       kartMint.toBuffer(),
     ],
-    program.programId,
-  )
+    program.programId
+  );
 
   try {
-    const accountInfo = await program.account.kartAccount.fetch(kartAccount)
+    const accountInfo = await program.account.kartAccount.fetch(kartAccount);
+
+    console.log("fetch kart", accountInfo);
 
     const {
       maxSpeed,
@@ -49,7 +51,7 @@ export const fetchKartInfo = async ({
       driftPowerGenerationRate,
       handling,
       ...cleanKartInfo
-    } = accountInfo
+    } = accountInfo;
 
     return [
       kartAccount,
@@ -58,12 +60,12 @@ export const fetchKartInfo = async ({
         ...cleanKartInfo,
         masSpeed: maxSpeed.toNumber(),
         acceleration: acceleration.toNumber(),
-        driftPowerConsumptionRate: driftPowerConsumptionRate.toNumber(),
-        driftPowerGenerationRate: driftPowerGenerationRate.toNumber(),
+        driftPowerConsumptionRate: driftPowerConsumptionRate,
+        driftPowerGenerationRate: driftPowerGenerationRate,
         handling: handling.toNumber(),
       },
-    ]
+    ];
   } catch (e) {
-    return [kartAccount, kartAccountBump, undefined]
+    return [kartAccount, kartAccountBump, undefined];
   }
-}
+};
