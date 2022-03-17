@@ -38,6 +38,7 @@ const AbilityCard: React.FC<Props> = ({ type }) => {
   const abilityCard = abilities[type as keyof typeof abilities];
   return (
     <WrapperAbilityCard>
+      <h5>Ability - {type?.toUpperCase()}</h5>
       <AppImage src={abilityCard?.url} height="200px" width="200px" />
       <Paragraph>{abilityCard?.description}</Paragraph>
     </WrapperAbilityCard>
@@ -51,7 +52,7 @@ const WrapperAbilityCard = styled.div`
   align-items: center;
   gap: 1rem;
   padding: 1rem 1rem 2rem;
-  min-height: 380px;
+  min-height: 425px;
   /* opacity: 0.8; */
 `;
 

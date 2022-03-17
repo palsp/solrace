@@ -13,7 +13,7 @@ const SneakpeekCards: React.FC<Props> = ({ type }) => {
     return (
       <WrapperCard>
         <TitleDiv>
-          <h2>Explore the Abilities</h2>
+          <h2>Explore the abilities</h2>
         </TitleDiv>
         <WrapperCarousel>
           <Carousel
@@ -51,24 +51,24 @@ const SneakpeekCards: React.FC<Props> = ({ type }) => {
             interval={4500}
           >
             <ModelDiv>
-              <Model3D model="Cassini" height="380px" />
+              <Model3D model="Cassini" height="425px" />
               <ModelH5>ZGMF-X42F Cassini</ModelH5>
             </ModelDiv>
             <ModelDiv>
-              <Model3D model="Apollo" height="380px" />
+              <Model3D model="Apollo" height="425px" />
               <ModelH5>ZGMF-X42F Apollo</ModelH5>
             </ModelDiv>
 
             <ModelDiv>
-              <Model3D model="Ariel" height="380px" />
+              <Model3D model="Ariel" height="425px" />
               <ModelH5>ZGMF-X42F Ariel</ModelH5>
             </ModelDiv>
             <ModelDiv>
-              <Model3D model="Voyager" height="380px" />
+              <Model3D model="Voyager" height="425px" />
               <ModelH5>ZGMF-X42F Voyager</ModelH5>
             </ModelDiv>
             <ModelDiv>
-              <Model3D model="Venera" height="380px" />
+              <Model3D model="Venera" height="425px" />
               <ModelH5>ZGMF-X42F Venera</ModelH5>
             </ModelDiv>
 
