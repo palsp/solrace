@@ -60,26 +60,6 @@ const KartPage = () => {
       <TitleDiv>
         <h3>KART - your karts collection</h3>
       </TitleDiv>
-      {/* <ParagraphDiv>
-        <Paragraph>
-          &nbsp; &nbsp; &nbsp; &nbsp; Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Sed inventore repellendus doloremque quam earum quia
-          magni quo blanditiis vitae doloribus incidunt quasi minus fugiat, sint
-          voluptatem facere deleniti tempore, veritatis assumenda! Eos fugit
-          magni recusandae ipsum nostrum debitis,
-        </Paragraph>
-        <Paragraph>
-          &nbsp; &nbsp; &nbsp; &nbsp;Molestias aliquid accusantium, dolores
-          consequuntur officia soluta placeat, l abore ex ipsam doloremque
-          nostrum et ea rerum animi, omnis esse vel. Quis aspernatur quibusdam
-          maxime velit explicabo aut? Commodi asperiores,
-        </Paragraph>
-        <Paragraph>
-          &nbsp; &nbsp; &nbsp; &nbsp;Molestias aliquid accusantium, dolores
-          consequuntur officia soluta placeat, l abore ex ipsam doloremque
-          nostrum et ea rerum animi, omnis esse.
-        </Paragraph>
-      </ParagraphDiv> */}
       {!connected ? <Paragraph>Please Connect Your Wallet</Paragraph> : ""}
     </InventoryLayout>
   );
@@ -107,18 +87,6 @@ const TitleDiv = styled.div`
   border-radius: 0.5rem;
   gap: 2rem;
   margin-bottom: 1rem;
-`;
-
-const ParagraphDiv = styled.div`
-  background: var(--color-primary-light);
-  width: 100%;
-  padding: 0.5rem;
-  box-shadow: var(--shadow-elevation-medium-primary);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-radius: 0.5rem;
-  gap: 2rem;
 `;
 
 export default KartPage;
