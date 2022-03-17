@@ -6,7 +6,9 @@ const GameDetail = () => {
   return (
     <WrapperGameDetail>
       <WrapperContent>
-        <TitleText>Explore the world where every conflicts...</TitleText>
+        <TitleText>
+          Explore the world where every conflicts can be resolved by racing!
+        </TitleText>
 
         <WrapperFlex>
           <WrapperDescription>
@@ -16,9 +18,7 @@ const GameDetail = () => {
                 all, we have been fighting for as long as we
                 remember"&nbsp;&nbsp;
               </Quote>
-              <QuoteAuthor>
-                <i> —Chairman Richard Prescott.</i>
-              </QuoteAuthor>
+              <QuoteAuthor>—Chairman Richard Prescott.</QuoteAuthor>
               <p>
                 &nbsp;&nbsp;&nbsp;&nbsp;Yet, we all know what happens in the
                 after wars… casualties, damages, endless grief and bereavement.
@@ -89,6 +89,7 @@ const TitleText = styled.h1`
 const Quote = styled.p`
   background: var(--color-secondary);
   color: var(--color-black);
+  font-style: italic;
 `;
 
 const QuoteAuthor = styled.p`
@@ -98,6 +99,7 @@ const QuoteAuthor = styled.p`
   padding-inline: 0.5rem;
   margin-bottom: 1rem;
   color: var(--color-black);
+  font-style: italic;
 `;
 const Star = styled.div`
   position: fixed;

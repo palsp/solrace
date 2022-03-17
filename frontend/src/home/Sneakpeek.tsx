@@ -5,10 +5,10 @@ const Sneakpeek = () => {
   return (
     <WrapperSneakpeek>
       <WrapperContent>
-        <TitleText>Sneak Peek to our game</TitleText>
+        <TitleText>Sneak peek to our game</TitleText>
         <WrapperCards>
-          <SneakpeekCards type="abilities" />
           <SneakpeekCards type="models" />
+          <SneakpeekCards type="abilities" />
         </WrapperCards>
       </WrapperContent>
       <Star>&#10022;</Star>

@@ -40,7 +40,7 @@ const SneakpeekCards: React.FC<Props> = ({ type }) => {
     return (
       <WrapperCard>
         <TitleDiv>
-          <h2>Test drive our karts</h2>
+          <h2>Choose your karts</h2>
         </TitleDiv>
         <WrapperCarousel>
           <Carousel
