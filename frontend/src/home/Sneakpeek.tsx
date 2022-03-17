@@ -5,7 +5,7 @@ const Sneakpeek = () => {
   return (
     <WrapperSneakpeek>
       <WrapperContent>
-        <TitleText>Sneak peek to our game</TitleText>
+        <TitleText>Ace the race with your perfect combinations</TitleText>
         <WrapperCards>
           <SneakpeekCards type="models" />
           <SneakpeekCards type="abilities" />

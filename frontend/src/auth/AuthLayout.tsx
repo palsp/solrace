@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components";
-// import { backButton, backButtonPrimary, backButtonSecondary } from "~/assets";
 import { AppImage } from "~/ui";
 
 interface Props {
@@ -23,7 +22,6 @@ const AuthLayout: React.FC<Props> = ({ children, direction }) => {
           </WrapperIcon>
         </a>
       </Link>
-      {/* &#10023; */}
       <WrapperDecorative>
         <WrapperLogo>
           <AppImage
@@ -64,7 +62,6 @@ const AuthLayout: React.FC<Props> = ({ children, direction }) => {
 const AuthLayoutContainer = styled.div`
   height: 100%;
   display: flex;
-  /* align-items: center; */
   flex-direction: ${(props: Props) => props.direction};
 `;
 
@@ -149,7 +146,6 @@ const Line = styled.div`
   height: 50vh;
   z-index: 1;
   border: 1px solid var(--color-white);
-  /* outline: 1px solid white; */
   border-radius: 50%;
   box-sizing: border-box;
 `;

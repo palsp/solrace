@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import styled from "styled-components";
 import { Button, Model3D } from "~/ui";
@@ -19,7 +20,13 @@ const GamePortal = () => {
                 these garages to earn passive income via a fair share of upgrade
                 fee
               </CardDescription>
-              <Button color="primary">View Garage</Button>
+              <Link href="/garage">
+                <a>
+                  <Button color="primary" width="100%">
+                    View Garage
+                  </Button>
+                </a>
+              </Link>
             </FirstCardContent>
           </WrapperItem>
           <WrapperItem>
@@ -32,7 +39,13 @@ const GamePortal = () => {
                 matters; but the design. A unique 8,888 Genesis Solakarts are
                 ready to onboard all solracers for an immersive race
               </CardDescription>
-              <Button color="primary">Browse solakart</Button>
+              <Link href="/kart">
+                <a>
+                  <Button color="primary" width="100%">
+                    Browse Solakart
+                  </Button>
+                </a>
+              </Link>
             </SecondCardContent>
           </WrapperItem>
           <WrapperItem>
@@ -44,7 +57,14 @@ const GamePortal = () => {
                 the enjoyment from the ride, solracers and garage owners could
                 boost their benefits and earn governace rights via $SOLR staking
               </CardDescription>
-              <Button color="primary"> $SOLR staking</Button>
+              <Link href="/garage">
+                <a>
+                  <Button color="primary" width="100%">
+                    {" "}
+                    $SOLR Staking
+                  </Button>
+                </a>
+              </Link>
             </ThirdCardContent>
           </WrapperItem>
         </WrapperItems>
