@@ -78,7 +78,7 @@ const SneakpeekCards: React.FC<Props> = ({ type }) => {
       </WrapperCard>
     );
   }
-  return "";
+  return <></>;
 };
 const WrapperCard = styled(Column)`
   position: relative;
