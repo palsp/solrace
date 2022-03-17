@@ -9,8 +9,10 @@ import {
 } from "react-feather";
 import Button from "../button";
 import ToggleButtonGroup from "../toggleButtonGroup";
-
-const Filter = () => {
+interface PropsFilter {
+  page: string;
+}
+const Filter: React.FC<PropsFilter> = ({ page }) => {
   return (
     <WrapperFilter>
       <TitleDiv>
@@ -29,14 +31,13 @@ const Filter = () => {
           </Button>
         </ApplyDiv>
       </TitleDiv>
-      <WrapperToggle>
-        <ToggleButtonGroup
-          value1="Kart"
-          value2="Garage"
-          width="180px"
-          color="primary"
-        />
-      </WrapperToggle>
+      {page === "marketplace" ? (
+        <WrapperToggle>
+          <ToggleButtonGroup value1="Kart" value2="Garage" width="180px" />
+        </WrapperToggle>
+      ) : (
+        ""
+      )}
       <WrapperRarity>
         <p>Rarity</p>
         <RarityDiv>

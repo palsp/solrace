@@ -63,7 +63,10 @@ const WrapperButton = styled.div`
   box-shadow: var(--shadow-elevation-high-primary);
   position: relative;
   overflow: hidden;
-
+  transition: background-color 0.75s ease;
+  &:hover {
+    background-color: var(--color-primary);
+  }
   &::before {
     content: "";
     position: absolute;
@@ -112,5 +115,6 @@ const WrapperToggleButtonGroup = styled.div`
   display: flex;
   border-radius: 0.25rem;
   overflow: hidden;
+  margin-top: 0.5rem;
 `;
 export default ToggleButtonGroup;

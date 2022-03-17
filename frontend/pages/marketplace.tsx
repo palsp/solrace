@@ -40,7 +40,7 @@ const MarketplacePage = () => {
   ) : (
     <Skeleton wrapper={CardSkeleton} count={1} />
   );
-  return <InventoryLayout direction="row"></InventoryLayout>;
+  return <InventoryLayout direction="row" page="marketplace"></InventoryLayout>;
 };
 const Main = styled(Row)`
   flex-wrap: wrap;
