@@ -78,6 +78,33 @@ const SneakpeekCards: React.FC<Props> = ({ type }) => {
       </WrapperCard>
     );
   }
+  if (type === "video") {
+    return (
+      <WrapperCard>
+        <TitleDiv>
+          <h2>Explore the abilities</h2>
+        </TitleDiv>
+        <WrapperCarousel>
+          <Carousel
+            infiniteLoop
+            autoPlay
+            emulateTouch
+            // showArrows={false}
+            showStatus={false}
+            showThumbs={false}
+            interval={4500}
+          >
+            <AbilityCard type="hack" />
+            <AbilityCard type="missile" />
+            <AbilityCard type="swap" />
+            <AbilityCard type="berserk" />
+            <AbilityCard type="reinforce" />
+            <AbilityCard type="arcTrap" />
+          </Carousel>
+        </WrapperCarousel>
+      </WrapperCard>
+    );
+  }
   return <></>;
 };
 const WrapperCard = styled(Column)`
