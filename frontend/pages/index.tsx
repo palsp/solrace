@@ -1,7 +1,15 @@
 import React from "react";
 import HorizontalScroll from "react-scroll-horizontal";
 import styled from "styled-components";
-import { Trailer, GameDetail, GamePlay, Roadmap, Team, HomeNav } from "~/home";
+import {
+  Trailer,
+  GameDetail,
+  GamePlay,
+  Roadmap,
+  Team,
+  HomeNav,
+  Sneakpeek,
+} from "~/home";
 
 const home = () => {
   return (
@@ -11,6 +19,7 @@ const home = () => {
       <Trailer />
       <GameDetail />
       <GamePlay />
+      <Sneakpeek />
       <Roadmap />
       <Team />
     </HorizontalScroll>
