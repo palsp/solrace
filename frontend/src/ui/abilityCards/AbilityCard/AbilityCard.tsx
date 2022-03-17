@@ -10,7 +10,7 @@ const AbilityCard = () => {
       </TitleDiv>
       <TextDescription>
         <WrapperAbility>
-          <AppImage src="/swap-v1.png" height="300px" width="300px" />
+          <AppImage src="/swap-v1.png" height="200px" width="200px" />
           <Paragraph>
             Bored from watching your opponents rear? Then let them watch yours
             instead! After a short delay, switch the position of the opponent
@@ -25,14 +25,14 @@ const AbilityCard = () => {
 const WrapperCard = styled(Column)`
   position: relative;
   overflow: hidden;
-  width: clamp(200px, 100%, 550px);
+  width: clamp(200px, 100%, 400px);
   height: 100%;
   background: var(--color-white);
-  box-shadow: var(--shadow-elevation-medium-white);
+  box-shadow: var(--shadow-elevation-medium-secondary);
   /* gap: 1rem; */
   border-radius: 0.5rem;
   &:hover {
-    box-shadow: var(--shadow-elevation-high-secondary);
+    /* box-shadow: var(--shadow-elevation-high-secondary); */
   }
 `;
 const WrapperAbility = styled.div`
