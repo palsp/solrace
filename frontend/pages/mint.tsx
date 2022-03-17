@@ -216,12 +216,7 @@ const MintPage = () => {
                 takes place. Garage owners could earn passive income via a fair
                 share of upgrading fee
               </h4>
-              <Button
-                width="250px"
-                color="secondary"
-                onClick={handleMintGarage}
-                width="50%"
-              >
+              <Button color="secondary" onClick={handleMintGarage} width="50%">
                 Mint Garage
               </Button>
             </WrapperMintGarage>
