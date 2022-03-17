@@ -92,169 +92,177 @@ const Filter: React.FC<PropsFilter> = ({ page }) => {
           </CheckboxDiv>
         </RarityDiv>
       </WrapperRarity>
-      <WrapperAbility>
-        <p>Ability</p>
-        <AbilityDiv>
-          <SmallDescription>
-            Max Speed
-            <IconWrapper size="18px">
-              <ChevronsUp />
-            </IconWrapper>
-          </SmallDescription>
-          <DivCheckbox>
-            <CheckboxDiv>
-              <CheckboxInput type="checkbox" />
-              <CheckboxLabel>
-                <SmallDescription>1-19</SmallDescription>
-              </CheckboxLabel>
-            </CheckboxDiv>
-            <CheckboxDiv>
-              <CheckboxInput type="checkbox" />
-              <CheckboxLabel>
-                <SmallDescription>20-39</SmallDescription>
-              </CheckboxLabel>
-            </CheckboxDiv>
-            <CheckboxDiv>
-              <CheckboxInput type="checkbox" />
-              <CheckboxLabel>
-                <SmallDescription>40-59</SmallDescription>
-              </CheckboxLabel>
-            </CheckboxDiv>
-            <CheckboxDiv>
-              <CheckboxInput type="checkbox" />
-              <CheckboxLabel>
-                <SmallDescription>60-79</SmallDescription>
-              </CheckboxLabel>
-            </CheckboxDiv>
-            <CheckboxDiv>
-              <CheckboxInput type="checkbox" />
-              <CheckboxLabel>
-                <SmallDescription>80-99</SmallDescription>
-              </CheckboxLabel>
-            </CheckboxDiv>
-          </DivCheckbox>
-          <div>
+      {page === "garage" ? (
+        ""
+      ) : (
+        <WrapperAbility>
+          <p>Ability</p>
+          <AbilityDiv>
             <SmallDescription>
-              Acceleration
+              Max Speed
               <IconWrapper size="18px">
-                <Wind />
+                <ChevronsUp />
               </IconWrapper>
             </SmallDescription>
             <DivCheckbox>
               <CheckboxDiv>
                 <CheckboxInput type="checkbox" />
                 <CheckboxLabel>
-                  <SmallDescription>1-19</SmallDescription>
+                  <SmallDescription>200-208</SmallDescription>
                 </CheckboxLabel>
               </CheckboxDiv>
               <CheckboxDiv>
                 <CheckboxInput type="checkbox" />
                 <CheckboxLabel>
-                  <SmallDescription>20-39</SmallDescription>
+                  <SmallDescription>209-217</SmallDescription>
                 </CheckboxLabel>
               </CheckboxDiv>
               <CheckboxDiv>
                 <CheckboxInput type="checkbox" />
                 <CheckboxLabel>
-                  <SmallDescription>40-59</SmallDescription>
+                  <SmallDescription>218-225</SmallDescription>
                 </CheckboxLabel>
               </CheckboxDiv>
               <CheckboxDiv>
                 <CheckboxInput type="checkbox" />
                 <CheckboxLabel>
-                  <SmallDescription>60-79</SmallDescription>
-                </CheckboxLabel>
-              </CheckboxDiv>
-              <CheckboxDiv>
-                <CheckboxInput type="checkbox" />
-                <CheckboxLabel>
-                  <SmallDescription>80-99</SmallDescription>
-                </CheckboxLabel>
-              </CheckboxDiv>{" "}
-            </DivCheckbox>
-          </div>
-          <div>
-            <SmallDescription>
-              Drift
-              <IconWrapper size="18px">
-                <CloudDrizzle />
-              </IconWrapper>
-            </SmallDescription>
-            <DivCheckbox>
-              <CheckboxDiv>
-                <CheckboxInput type="checkbox" />
-                <CheckboxLabel>
-                  <SmallDescription>1-19</SmallDescription>
-                </CheckboxLabel>
-              </CheckboxDiv>
-              <CheckboxDiv>
-                <CheckboxInput type="checkbox" />
-                <CheckboxLabel>
-                  <SmallDescription>20-39</SmallDescription>
-                </CheckboxLabel>
-              </CheckboxDiv>
-              <CheckboxDiv>
-                <CheckboxInput type="checkbox" />
-                <CheckboxLabel>
-                  <SmallDescription>40-59</SmallDescription>
-                </CheckboxLabel>
-              </CheckboxDiv>
-              <CheckboxDiv>
-                <CheckboxInput type="checkbox" />
-                <CheckboxLabel>
-                  <SmallDescription>60-79</SmallDescription>
-                </CheckboxLabel>
-              </CheckboxDiv>
-              <CheckboxDiv>
-                <CheckboxInput type="checkbox" />
-                <CheckboxLabel>
-                  <SmallDescription>80-99</SmallDescription>
+                  <SmallDescription>226+</SmallDescription>
                 </CheckboxLabel>
               </CheckboxDiv>
             </DivCheckbox>
-          </div>
-          <div>
-            <SmallDescription>
-              Handling
-              <IconWrapper size="18px">
-                <Feather />
-              </IconWrapper>
-            </SmallDescription>
-            <DivCheckbox>
-              <CheckboxDiv>
-                <CheckboxInput type="checkbox" />
-                <CheckboxLabel>
-                  <SmallDescription>1-19</SmallDescription>
-                </CheckboxLabel>
-              </CheckboxDiv>
-              <CheckboxDiv>
-                <CheckboxInput type="checkbox" />
-                <CheckboxLabel>
-                  <SmallDescription>20-39</SmallDescription>
-                </CheckboxLabel>
-              </CheckboxDiv>
-              <CheckboxDiv>
-                <CheckboxInput type="checkbox" />
-                <CheckboxLabel>
-                  <SmallDescription>40-59</SmallDescription>
-                </CheckboxLabel>
-              </CheckboxDiv>
-              <CheckboxDiv>
-                <CheckboxInput type="checkbox" />
-                <CheckboxLabel>
-                  <SmallDescription>60-79</SmallDescription>
-                </CheckboxLabel>
-              </CheckboxDiv>
-              <CheckboxDiv>
-                <CheckboxInput type="checkbox" />
-                <CheckboxLabel>
-                  <SmallDescription>80-99</SmallDescription>
-                </CheckboxLabel>
-              </CheckboxDiv>
-            </DivCheckbox>
-          </div>
-        </AbilityDiv>
-      </WrapperAbility>
+            <div>
+              <SmallDescription>
+                Acceleration
+                <IconWrapper size="18px">
+                  <Wind />
+                </IconWrapper>
+              </SmallDescription>
+              <DivCheckbox>
+                <CheckboxDiv>
+                  <CheckboxInput type="checkbox" />
+                  <CheckboxLabel>
+                    <SmallDescription>3000-3200</SmallDescription>
+                  </CheckboxLabel>
+                </CheckboxDiv>
+                <CheckboxDiv>
+                  <CheckboxInput type="checkbox" />
+                  <CheckboxLabel>
+                    <SmallDescription>3301-3600</SmallDescription>
+                  </CheckboxLabel>
+                </CheckboxDiv>
+                <CheckboxDiv>
+                  <CheckboxInput type="checkbox" />
+                  <CheckboxLabel>
+                    <SmallDescription>3601-3900</SmallDescription>
+                  </CheckboxLabel>
+                </CheckboxDiv>
+                <CheckboxDiv>
+                  <CheckboxInput type="checkbox" />
+                  <CheckboxLabel>
+                    <SmallDescription>3900+</SmallDescription>
+                  </CheckboxLabel>
+                </CheckboxDiv>
+              </DivCheckbox>
+            </div>
+            <div>
+              <SmallDescription>
+                Drift Power Generation Rate
+                <IconWrapper size="18px">
+                  <CloudDrizzle />
+                </IconWrapper>
+              </SmallDescription>
+              <DivCheckbox>
+                <CheckboxDiv>
+                  <CheckboxInput type="checkbox" />
+                  <CheckboxLabel>
+                    <SmallDescription>1-19</SmallDescription>
+                  </CheckboxLabel>
+                </CheckboxDiv>
+                <CheckboxDiv>
+                  <CheckboxInput type="checkbox" />
+                  <CheckboxLabel>
+                    <SmallDescription>20-39</SmallDescription>
+                  </CheckboxLabel>
+                </CheckboxDiv>
+                <CheckboxDiv>
+                  <CheckboxInput type="checkbox" />
+                  <CheckboxLabel>
+                    <SmallDescription>40-59</SmallDescription>
+                  </CheckboxLabel>
+                </CheckboxDiv>
+                <CheckboxDiv>
+                  <CheckboxInput type="checkbox" />
+                  <CheckboxLabel>
+                    <SmallDescription>60-79</SmallDescription>
+                  </CheckboxLabel>
+                </CheckboxDiv>
+                <CheckboxDiv>
+                  <CheckboxInput type="checkbox" />
+                  <CheckboxLabel>
+                    <SmallDescription>80-99</SmallDescription>
+                  </CheckboxLabel>
+                </CheckboxDiv>
+              </DivCheckbox>
+            </div>
+            <div>
+              <SmallDescription>
+                Drift Power Consumption Rate
+                <IconWrapper size="18px">
+                  <CloudDrizzle />
+                </IconWrapper>
+              </SmallDescription>
+              <DivCheckbox>
+                <CheckboxDiv>
+                  <CheckboxInput type="checkbox" />
+                  <CheckboxLabel>
+                    <SmallDescription>0.2-0.3</SmallDescription>
+                  </CheckboxLabel>
+                </CheckboxDiv>
+                <CheckboxDiv>
+                  <CheckboxInput type="checkbox" />
+                  <CheckboxLabel>
+                    <SmallDescription>0.31-0.4</SmallDescription>
+                  </CheckboxLabel>
+                </CheckboxDiv>
+                <CheckboxDiv>
+                  <CheckboxInput type="checkbox" />
+                  <CheckboxLabel>
+                    <SmallDescription>0.4+</SmallDescription>
+                  </CheckboxLabel>
+                </CheckboxDiv>
+              </DivCheckbox>
+            </div>
+            <div>
+              <SmallDescription>
+                Handling
+                <IconWrapper size="18px">
+                  <Feather />
+                </IconWrapper>
+              </SmallDescription>
+              <DivCheckbox>
+                <CheckboxDiv>
+                  <CheckboxInput type="checkbox" />
+                  <CheckboxLabel>
+                    <SmallDescription>600-700</SmallDescription>
+                  </CheckboxLabel>
+                </CheckboxDiv>
+                <CheckboxDiv>
+                  <CheckboxInput type="checkbox" />
+                  <CheckboxLabel>
+                    <SmallDescription>701-800</SmallDescription>
+                  </CheckboxLabel>
+                </CheckboxDiv>
+                <CheckboxDiv>
+                  <CheckboxInput type="checkbox" />
+                  <CheckboxLabel>
+                    <SmallDescription>801+</SmallDescription>
+                  </CheckboxLabel>
+                </CheckboxDiv>
+              </DivCheckbox>
+            </div>
+          </AbilityDiv>
+        </WrapperAbility>
+      )}
     </WrapperFilter>
   );
 };
@@ -307,7 +315,7 @@ const RarityDiv = styled.div`
   gap: 0 2rem;
   flex-wrap: wrap;
   & > ${CheckboxDiv} {
-    min-width: 40px;
+    min-width: 50px;
   }
 `;
 
