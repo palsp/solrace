@@ -87,12 +87,11 @@ const KartDetail = () => {
     isInitialize,
     bump,
     isLoading: loadingKart,
-  } = useKartAccount(POOL_NAME, kartMint || KART_CREATOR);
+  } = useKartAccount(POOL_NAME, kartMint!);
 
   const handleGarageChange: React.ChangeEventHandler<HTMLSelectElement> = (
     e
   ) => {
-    console.log(e.target.value);
     if (e.target.value !== "") {
       setSelectedGarage(new PublicKey(e.target.value));
     } else {
@@ -116,6 +115,7 @@ const KartDetail = () => {
 
     setLoading(true);
 
+    console.log(isInitialize, publicAddress?.toBase58());
     try {
       // we can ensure all ! field is exist by checking is loading
       const tx = await upgradeKart({
