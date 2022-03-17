@@ -12,4 +12,4 @@ export { default as Model3D } from "./model3d";
 export { default as Select } from "./select";
 export { default as Input } from "./input";
 export { default as Filter } from "./filter";
-export { default as AbilityCards } from "./abilityCards";
+export { default as SneakpeekCards } from "./sneakpeekCards";

@@ -8,9 +8,16 @@ import CarModel3D from "./carModel3D/CarModel3D";
 import Ground from "./ground/Ground";
 interface Props {
   height?: string;
+  marginBlock?: string;
+  borderRadius?: string;
   model: string;
 }
-const Model3D: React.FC<Props> = ({ height, model }) => {
+const Model3D: React.FC<Props> = ({
+  height,
+  model,
+  marginBlock,
+  borderRadius,
+}) => {
   return (
     <Canvas
       camera={{
@@ -21,9 +28,9 @@ const Model3D: React.FC<Props> = ({ height, model }) => {
       style={{
         background: "var(--background-gradient-2)",
         height: `${height ? height : "calc(100vh - 7rem)"}`,
-        marginBlock: "1rem",
+        marginBlock: `${marginBlock ? marginBlock : ""}`,
         border: "0.1rem solid var(--color-primary-dark)",
-        borderRadius: "0.5rem",
+        borderRadius: `${borderRadius ? borderRadius : "0 0 0.5rem 0.5rem"}`,
         boxShadow: "var(--shadow-elevation-medium-primary)",
       }}
     >

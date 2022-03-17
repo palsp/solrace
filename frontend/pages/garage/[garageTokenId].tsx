@@ -21,7 +21,9 @@ const GarageDetail = () => {
   return (
     <TokenDetailLayout
       direction="row-reverse"
-      token3D={<Model3D model="Apollo" />}
+      token3D={
+        <Model3D model="Apollo" marginBlock="1rem" borderRadius="0.5rem" />
+      }
     >
       <TitleDiv>
         <Title fontStyle="italic">ZX-00 Pegasus</Title>

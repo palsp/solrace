@@ -1,13 +1,14 @@
 import React from "react";
 import styled from "styled-components";
-import AbilityCards from "~/ui/abilityCards";
+import SneakpeekCards from "~/ui/sneakpeekCards";
 const Sneakpeek = () => {
   return (
     <WrapperSneakpeek>
       <WrapperContent>
         <TitleText>Sneak Peek to our game</TitleText>
         <WrapperCards>
-          <AbilityCards />
+          <SneakpeekCards type="abilities" />
+          <SneakpeekCards type="models" />
         </WrapperCards>
       </WrapperContent>
       <Star>&#10022;</Star>
@@ -27,7 +28,7 @@ const WrapperContent = styled.div`
 const WrapperCards = styled.div`
   display: flex;
   justify-content: center;
-  gap: 3rem;
+  gap: 8rem;
   width: 90%;
   margin: 4.5rem auto;
 `;
