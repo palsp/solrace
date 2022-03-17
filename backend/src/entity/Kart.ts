@@ -27,14 +27,17 @@ export class Kart extends BaseEntity {
   @Column()
   acceleration!: number
 
-  @Column({ name: 'drift_power_generation_rate' })
+  @Column({ name: 'drift_power_generation_rate', type: 'float' })
   driftPowerGenerationRate!: number
 
-  @Column({ name: 'drift_power_consumption_rate' })
+  @Column({ name: 'drift_power_consumption_rate', type: 'float' })
   driftPowerConsumptionRate!: number
 
   @Column()
   handling!: number
+
+  @Column()
+  model!: string
 
   @Column({ nullable: true })
   owner?: string

@@ -11,10 +11,10 @@ import { createMint, createTokenAccount, getTokenAccount } from './utils'
 const SUPPORT_ENV = ['devnet', 'testnet']
 
 const garageCreator = new PublicKey(
-  'AkuCDDdZhWi6GyuPLeVi1FVtajZ6Bbyj9hJEgDYRcfku',
+  'BrdAi9KnJrMMjjRAMBr4QLft2PpEyR3L6wp2ruceovhS',
 )
 const kartCreator = new PublicKey(
-  'GKouHKo891dGKvrWGi3Ld81ESaRrcUWpgqzhf5N4UZJH',
+  '7uGWKJKxKvxE1Hx5G4L9WMoUJyXcYjoqtpRg27kErVZk',
 )
 
 export const initialize = async () => {
@@ -41,7 +41,7 @@ export const initialize = async () => {
   console.log(`solr mint address : ${solrMint.toBase58()}`)
   // 20k per 7 days => 1m per years
   // default to 6 decimals places
-  const solrAmount = new anchor.BN(1000000000000)
+  const solrAmount = new anchor.BN(1_000_000_000)
 
   const poolAuthority = await createTokenAccount(
     provider,

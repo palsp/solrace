@@ -11,7 +11,8 @@
     "db:migration:generate": "yarn typeorm migration:generate",
     "db:migration:run": "yarn typeorm migration:run",
     "db:migration:revert": "yarn typeorm migration:revert",
-    "create-metadata": "ts-node -r tsconfig-paths/register ./scripts/create-metadata"
+    "create-kart": "ts-node -r tsconfig-paths/register ./scripts/create-kart-metadata",
+    "create-garage": "ts-node -r tsconfig-paths/register ./scripts/create-garage-metadata"
   },
   "dependencies": {
     "@hapi/boom": "^9.1.4",

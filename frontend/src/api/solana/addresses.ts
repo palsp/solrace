@@ -17,11 +17,11 @@ export const CANDY_MACHINE_PROGRAM = new PublicKey(
 );
 
 export const SOL_RACE_CORE_PROGRAM_ID = new PublicKey(
-  "4tcD8pgdaSn4yzWQybKuKzSXpW3uoDugFY6owNUhhexd"
+  "4mnaEgh2oejHoHW6dTVNGrAK1ZmMV3SfBQ2mmmaXgFz5"
 );
 
 export const SOLR_MINT_ADDRESS = new PublicKey(
-  "HQ7PKsKfk9EPtmHercrWs9ymUZqut7tS1e9ktpb8qd5n"
+  "A6WUoUfowpexNFBEXSCqWwPD1QmF8UxPv4XBiakEC4x9"
 );
 
 export const GARAGE_CREATOR = new PublicKey(
