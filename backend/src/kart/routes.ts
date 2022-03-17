@@ -123,8 +123,14 @@ router.get('/', async (req, res, next) => {
       if (upgradedKart) {
         attributes.maxSpeed += upgradedKart.maxSpeed.toNumber()
         attributes.acceleration += upgradedKart.acceleration.toNumber()
-        attributes.driftPowerGenerationRate += upgradedKart.driftPowerGenerationRate.toNumber()
-        attributes.driftPowerConsumptionRate += upgradedKart.driftPowerConsumptionRate.toNumber()
+        attributes.driftPowerGenerationRate +=
+          upgradedKart.driftPowerGenerationRate
+
+        attributes.driftPowerConsumptionRate -=
+          upgradedKart.driftPowerConsumptionRate
+        if (attributes.driftPowerConsumptionRate < 0.2) {
+          attributes.driftPowerConsumptionRate = 0.2
+        }
         attributes.handling += upgradedKart.handling.toNumber()
       }
 
