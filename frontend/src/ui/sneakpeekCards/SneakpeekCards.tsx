@@ -210,7 +210,7 @@ const VideoDiv = styled.div`
   overflow: hidden;
   box-shadow: var(--shadow-elevation-medium-black);
   min-height: 425px;
-  padding: 0rem 0rem 2rem;
+  padding: 1rem 0rem 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
