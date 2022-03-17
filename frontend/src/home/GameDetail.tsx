@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { AppImage } from "~/ui";
 
 const GameDetail = () => {
   return (
@@ -120,10 +119,7 @@ const TitleDescription = styled.div`
   border-radius: 0.5rem;
   box-shadow: var(--shadow-elevation-low-black);
 `;
-const Video = styled.video`
-  /* min-width: 100%;
-  min-height: 100%; */
-`;
+const Video = styled.video``;
 const VideoDiv = styled.div`
   background: transparent;
   border-radius: 0.5rem;

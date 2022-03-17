@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import styled from "styled-components";
 import { PublicKey } from "@solana/web3.js";
 import { toast } from "react-toastify";
@@ -27,12 +27,12 @@ import { useGarageStaker } from "~/garage-staker/hooks";
 import { NFTAccount } from "~/nft/hooks";
 import { useKartAccount } from "~/hooks/useAccount";
 import useSWR from "swr";
+import { KART_CREATOR } from "~/api/solana/addresses";
 
 const KartDetail = () => {
   const { query, isReady } = useRouter();
   // let kartMint: any, kartTokenAccount: any;
   // if (router?.query?.nft) {
-  let nft: any, kartMint: any, kartTokenAccount: any;
 
   const { data: kart } = useSWR(`/kart/${query.kartTokenId}`);
   const [modelUrl, setModelUrl] = useState<string>();
@@ -47,10 +47,23 @@ const KartDetail = () => {
     setModelUrl(urlParts.join("/"));
   }, [kart]);
 
-  useEffect(() => {
-    kartMint = query.mint;
-    kartTokenAccount = query.tokenAccountAddress;
-  }, [isReady]);
+  const { mint, tokenAccountAddress } = query;
+
+  const kartMint = useMemo(() => {
+    if (!mint) {
+      return undefined;
+    }
+
+    return new PublicKey(mint);
+  }, [mint]);
+
+  const kartTokenAccount = useMemo(() => {
+    if (!tokenAccountAddress) {
+      return undefined;
+    }
+
+    return new PublicKey(tokenAccountAddress);
+  }, [tokenAccountAddress]);
 
   useEffect(() => {
     fetchModelUrl();
@@ -74,11 +87,12 @@ const KartDetail = () => {
     isInitialize,
     bump,
     isLoading: loadingKart,
-  } = useKartAccount(POOL_NAME, kartMint);
+  } = useKartAccount(POOL_NAME, kartMint || KART_CREATOR);
 
   const handleGarageChange: React.ChangeEventHandler<HTMLSelectElement> = (
     e
   ) => {
+    console.log(e.target.value);
     if (e.target.value !== "") {
       setSelectedGarage(new PublicKey(e.target.value));
     } else {
@@ -94,12 +108,14 @@ const KartDetail = () => {
       });
       return;
     }
-    if (loadingKart || !poolAccount) {
+
+    if (loadingKart || !poolAccount || !kartMint || !kartTokenAccount) {
       // not finish loading
       return;
     }
 
     setLoading(true);
+
     try {
       // we can ensure all ! field is exist by checking is loading
       const tx = await upgradeKart({
@@ -120,6 +136,7 @@ const KartDetail = () => {
         await revalidateKart();
       }
     } catch (e) {
+      console.log(e);
       toastAPIError(e, "Fail! please try again");
     } finally {
       setLoading(false);
@@ -189,12 +206,14 @@ const KartDetail = () => {
           onChange={handleGarageChange}
           value={selectedGarage?.toString()}
         >
+          <option key="1234" value="select garage"></option>
           {stakers.map((staker) => (
             <option
               key={staker.publicAddress.toBase58()}
               value={staker.publicAddress.toBase58()}
             >
-              {shortenIfAddress(staker.publicAddress.toBase58())} (100%)
+              {shortenIfAddress(staker.publicAddress.toBase58())} (
+              {(50 + Math.random() * 20).toFixed(2)} %)
             </option>
           ))}
         </Select>

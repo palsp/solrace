@@ -8,7 +8,9 @@ const Trailer = () => {
   return (
     <WrapperTrailer>
       <SocialDiv>
-        <AppImage src="/twitter.png" width="34px" height="34px" />
+        <a href="https://twitter.com/projectsolrace" target="_blank">
+          <AppImage src="/twitter.png" width="34px" height="34px" />
+        </a>
         <AppImage src="/discord.png" width="34px" height="34px" />
         <AppImage src="/telegram.png" width="34px" height="34px" />
         <AppImage src="/medium.png" width="34px" height="34px" />
@@ -17,14 +19,15 @@ const Trailer = () => {
         <Video src="/solrace-map-s-com.mp4" controls autoPlay></Video>
       </VideoWrapper>
       <TitleDiv>
-        <TitleText>Drop your kart !</TitleText>
+        <TitleText>SolRace</TitleText>
         <TitleDescription>
-          Ace the race with your speed in a world where everything conflicts
-          decided by racing, not wars..
+          The first Drive to Earn (D2E) game build on Solana Blockchain. Aiming
+          to bring the seamless integration of unique racing experience and
+          blockchain mechanics. #D2EGAME
         </TitleDescription>
         <Link href="/app">
           <a>
-            <Button color="primary" width="200px" padding="0.75rem">
+            <Button color="primary" width="250px" padding="0.75rem">
               Start
             </Button>
           </a>
@@ -57,7 +60,7 @@ const TitleDiv = styled.div`
   bottom: 0;
   right: 0;
   width: 800px;
-  height: 300px;
+  height: 400px;
   margin: auto;
   color: white;
   display: flex;
@@ -69,9 +72,11 @@ const TitleDiv = styled.div`
 
 const TitleText = styled.h1`
   font-weight: 400;
-  font-size: 3rem;
+  font-size: 4rem;
 `;
-const TitleDescription = styled.p``;
+const TitleDescription = styled.p`
+  font-size: 1.2rem;
+`;
 
 const SocialDiv = styled.div`
   position: absolute;

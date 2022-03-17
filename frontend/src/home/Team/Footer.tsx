@@ -17,8 +17,14 @@ const Footer = () => {
           </Link>
         </FooterLogo>
         <FooterNav>
-          <AppLink href="/home">Home</AppLink>
-          <AppLink href="/litepaper">Litepaper</AppLink>
+          <AppLink href="/">Home</AppLink>
+          <AppLink
+            href="https://drive.google.com/file/d/10FxikBiqguOP5KLIWHHQmvIPby_8Bt5m/view"
+            textColor="black"
+            target="_blank"
+          >
+            Litepaper
+          </AppLink>
           <AppLink href="/marketplace">Marketplace</AppLink>
           <AppLink href="/Roadmap">Roadmap</AppLink>
           <AppLink href="/Team">Team</AppLink>
@@ -26,7 +32,9 @@ const Footer = () => {
         <FooterCommunity>
           <p>Community</p>
           <SocialDiv>
-            <AppImage src="/twitter-black.png" width="34px" height="34px" />
+            <a href="https://twitter.com/projectsolrace" target="_blank">
+              <AppImage src="/twitter-black.png" width="34px" height="34px" />
+            </a>
             <AppImage src="/discord-black.png" width="34px" height="34px" />
             <AppImage src="/telegram-black.png" width="34px" height="34px" />
             <AppImage src="/medium-black.png" width="34px" height="34px" />
@@ -59,11 +67,6 @@ const WrapperFooter = styled.div`
   position: absolute;
   bottom: 0;
   width: 100%;
-  /* height: 45%; */
-  /* color: white; */
-  /* margin-top: 6.5rem; */
-  /* height: 100px; */
-  /* width: 100vw; */
   color: black;
 `;
 const WrapperFlex = styled.div`
