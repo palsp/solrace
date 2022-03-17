@@ -277,7 +277,7 @@ const WrapperMintGarage = styled.div`
 `;
 
 const TitleDiv = styled.div`
-  background: var(--color-primary-light);
+  background: var(--color-primary-dark);
   width: fit-content;
   padding: 1rem;
   box-shadow: var(--shadow-elevation-medium-primary);

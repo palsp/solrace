@@ -40,7 +40,13 @@ const MarketplacePage = () => {
   ) : (
     <Skeleton wrapper={CardSkeleton} count={1} />
   );
-  return <InventoryLayout direction="row" page="marketplace"></InventoryLayout>;
+  return (
+    <InventoryLayout direction="row" page="marketplace">
+      <TitleDiv>
+        <h3>MARKETPLACE</h3>
+      </TitleDiv>
+    </InventoryLayout>
+  );
 };
 const Main = styled(Row)`
   flex-wrap: wrap;
@@ -50,5 +56,16 @@ const Main = styled(Row)`
     margin-bottom: 0.5rem;
   }
 `;
-
+const TitleDiv = styled.div`
+  background: var(--color-primary-light);
+  width: 100%;
+  padding: 0.5rem;
+  box-shadow: var(--shadow-elevation-medium-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 0.5rem;
+  gap: 2rem;
+  margin-bottom: 1rem;
+`;
 export default MarketplacePage;

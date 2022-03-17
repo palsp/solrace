@@ -59,7 +59,7 @@ const GaragePage = () => {
   );
 
   return (
-    <InventoryLayout direction="row-reverse" cards={cards}>
+    <InventoryLayout direction="row-reverse" cards={cards} page="garage">
       <TitleDiv>
         <h3>GARAGE - stake your karts and earn passive rewards</h3>
       </TitleDiv>
