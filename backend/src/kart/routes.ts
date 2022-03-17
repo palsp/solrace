@@ -35,7 +35,7 @@ router.get('/:tokenId', async (req, res, next) => {
 
     const { token: __, ...attributes } = nftMetadata
     const { files, creators, collection, ...metadata } = token
-    console.log(attributes)
+
     const parsedAttributes: MetadataAttribute[] = Object.entries(
       _.omit(attributes, ['id', 'owner', 'mintTokenAccount', 'tokenAccount']),
     ).reduce((prev, curr) => {
