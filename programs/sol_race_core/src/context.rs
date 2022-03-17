@@ -32,7 +32,7 @@ pub struct Initialize<'info> {
     pub solr_mint : Box<Account<'info, Mint>>,
     #[account(init,
         token::mint = solr_mint,
-        token::authority = pool_authority,
+        token::authority = pool_account,
         seeds = [pool_name.as_bytes(), b"pool_solr"],
         bump,
         payer = staking_authority)]
@@ -226,13 +226,53 @@ pub struct Unbond<'info> {
 
 
 #[derive(Accounts)]
+pub struct Withdraw<'info> {
+    pub user: Signer<'info>,
+    #[account(mut,
+      seeds = [
+        pool_account.pool_name.as_ref().trim_ascii_whitespace(),  
+        "pool_account".as_ref()
+      ],
+      bump = pool_account.bumps.pool_account,
+      has_one = solr_mint
+    )]
+    pub pool_account: Account<'info, PoolAccount>,
+    #[account(mut,
+      seeds = [
+        b"staking_account",
+        pool_account.pool_name.as_ref().trim_ascii_whitespace(),
+        user.key().as_ref(),
+        staking_account.garage_mint.as_ref()
+      ],
+      bump = staking_account.bump,
+      constraint = staking_account.is_bond == true @ ErrorCode::NotStake 
+    )]
+    pub staking_account: Account<'info, StakingAccount>,
+
+    #[account(mut,
+      seeds = [pool_account.pool_name.as_ref().trim_ascii_whitespace(), b"pool_solr"],
+      bump = pool_account.bumps.pool_solr,
+     )]
+    pub pool_solr : Account<'info, TokenAccount>,
+    #[account(mut,
+      constraint = user_solr.owner == user.key(),
+      constraint = user_solr.mint == solr_mint.key()
+    )]
+    pub user_solr: Account<'info, TokenAccount>,
+    #[account(constraint = solr_mint.key() == pool_account.solr_mint)]
+    pub solr_mint : Box<Account<'info, Mint>>,
+    pub system_program : Program<'info, System>,
+    pub token_program: Program<'info, Token>
+}
+
+#[derive(Accounts)]
 pub struct UpgradeKart<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
     #[account(mut,
       seeds = [
         pool_account.pool_name.as_ref().trim_ascii_whitespace(),
-        "pool_account".as_ref()
+        b"pool_account"
       ],
       bump = pool_account.bumps.pool_account,
     )]

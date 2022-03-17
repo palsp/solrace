@@ -1,6 +1,5 @@
 import express, { ErrorRequestHandler } from 'express'
 import cors from 'cors'
-import path from 'path'
 
 import metadata from 'metadata/routes'
 import auth from 'auth/routes'
@@ -8,6 +7,7 @@ import user from 'user/routes'
 import wallet from 'wallet/routes'
 import nft from 'nft/routes'
 import kart from 'kart/routes'
+import garage from 'garage/routes'
 import health from 'health/routes'
 import { getErrorAndStatusCode } from 'error'
 
@@ -33,6 +33,7 @@ routes.use('/user', user)
 routes.use('/wallet', wallet)
 routes.use('/nft', nft)
 routes.use('/kart', kart)
+routes.use('/garage', garage)
 
 app.use(routes)
 

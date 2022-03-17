@@ -88,8 +88,8 @@ yarn --cwd js install
 ts-node  js/packages/cli/src/candy-machine-v2-cli.ts upload \
     -e devnet \
     -k ~/.config/solana/devnet.json \
-    -cp config-kart.json \
-    -c kart \
+    -cp config-garage.json \
+    -c garage \
     ./assets
 ```
 
@@ -107,10 +107,10 @@ in `scripts/metaplex`
 
 mint one token
 ```
-ts-node  --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts mint_one_token \
+ts-node   js/packages/cli/src/candy-machine-v2-cli.ts mint_one_token \
     -e devnet \
     -k  ~/.config/solana/devnet.json \
-    -c garage
+    -c kart
 ```
 
 mint multiple token
