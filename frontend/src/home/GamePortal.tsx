@@ -9,7 +9,7 @@ const GamePortal = () => {
         <TitleText>Are you ready for an all-out race?</TitleText>
         <WrapperItems>
           <WrapperItem>
-            <p>Own the garage</p>
+            <h3>Own the garage</h3>
             {/* <Model3D height="65vh" model="Apollo" /> */}
             <FirstCardContent>
               <p>
@@ -23,7 +23,7 @@ const GamePortal = () => {
             </FirstCardContent>
           </WrapperItem>
           <WrapperItem>
-            <p>Get your Solakart</p>
+            <h3>Get your Solakart</h3>
             {/* <Model3D height="65vh" model="Cassini" /> */}
 
             <SecondCardContent>
@@ -36,7 +36,7 @@ const GamePortal = () => {
             </SecondCardContent>
           </WrapperItem>
           <WrapperItem>
-            <p>Explore the Solravese</p>
+            <h3>Explore the Solravese</h3>
             {/* <Model3D height="65vh" model="Ariel" /> */}
             <ThirdCardContent>
               <p>
@@ -59,6 +59,7 @@ const WrapperGamePortal = styled.div`
   background: url("/game-2.png");
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center;
   color: var(--color-white);
 `;
 const WrapperContent = styled.div`
@@ -67,7 +68,7 @@ const WrapperContent = styled.div`
 const WrapperItems = styled.div`
   display: flex;
   justify-content: center;
-  gap: 3rem;
+  gap: 5rem;
   width: 90%;
   margin: 4.5rem auto;
   /* margin-bottom: 5rem; */
@@ -83,6 +84,7 @@ const WrapperItem = styled.div`
 
 const CardContent = styled.div`
   position: relative;
+  overflow: hidden;
   width: 300px;
   height: 400px;
   padding: 1rem;
@@ -92,25 +94,75 @@ const CardContent = styled.div`
   flex-direction: column;
   justify-content: space-between;
   font-size: 0.9rem;
+  /* gap: 0.5rem; */
   text-align: center;
   color: var(--color-white);
-  box-shadow: var(--shadow-elevation-medium-black);
-  & > :first-child {
-    margin-top: 0.5rem;
+  box-shadow: var(--shadow-elevation-medium-secondary);
+  transition: box-shadow 1s ease;
+  &:hover {
+    box-shadow: var(--shadow-elevation-high-secondary);
   }
 `;
 
 const FirstCardContent = styled(CardContent)`
-  background: url("/game-1.png");
-  background-position: center;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+    background: url("/game-1.png");
+    background-position: center;
+  }
+  & > p {
+    position: relative;
+    padding: 0.25rem 0.15rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-elevation-low-black);
+  }
 `;
 const SecondCardContent = styled(CardContent)`
-  background: url("/game-2.png");
-  background-position: center;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+    background: url("/game-2.png");
+    background-position: center;
+  }
+  & > p {
+    position: relative;
+    padding: 0.25rem 0.15rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-elevation-low-black);
+  }
 `;
 const ThirdCardContent = styled(CardContent)`
-  background: url("/game-3.png");
-  background-position: center;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+    background: url("/game-3.png");
+    background-position: center;
+  }
+  & > p {
+    position: relative;
+    padding: 0.25rem 0.15rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-elevation-low-black);
+  }
 `;
 
 const TitleText = styled.h1`
