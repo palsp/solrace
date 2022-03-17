@@ -8,6 +8,8 @@ import {
   Feather,
 } from "react-feather";
 import Button from "../button";
+import ToggleButtonGroup from "../toggleButtonGroup";
+
 const Filter = () => {
   return (
     <WrapperFilter>
@@ -27,6 +29,14 @@ const Filter = () => {
           </Button>
         </ApplyDiv>
       </TitleDiv>
+      <WrapperToggle>
+        <ToggleButtonGroup
+          value1="Kart"
+          value2="Garage"
+          width="180px"
+          color="primary"
+        />
+      </WrapperToggle>
       <WrapperRarity>
         <p>Rarity</p>
         <RarityDiv>
@@ -258,6 +268,11 @@ const WrapperRarity = styled.div`
   margin: 1rem 0;
 `;
 const WrapperAbility = styled.div`
+  margin: 1rem 0;
+`;
+const WrapperToggle = styled.div`
+  display: flex;
+  justify-content: center;
   margin: 1rem 0;
 `;
 const WrapperIcon = styled.div`
