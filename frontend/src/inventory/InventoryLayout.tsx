@@ -26,7 +26,7 @@ const InventoryLayoutContainer = styled.div`
   height: 100%;
   display: flex;
   flex-direction: ${(props: Props) => props.direction};
-  gap: 2rem;
+  gap: 1rem;
 `;
 
 const WrapperDescription = styled.div`

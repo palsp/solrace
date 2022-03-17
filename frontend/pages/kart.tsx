@@ -66,13 +66,11 @@ const KartPage = () => {
 };
 
 const Main = styled(Row)`
-  justify-content: center;
   flex-wrap: wrap;
-  gap: 2rem;
+  gap: 0.75rem;
   align-items: space-between;
-  align-content: space-between;
   & > * {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
 `;
 
