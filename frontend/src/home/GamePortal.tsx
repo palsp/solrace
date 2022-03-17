@@ -12,13 +12,13 @@ const GamePortal = () => {
             <h3>Own the garage</h3>
             {/* <Model3D height="65vh" model="Apollo" /> */}
             <FirstCardContent>
-              <p>
+              <CardDescription>
                 An exclusive 888 plots of garage plays an important role in
                 Solrace economic chain as a solid kart performance boost could
                 destine solracers’ success in the ride. Become the owner of
                 these garages to earn passive income via a fair share of upgrade
                 fee
-              </p>
+              </CardDescription>
               <Button color="primary">View Garage</Button>
             </FirstCardContent>
           </WrapperItem>
@@ -27,11 +27,11 @@ const GamePortal = () => {
             {/* <Model3D height="65vh" model="Cassini" /> */}
 
             <SecondCardContent>
-              <p>
+              <CardDescription>
                 It is not only about the speed or raw heat of competition that
                 matters; but the design. A unique 8,888 Genesis Solakarts are
                 ready to onboard all solracers for an immersive race
-              </p>
+              </CardDescription>
               <Button color="primary">Browse solakart</Button>
             </SecondCardContent>
           </WrapperItem>
@@ -39,11 +39,11 @@ const GamePortal = () => {
             <h3>Explore the Solravese</h3>
             {/* <Model3D height="65vh" model="Ariel" /> */}
             <ThirdCardContent>
-              <p>
+              <CardDescription>
                 There are so much more in the Solraverse... Not limited to only
                 the enjoyment from the ride, solracers and garage owners could
                 boost their benefits and earn governace rights via $SOLR staking
-              </p>
+              </CardDescription>
               <Button color="primary"> $SOLR staking</Button>
             </ThirdCardContent>
           </WrapperItem>
@@ -71,7 +71,6 @@ const WrapperItems = styled.div`
   gap: 5rem;
   width: 90%;
   margin: 4.5rem auto;
-  /* margin-bottom: 5rem; */
 `;
 const WrapperItem = styled.div`
   display: flex;
@@ -94,7 +93,6 @@ const CardContent = styled.div`
   flex-direction: column;
   justify-content: space-between;
   font-size: 0.9rem;
-  /* gap: 0.5rem; */
   text-align: center;
   color: var(--color-white);
   box-shadow: var(--shadow-elevation-medium-secondary);
@@ -102,9 +100,6 @@ const CardContent = styled.div`
   &:hover {
     box-shadow: var(--shadow-elevation-high-secondary);
   }
-`;
-
-const FirstCardContent = styled(CardContent)`
   &::before {
     content: "";
     position: absolute;
@@ -113,55 +108,32 @@ const FirstCardContent = styled(CardContent)`
     width: 100%;
     height: 100%;
     opacity: 0.8;
+  }
+`;
+
+const CardDescription = styled.p`
+  position: relative;
+  padding: 0.25rem 0.15rem;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-elevation-low-black);
+`;
+const FirstCardContent = styled(CardContent)`
+  &::before {
     background: url("/game-1.png");
     background-position: center;
-  }
-  & > p {
-    position: relative;
-    padding: 0.25rem 0.15rem;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 0.5rem;
-    box-shadow: var(--shadow-elevation-low-black);
   }
 `;
 const SecondCardContent = styled(CardContent)`
   &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.8;
     background: url("/game-2.png");
     background-position: center;
-  }
-  & > p {
-    position: relative;
-    padding: 0.25rem 0.15rem;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 0.5rem;
-    box-shadow: var(--shadow-elevation-low-black);
   }
 `;
 const ThirdCardContent = styled(CardContent)`
   &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.8;
     background: url("/game-3.png");
     background-position: center;
-  }
-  & > p {
-    position: relative;
-    padding: 0.25rem 0.15rem;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 0.5rem;
-    box-shadow: var(--shadow-elevation-low-black);
   }
 `;
 
