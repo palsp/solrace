@@ -11,10 +11,12 @@ interface Props {
   marginBlock?: string;
   borderRadius?: string;
   model: string;
+  modelUrl?: string;
 }
 const Model3D: React.FC<Props> = ({
   height,
   model,
+  modelUrl,
   marginBlock,
   borderRadius,
 }) => {
@@ -43,7 +45,7 @@ const Model3D: React.FC<Props> = ({
         />
         <ambientLight />
         <pointLight position={[10, 10, 10]} />
-        <CarModel3D model={model} />
+        <CarModel3D model={model} modelUrl={modelUrl} />
         <Ground
           mirror={0.99}
           blur={[500, 100]}

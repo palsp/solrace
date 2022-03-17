@@ -1,9 +1,13 @@
 import styled from "styled-components";
 import { AppImage, Paragraph } from "~/ui";
 import Column from "../column";
+import Skeleton from "react-loading-skeleton";
+import { CardSkeleton } from "~/ui/card";
 
 interface Props {
   type: string;
+  name?: string;
+  image?: string;
 }
 
 const cardType = {
@@ -27,15 +31,20 @@ const cardType = {
   },
 };
 
-const Card: React.FC<Props> = ({ type, children }) => {
+const Card: React.FC<Props> = ({ type, children, image, name }) => {
   let card = cardType[type as keyof typeof cardType];
+
   return (
     <WrapperCard>
       <WrapperCardContent>
-        <AppImage src={card.img} height="300px" width="300px" />
+        {image ? (
+          <AppImage src={image} width="300px" height="300px"></AppImage>
+        ) : (
+          <Skeleton wrapper={CardSkeleton} count={1} />
+        )}
         <WrapperDescription>
           <TextDescription>
-            <Paragraph>Model: {card.description.model}</Paragraph>
+            {name && <Paragraph> {name}</Paragraph>}
             <Paragraph>Rarity: {card.description.rarity}</Paragraph>
           </TextDescription>
           <PriceDescription>

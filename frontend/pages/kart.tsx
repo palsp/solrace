@@ -1,18 +1,9 @@
-import { toast } from "react-toastify";
-import AppLayout from "~/app/AppLayout";
-import { useAllNFT, useNFT } from "~/nft/hooks";
-import { POOL_NAME } from "~/api/solana/constants";
+import { useNFT } from "~/nft/hooks";
 import styled from "styled-components";
 
-import { useWorkspace } from "~/workspace/hooks";
-import { mint } from "~/mint/services";
-import Title from "~/ui/title/Title";
-import Button from "~/ui/button/Button";
 import { Paragraph, Row } from "~/ui";
-import { usePoolAccount } from "~/hooks/useAccount";
 import KartCard from "~/kart/KartCard";
 import { useWallet } from "@solana/wallet-adapter-react";
-import ConnectWalletButton from "~/wallet/ConnectWalletButton";
 import { usePool } from "~/pool/hooks";
 import Link from "next/link";
 import InventoryLayout from "~/inventory";
@@ -23,7 +14,6 @@ import { useMemo } from "react";
 import { KART_COLLECTION_NAME } from "~/kart/constants";
 
 const KartPage = () => {
-  const { provider, wallet } = useWorkspace();
   const { connected } = useWallet();
 
   // const { nfts, revalidate: revalidateNFTs } = useAllNFT(wallet?.publicKey);
@@ -31,7 +21,7 @@ const KartPage = () => {
   const karts = useMemo(() => {
     return getNFTOfCollection(KART_COLLECTION_NAME);
   }, [getNFTOfCollection]);
-  console.log("karts", karts);
+
   const { poolInfo } = usePool();
   let cards = poolInfo ? (
     <Main>
@@ -39,7 +29,7 @@ const KartPage = () => {
         <Link
           key={kart.tokenAccountAddress}
           href={{
-            pathname: `/kart/${kart.tokenAccountAddress}`,
+            pathname: `/kart/${kart.data.name.split("#")[1]}`,
             query: {
               mint: kart.mint.toString(),
               tokenAccountAddress: kart.tokenAccountAddress,

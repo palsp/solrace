@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { PublicKey } from "@solana/web3.js";
 import { toast } from "react-toastify";
@@ -26,6 +26,7 @@ import Button from "~/ui/button/Button";
 import { useGarageStaker } from "~/garage-staker/hooks";
 import { NFTAccount } from "~/nft/hooks";
 import { useKartAccount } from "~/hooks/useAccount";
+import useSWR from "swr";
 
 const KartDetail = () => {
   const { query, isReady } = useRouter();
@@ -33,12 +34,27 @@ const KartDetail = () => {
   // if (router?.query?.nft) {
   let nft: any, kartMint: any, kartTokenAccount: any;
 
+  const { data: kart } = useSWR(`/kart/${query.kartTokenId}`);
+  const [modelUrl, setModelUrl] = useState<string>();
+
+  const fetchModelUrl = useCallback(async () => {
+    if (!kart) return;
+
+    const urlParts = kart.image.split("/");
+
+    urlParts[urlParts.length - 1] = "Cassini.gltf";
+
+    setModelUrl(urlParts.join("/"));
+  }, [kart]);
+
   useEffect(() => {
     kartMint = query.mint;
     kartTokenAccount = query.tokenAccountAddress;
-    console.log("kartMint", kartMint);
-    console.log("kartTokenAccount", kartTokenAccount);
   }, [isReady]);
+
+  useEffect(() => {
+    fetchModelUrl();
+  }, [fetchModelUrl]);
   // let nft: any = JSON.parse(router.query.nft);
   // console.log("nft", nft);
   // ({ mint: kartMint, tokenAccountAddress: kartTokenAccount } = nft);
@@ -109,15 +125,21 @@ const KartDetail = () => {
       setLoading(false);
     }
   };
+  console.log(kart);
   return (
     <TokenDetailLayout
       direction="row"
       token3D={
-        <Model3D model="Cassini" marginBlock="1rem" borderRadius="0.5rem" />
+        <Model3D
+          model="Cassini"
+          modelUrl={modelUrl}
+          marginBlock="1rem"
+          borderRadius="0.5rem"
+        />
       }
     >
       <TitleDiv>
-        <Title fontStyle="italic">ZGMF-X42F Cassini</Title>
+        <Title fontStyle="italic">{kart?.name}</Title>
         <ParagraphItalic>ID: {tokenId}</ParagraphItalic>
         <ParagraphItalic>
           Owner: BuxRVqu8YndicdXV4KLXBR451GUug63BkgaVEgwpDwYA
