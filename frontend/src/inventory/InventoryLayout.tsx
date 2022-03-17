@@ -6,15 +6,21 @@ import { Filter } from "~/ui";
 interface Props {
   direction: string;
   cards?: JSX.Element | undefined;
+  page: string;
 }
-const InventoryLayout: React.FC<Props> = ({ direction, children, cards }) => {
+const InventoryLayout: React.FC<Props> = ({
+  direction,
+  page,
+  children,
+  cards,
+}) => {
   return (
     <AppLayout>
-      <InventoryLayoutContainer direction={direction}>
+      <InventoryLayoutContainer direction={direction} page={page}>
         <WrapperDescription>
           {children}
 
-          <Filter />
+          <Filter page={page} />
         </WrapperDescription>
         <WrapperCards>{cards}</WrapperCards>
       </InventoryLayoutContainer>

@@ -52,27 +52,54 @@ const SneakpeekCards: React.FC<Props> = ({ type }) => {
           >
             <ModelDiv>
               <Model3D model="Cassini" height="425px" />
-              <ModelH5>ZGMF-X42F Cassini</ModelH5>
+              <ModelH5>ZGNF-X42F Takahashi</ModelH5>
             </ModelDiv>
             <ModelDiv>
               <Model3D model="Apollo" height="425px" />
-              <ModelH5>ZGMF-X42F Apollo</ModelH5>
+              <ModelH5>ARB-01 Nakajima</ModelH5>
             </ModelDiv>
 
             <ModelDiv>
               <Model3D model="Ariel" height="425px" />
-              <ModelH5>ZGMF-X42F Ariel</ModelH5>
+              <ModelH5>RX-39 Suzuki</ModelH5>
             </ModelDiv>
             <ModelDiv>
               <Model3D model="Voyager" height="425px" />
-              <ModelH5>ZGMF-X42F Voyager</ModelH5>
+              <ModelH5>GMW-00X Sato</ModelH5>
             </ModelDiv>
             <ModelDiv>
               <Model3D model="Venera" height="425px" />
-              <ModelH5>ZGMF-X42F Venera</ModelH5>
+              <ModelH5>ASW-K-78F Hasemi</ModelH5>
             </ModelDiv>
 
             {/* <Model3D model="Ariel" height="380px" /> */}
+          </Carousel>
+        </WrapperCarousel>
+      </WrapperCard>
+    );
+  }
+  if (type === "video") {
+    return (
+      <WrapperCard>
+        <TitleDiv>
+          <h2>Explore the abilities</h2>
+        </TitleDiv>
+        <WrapperCarousel>
+          <Carousel
+            infiniteLoop
+            autoPlay
+            emulateTouch
+            // showArrows={false}
+            showStatus={false}
+            showThumbs={false}
+            interval={4500}
+          >
+            <AbilityCard type="hack" />
+            <AbilityCard type="missile" />
+            <AbilityCard type="swap" />
+            <AbilityCard type="berserk" />
+            <AbilityCard type="reinforce" />
+            <AbilityCard type="arcTrap" />
           </Carousel>
         </WrapperCarousel>
       </WrapperCard>

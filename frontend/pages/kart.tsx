@@ -31,7 +31,7 @@ const KartPage = () => {
   const karts = useMemo(() => {
     return getNFTOfCollection(KART_COLLECTION_NAME);
   }, [getNFTOfCollection]);
-
+  console.log("karts", karts);
   const { poolInfo } = usePool();
   let cards = poolInfo ? (
     <Main>
@@ -56,7 +56,7 @@ const KartPage = () => {
     <Skeleton wrapper={CardSkeleton} count={1} />
   );
   return (
-    <InventoryLayout direction="row" cards={cards}>
+    <InventoryLayout direction="row" cards={cards} page="kart">
       <TitleDiv>
         <h3>KART - your karts collection</h3>
       </TitleDiv>

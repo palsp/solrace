@@ -1,1 +1,1 @@
-export const KART_COLLECTION_NAME = 'sol-kart'
+export const KART_COLLECTION_NAME = "SOL KART";

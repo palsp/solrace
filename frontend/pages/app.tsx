@@ -49,7 +49,7 @@ const Home = () => {
         </NAV> */}
       <WrapperIndex>
         <VideoWrapper>
-          <Video src="/solrace-map.mp4" controls></Video>
+          <Video src="/solrace-race-s-com.mp4" controls></Video>
         </VideoWrapper>
         {/* <Button width="300px" color="primary">
             Mint
@@ -70,14 +70,14 @@ const VideoWrapper = styled.div`
   /* margin-left: -3rem; */
   position: absolute;
   top: 0;
-  left: 0;
+  left: -25px;
   max-height: 100%;
   width: 100vw;
   /* height: 90%; */
 `;
 const Video = styled.video`
-  min-width: 100vw;
-  min-height: 100%;
+  min-width: 111.5vw;
+  /* min-height: 100%; */
 `;
 
 export default Home;

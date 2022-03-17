@@ -2,7 +2,6 @@ import styled from "styled-components";
 import AppNav from "~/app/AppNav";
 
 const AppLayoutContainer = styled.div`
-  padding-top: 3rem;
   padding: 5rem 3rem 1rem;
   height: 100%;
   background-image: var(--background-gradient-1);

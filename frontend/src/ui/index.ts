@@ -13,3 +13,4 @@ export { default as Select } from "./select";
 export { default as Input } from "./input";
 export { default as Filter } from "./filter";
 export { default as SneakpeekCards } from "./sneakpeekCards";
+export { default as ToggleButtonGroup } from "./toggleButtonGroup";

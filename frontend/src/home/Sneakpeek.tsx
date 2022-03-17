@@ -9,6 +9,7 @@ const Sneakpeek = () => {
         <WrapperCards>
           <SneakpeekCards type="models" />
           <SneakpeekCards type="abilities" />
+          <SneakpeekCards type="video" />
         </WrapperCards>
       </WrapperContent>
       <Star>&#10022;</Star>
@@ -28,7 +29,7 @@ const WrapperContent = styled.div`
 const WrapperCards = styled.div`
   display: flex;
   justify-content: center;
-  gap: 8rem;
+  gap: 5rem;
   width: 90%;
   margin: 4.5rem auto;
 `;

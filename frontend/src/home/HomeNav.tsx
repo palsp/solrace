@@ -20,7 +20,7 @@ const HomeNav = () => {
             style={{ cursor: "pointer", marginBottom: "0.5rem" }}
           />
         </Link>
-        <AppLink href="/home" textColor="white">
+        <AppLink href="/" textColor="white">
           Home
         </AppLink>
         <AppLink href="/litepaper" textColor="white">
@@ -29,7 +29,7 @@ const HomeNav = () => {
         <AppLink href="/marketplace" textColor="white">
           Marketplace
         </AppLink>
-        <AppLink href="/marketplace" textColor="white">
+        <AppLink href="/mint" textColor="white">
           Buy GARAGE
         </AppLink>
 

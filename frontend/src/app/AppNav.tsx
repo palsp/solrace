@@ -22,9 +22,9 @@ const AppNav = () => {
           />
         </Link>
         <AppLink href="/mint">MINT</AppLink>
-
         <AppLink href="/garage">GARAGE</AppLink>
         <AppLink href="/kart">KART</AppLink>
+        <AppLink href="/marketplace">MARKETPLACE</AppLink>
 
         {!user ? (
           <div>
@@ -57,7 +57,7 @@ const UserSection = styled(Row)`
   width: 100%;
   justify-content: space-evenly;
   align-items: center;
-  gap: 5rem;
+  gap: 3rem;
 `;
 
 const NavContainer = styled.div`
