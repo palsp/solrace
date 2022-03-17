@@ -1,1 +1,1 @@
-export const GARAGE_COLLECTION_NAME = 'sol-land'
+export const GARAGE_COLLECTION_NAME = "SOL GARAGE";
