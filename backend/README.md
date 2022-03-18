@@ -1,14 +1,10 @@
 # @solana-hack-nft/backend
 
 
-set env 
-```
-DB_NAME=solana_hack_nft_dev
-JWT_SECRET=asdf
-JWT_EXPIRES_IN=1d
-```
+create `.env` and set the environment variables. Follow the `.env.example` for more details
 
-copy generated asset to `assets` folder ( image and json file)
+
+copy generated asset to `assets` folder ( only json file)
 
 create `collection.json` in `assets` folder. look like this
 ```json
@@ -24,9 +20,14 @@ docker compose up -d
 yarn db:migration:run
 ```
 
-generate metadata 
+generate kart metadata
 ```
-yarn create-metadata -s <FIRST_TOKEN_ID> -e <LAST_TOKEN_ID>
+yarn create-kart -s <FIRST_TOKEN_ID> -e <LAST_TOKEN_ID> -url <S3_URL>
+```
+
+generate garage metadata
+```
+yarn create-garage -s <FIRST_TOKEN_ID> -e <LAST_TOKEN_ID> -url <S3_URL>
 ```
 
 start development server
