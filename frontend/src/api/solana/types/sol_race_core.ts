@@ -263,6 +263,11 @@ export type SolRaceCore = {
           "isSigner": false
         },
         {
+          "name": "garageTokenAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "solrMint",
           "isMut": false,
           "isSigner": false
@@ -291,6 +296,11 @@ export type SolRaceCore = {
         {
           "name": "stakingAccount",
           "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "garageTokenAccount",
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -335,6 +345,11 @@ export type SolRaceCore = {
           "isSigner": false
         },
         {
+          "name": "garageTokenAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "solrMint",
           "isMut": false,
           "isSigner": false
@@ -372,6 +387,11 @@ export type SolRaceCore = {
         },
         {
           "name": "stakingAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "kartTokenAccount",
           "isMut": false,
           "isSigner": false
         },
@@ -467,15 +487,7 @@ export type SolRaceCore = {
         "kind": "struct",
         "fields": [
           {
-            "name": "staker",
-            "type": "publicKey"
-          },
-          {
             "name": "garageMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "garageTokenAccount",
             "type": "publicKey"
           },
           {
@@ -511,19 +523,11 @@ export type SolRaceCore = {
         "kind": "struct",
         "fields": [
           {
-            "name": "owner",
-            "type": "publicKey"
-          },
-          {
             "name": "bump",
             "type": "u8"
           },
           {
             "name": "kartMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "kartTokenAccount",
             "type": "publicKey"
           },
           {
@@ -905,6 +909,11 @@ export const IDL: SolRaceCore = {
           "isSigner": false
         },
         {
+          "name": "garageTokenAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "solrMint",
           "isMut": false,
           "isSigner": false
@@ -933,6 +942,11 @@ export const IDL: SolRaceCore = {
         {
           "name": "stakingAccount",
           "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "garageTokenAccount",
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -977,6 +991,11 @@ export const IDL: SolRaceCore = {
           "isSigner": false
         },
         {
+          "name": "garageTokenAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "solrMint",
           "isMut": false,
           "isSigner": false
@@ -1014,6 +1033,11 @@ export const IDL: SolRaceCore = {
         },
         {
           "name": "stakingAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "kartTokenAccount",
           "isMut": false,
           "isSigner": false
         },
@@ -1109,15 +1133,7 @@ export const IDL: SolRaceCore = {
         "kind": "struct",
         "fields": [
           {
-            "name": "staker",
-            "type": "publicKey"
-          },
-          {
             "name": "garageMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "garageTokenAccount",
             "type": "publicKey"
           },
           {
@@ -1153,19 +1169,11 @@ export const IDL: SolRaceCore = {
         "kind": "struct",
         "fields": [
           {
-            "name": "owner",
-            "type": "publicKey"
-          },
-          {
             "name": "bump",
             "type": "u8"
           },
           {
             "name": "kartMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "kartTokenAccount",
             "type": "publicKey"
           },
           {

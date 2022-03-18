@@ -1249,20 +1249,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "staking_gov"
-version = "0.1.0"
-dependencies = [
- "anchor-lang",
- "anchor-spl",
- "arrayref",
- "mpl-token-metadata",
- "solana-gateway",
- "solana-program",
- "spl-associated-token-account",
- "spl-token",
-]
-
-[[package]]
 name = "subtle"
 version = "2.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"

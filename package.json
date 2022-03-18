@@ -1,8 +1,16 @@
 {
+    "name": "solrace",
+    "private": true,
+    "workspaces" : {
+        "packages": [
+            "frontend",
+            "backend"
+        ]
+    },
     "scripts": {
         "test": "anchor test --skip-local-validator --skip-build --skip-deploy --skip-lint",
         "test:redeploy": "anchor test --skip-local-validator  --skip-lint",
-        "build": "anchor build -p sol_race_core --skip-lint",
+        "build": "anchor build -p sol_race_core --skip-lint && anchor run copy_types_frontend && anchor run copy_types_backend && anchor run copy_types_cli",
         "deploy": "anchor deploy -p sol_race_core"
     },
     "dependencies": {

@@ -1,8 +1,8 @@
 {
-  "name": "@solana-hack-nft/backend",
+  "name": "@solrace/backend",
   "version": "1.0.0",
-  "main": "index.js",
   "license": "MIT",
+  "private": true,
   "scripts": {
     "dev": "NODE_ENV=development ts-node-dev --respawn --transpile-only -r tsconfig-paths/register ./src/index",
     "test": "NODE_ENV=test jest --verbose --run-in-band",

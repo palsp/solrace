@@ -1,6 +1,6 @@
-export type SolRaceCore = {
+export type StakingGov = {
   "version": "0.1.0",
-  "name": "sol_race_core",
+  "name": "staking_gov",
   "instructions": [
     {
       "name": "initialize",
@@ -23,16 +23,6 @@ export type SolRaceCore = {
         {
           "name": "poolAuthority",
           "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "garageCreator",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "kartCreator",
-          "isMut": false,
           "isSigner": false
         },
         {
@@ -161,77 +151,6 @@ export type SolRaceCore = {
           "isSigner": false
         },
         {
-          "name": "garageMetadataAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "creatureEdition",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMetadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "bump",
-          "type": "u8"
-        }
-      ]
-    },
-    {
-      "name": "initKart",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "poolAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "kartAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "kartMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "kartTokenAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "kartMetadataAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "creatureEdition",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMetadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -263,12 +182,17 @@ export type SolRaceCore = {
           "isSigner": false
         },
         {
-          "name": "garageTokenAccount",
+          "name": "solrMint",
           "isMut": false,
           "isSigner": false
         },
         {
-          "name": "solrMint",
+          "name": "garageMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "garageTokenAccount",
           "isMut": false,
           "isSigner": false
         },
@@ -299,104 +223,17 @@ export type SolRaceCore = {
           "isSigner": false
         },
         {
-          "name": "garageTokenAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "solrMint",
           "isMut": false,
           "isSigner": false
         },
         {
-          "name": "systemProgram",
+          "name": "garageMint",
           "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "withdraw",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "poolAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "stakingAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "poolSolr",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userSolr",
-          "isMut": true,
           "isSigner": false
         },
         {
           "name": "garageTokenAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "solrMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "upgradeKart",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "poolAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "kartAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "stakingAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "kartTokenAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMetadataProgram",
           "isMut": false,
           "isSigner": false
         },
@@ -430,10 +267,6 @@ export type SolRaceCore = {
           },
           {
             "name": "garageCreator",
-            "type": "publicKey"
-          },
-          {
-            "name": "kartCreator",
             "type": "publicKey"
           },
           {
@@ -487,7 +320,15 @@ export type SolRaceCore = {
         "kind": "struct",
         "fields": [
           {
+            "name": "staker",
+            "type": "publicKey"
+          },
+          {
             "name": "garageMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "garageTokenAccount",
             "type": "publicKey"
           },
           {
@@ -495,68 +336,20 @@ export type SolRaceCore = {
             "type": "publicKey"
           },
           {
-            "name": "garageMasterEdition",
-            "type": "publicKey"
+            "name": "bump",
+            "type": "u8"
           },
           {
             "name": "isBond",
             "type": "bool"
           },
           {
-            "name": "bump",
-            "type": "u8"
+            "name": "pendingReward",
+            "type": "u128"
           },
           {
             "name": "rewardIndex",
             "type": "f64"
-          },
-          {
-            "name": "pendingReward",
-            "type": "u128"
-          }
-        ]
-      }
-    },
-    {
-      "name": "kartAccount",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "bump",
-            "type": "u8"
-          },
-          {
-            "name": "kartMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "kartMetadataAccount",
-            "type": "publicKey"
-          },
-          {
-            "name": "kartMasterEdition",
-            "type": "publicKey"
-          },
-          {
-            "name": "maxSpeed",
-            "type": "u64"
-          },
-          {
-            "name": "acceleration",
-            "type": "u64"
-          },
-          {
-            "name": "driftPowerGenerationRate",
-            "type": "f64"
-          },
-          {
-            "name": "driftPowerConsumptionRate",
-            "type": "f64"
-          },
-          {
-            "name": "handling",
-            "type": "u64"
           }
         ]
       }
@@ -644,9 +437,9 @@ export type SolRaceCore = {
   ]
 };
 
-export const IDL: SolRaceCore = {
+export const IDL: StakingGov = {
   "version": "0.1.0",
-  "name": "sol_race_core",
+  "name": "staking_gov",
   "instructions": [
     {
       "name": "initialize",
@@ -669,16 +462,6 @@ export const IDL: SolRaceCore = {
         {
           "name": "poolAuthority",
           "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "garageCreator",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "kartCreator",
-          "isMut": false,
           "isSigner": false
         },
         {
@@ -807,77 +590,6 @@ export const IDL: SolRaceCore = {
           "isSigner": false
         },
         {
-          "name": "garageMetadataAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "creatureEdition",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMetadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "bump",
-          "type": "u8"
-        }
-      ]
-    },
-    {
-      "name": "initKart",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "poolAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "kartAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "kartMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "kartTokenAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "kartMetadataAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "creatureEdition",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMetadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -909,12 +621,17 @@ export const IDL: SolRaceCore = {
           "isSigner": false
         },
         {
-          "name": "garageTokenAccount",
+          "name": "solrMint",
           "isMut": false,
           "isSigner": false
         },
         {
-          "name": "solrMint",
+          "name": "garageMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "garageTokenAccount",
           "isMut": false,
           "isSigner": false
         },
@@ -945,104 +662,17 @@ export const IDL: SolRaceCore = {
           "isSigner": false
         },
         {
-          "name": "garageTokenAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "solrMint",
           "isMut": false,
           "isSigner": false
         },
         {
-          "name": "systemProgram",
+          "name": "garageMint",
           "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "withdraw",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "poolAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "stakingAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "poolSolr",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userSolr",
-          "isMut": true,
           "isSigner": false
         },
         {
           "name": "garageTokenAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "solrMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "upgradeKart",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "poolAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "kartAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "stakingAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "kartTokenAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMetadataProgram",
           "isMut": false,
           "isSigner": false
         },
@@ -1076,10 +706,6 @@ export const IDL: SolRaceCore = {
           },
           {
             "name": "garageCreator",
-            "type": "publicKey"
-          },
-          {
-            "name": "kartCreator",
             "type": "publicKey"
           },
           {
@@ -1133,7 +759,15 @@ export const IDL: SolRaceCore = {
         "kind": "struct",
         "fields": [
           {
+            "name": "staker",
+            "type": "publicKey"
+          },
+          {
             "name": "garageMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "garageTokenAccount",
             "type": "publicKey"
           },
           {
@@ -1141,68 +775,20 @@ export const IDL: SolRaceCore = {
             "type": "publicKey"
           },
           {
-            "name": "garageMasterEdition",
-            "type": "publicKey"
+            "name": "bump",
+            "type": "u8"
           },
           {
             "name": "isBond",
             "type": "bool"
           },
           {
-            "name": "bump",
-            "type": "u8"
+            "name": "pendingReward",
+            "type": "u128"
           },
           {
             "name": "rewardIndex",
             "type": "f64"
-          },
-          {
-            "name": "pendingReward",
-            "type": "u128"
-          }
-        ]
-      }
-    },
-    {
-      "name": "kartAccount",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "bump",
-            "type": "u8"
-          },
-          {
-            "name": "kartMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "kartMetadataAccount",
-            "type": "publicKey"
-          },
-          {
-            "name": "kartMasterEdition",
-            "type": "publicKey"
-          },
-          {
-            "name": "maxSpeed",
-            "type": "u64"
-          },
-          {
-            "name": "acceleration",
-            "type": "u64"
-          },
-          {
-            "name": "driftPowerGenerationRate",
-            "type": "f64"
-          },
-          {
-            "name": "driftPowerConsumptionRate",
-            "type": "f64"
-          },
-          {
-            "name": "handling",
-            "type": "u64"
           }
         ]
       }
