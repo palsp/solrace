@@ -1,4 +1,5 @@
 import { NFTMetaData } from 'entity/NFTMetadata'
+import _ from 'lodash'
 import {
   BaseEntity,
   Column,
@@ -42,4 +43,29 @@ export class Garage extends BaseEntity {
   })
   @JoinColumn()
   token!: NFTMetaData
+
+  json(): MetadataResponse {
+    const { token, ...attributes } = this
+    const { files, creators, collection, ...metadata } = token
+
+    const initial: MetadataAttribute[] = []
+    const parsedAttributes: MetadataAttribute[] = Object.entries(
+      _.omit(attributes, ['id', 'owner', 'mintTokenAccount', 'tokenAccount']),
+    ).reduce((prev, curr) => {
+      prev.push({
+        trait_type: curr[0],
+        value: curr[1],
+      })
+      return prev
+    }, initial)
+
+    return {
+      ...metadata,
+      attributes: parsedAttributes,
+      properties: {
+        files,
+        creators,
+      },
+    }
+  }
 }

@@ -43,7 +43,7 @@ const getRawKartMetadataOfOwnerByMint = async (
   const karts: RawKartsByMint = {}
 
   const nftAccounts = await getParsedNFTAccountByOwner(ownerPubkey)
-  for (const { mint, tokenAccountAddress } of nftAccounts) {
+  for (const { mint } of nftAccounts) {
     const metadataPubkey = await getMetadata(mint)
 
     const rawMetadata = await connection.getAccountInfo(metadataPubkey)
@@ -188,7 +188,6 @@ export const getKartOfOwner = async (
   if (kartNames.length === 0) return []
 
   const karts = await getKartsIn(kartNames)
-  updateKartOwner(karts, rawKartsMetadataByMint, publicAddress)
 
   const kartByName: { [key: string]: Kart } = {}
   karts.forEach((kart) => {
@@ -198,8 +197,8 @@ export const getKartOfOwner = async (
   const results: MetadataResponse[] = []
   for (const mint in rawKartsMetadataByMint) {
     const rawKart = rawKartsMetadataByMint[mint]
-    const upgradedKart = await getUpgradedKart(mint)
     let kart = kartByName[rawKart.data.name]
+    const upgradedKart = await getUpgradedKart(mint)
 
     if (upgradedKart) kart = combineKart(kart, upgradedKart)
     results.push(kart.json())
