@@ -97,8 +97,3 @@ Garage's staker will also earn upgrading fee no matters the upgrade is success o
 2. upgrade (kart)
 
 - racers can upgrade their nft aka kart to enhance their in games attributes e.g. max speed, acceleration etc. 
-
-
-
-
-
