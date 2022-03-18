@@ -147,3 +147,15 @@ ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts show \
     -k ~/.config/solana/devnet.json \
     -c example
 ```
+
+### game code and deployed game
+
+the code and game can be downloaded from the google drive link here:
+https://drive.google.com/drive/folders/16On1ksGkRvLx1HPzvb9onXWU-oL0zL5I?usp=sharing
+
+`WindowsNoEditor.rar` is a fully deployed game, you can extract and run the game on the application file.
+`GameFile.rar` is a unreal project file that can be opened via Unreal Engine Project File (.uproject)
+
+The project file is built in Unreal Engine 4 version 4.26, containing multiple Unreal Engine Asset Files (.uasset). If you want to fully see all the game component's in detail, please download the engine from the here:
+https://www.unrealengine.com/en-US/download
+
