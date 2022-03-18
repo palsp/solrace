@@ -87,7 +87,6 @@ pub mod sol_race_core {
         staking_account.is_bond = false;
         staking_account.bump = bump;
         staking_account.garage_mint = ctx.accounts.garage_mint.key();
-        staking_account.garage_token_account = ctx.accounts.garage_token_account.key();
         staking_account.garage_metadata_account = ctx.accounts.garage_metadata_account.key();
         staking_account.garage_master_edition = ctx.accounts.creature_edition.key();
 
@@ -105,9 +104,7 @@ pub mod sol_race_core {
     pub fn init_kart(ctx: Context<InitKart>, bump: u8) -> Result<()> {
         let kart_account = &mut ctx.accounts.kart_account;
         kart_account.bump = bump;
-        kart_account.owner = ctx.accounts.user.key();
         kart_account.kart_mint = ctx.accounts.kart_mint.key();
-        kart_account.kart_token_account = ctx.accounts.kart_token_account.key();
         kart_account.kart_metadata_account = ctx.accounts.kart_metadata_account.key();
         kart_account.kart_master_edition = ctx.accounts.creature_edition.key();
 

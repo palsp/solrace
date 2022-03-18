@@ -1,162 +1,99 @@
-# SOL RACE
+# SOLRACE 
 
 
-## Setup
+SolRace is a blockchain racing game on the Solana blockchain inspired by the Mario kart.
 
-Clone the following repository into `scripts` folder
 
+
+## Technology 
+- Nodejs
+- Nextjs
+- Anchor Framework
+- unreal engine 4
+- AWS
+- Postgresql
+
+
+### Game code and deployed game
+the code and game can be downloaded from the google drive link here: https://drive.google.com/drive/folders/16On1ksGkRvLx1HPzvb9onXWU-oL0zL5I?usp=sharing
+
+WindowsNoEditor.rar is a fully deployed game, you can extract and run the game on the application file.
+
+GameFile.rar is an unreal project file that can be opened via Unreal Engine Project File (.uproject)
+
+The project file is built in Unreal Engine 4 version 4.26, containing multiple Unreal Engine Asset Files (.uasset). If you want to fully see all the game component's in detail, please download the engine from the link here: https://www.unrealengine.com/en-US/download
+
+
+
+#### Deploy
+
+  if you want use our devnet program, please skip this section.
+
+`
+  yarn build
+  yarn deploy
+`
+
+create pool for your nft 
+
+Set your program id in `cli/.env` file.
 ```
-git clone https://github.com/HashLips/hashlips_art_engine.git ./scripts/hashlips_art_engine
-git clone -b custom-storage https://github.com/palsp/metaplex.git ./scripts/metaplex
-```
-
-
-### generate collections and metadata
-From root folder. run 
-
-navigate to `scripts/hashlips_art_engine/src/config.js`
-```js
-// change from
-const network = NETWORK.eth;
-// to
-const network = NETWORK.sol;
-```
-
-change the configuration as you like. once ready, run
-```
-cd scripts/hashlips_art_engine 
-yarn install
-yarn generate
-```
-
-copy the image and metadata file to metaplex folder. 
-in the `scripts` folder, run 
-```sh
-yarn copy
-```
-
-### deploy candy machine to devnet
-
-create `config.json` file inside `metaplex` folder. here is a minimal configuration
-```json
-{
-  "price": 1.0,
-  "number": 10,
-  "gatekeeper": null,
-  "solTreasuryAccount": "<YOUR_WALLET_ADDRESS>",
-  "splTokenAccount": null,
-  "splToken": null,
-  "goLiveDate": "25 Dec 2021 00:00:00 GMT",
-  "endSettings": null,
-  "whitelistMintSettings": null,
-  "hiddenSettings": null,
-  "storage": "custom",
-  "ipfsInfuraProjectId": null,
-  "ipfsInfuraSecret": null,
-  "awsS3Bucket": null,
-  "noRetainAuthority": false,
-  "noMutable": false,
-  "customUrl" : "https://544b-2001-fb1-a9-e064-a10c-776a-7011-e5a2.ngrok.io",
-  "customImageUrl" : "https://544b-2001-fb1-a9-e064-a10c-776a-7011-e5a2.ngrok.io",
-  "imageType" : "png"
-}
+SOL_RACE_STAKING_PROGRAM_ID=
 ```
 
-for more options, visit [metaplex docs](https://docs.metaplex.com/candy-machine-v2/configuration)
-
-
-create solana keypair 
-```sh
-solana-keygen new --outfile ~/.config/solana/devnet.json
-
+copy the generated types and idl 
 ```
-config solana-cli
-
-```sh
-solana config set --url devnet
-solana config set --keypair ~/.config/solana/devnet.json
+anchor run copy_types
+anchor run copy_types_backend
+anchor run copy_types_cli
 ```
 
-airdrop some devnet sol
-```sh
-solana airdrop 1
+initialize pool. In the cli directory, run
 ```
-
-upload and deploy candy machine. in `scripts/metaplex` folder, run
-```sh
-yarn --cwd js install
-ts-node  js/packages/cli/src/candy-machine-v2-cli.ts upload \
-    -e devnet \
-    -k ~/.config/solana/devnet.json \
-    -cp config-garage.json \
-    -c garage \
-    ./assets
+  yarn init-pool
 ```
-
-verify upload
-```
-ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts verify_upload \
-    -e devnet \
-    -k ~/.config/solana/devnet.json \
-    -c garage
-```
+it will prompt some questions in the cli.
 
 
-### calling the contract
-in `scripts/metaplex`
+Update the addresses in `backend/src/solana/addresses.to` and `frontend/src/api/solana/addresses`. Theses is what you needed
+1. SOLR_MINT_ADDRESS
+2. GARAGE_CREATOR
+3. GARAGE_CM_ID
+4. KART_CREATOR
+5. KART_CM_ID
+6. SOL_RACE_CORE_PROGRAM_ID
 
-mint one token
-```
-ts-node   js/packages/cli/src/candy-machine-v2-cli.ts mint_one_token \
-    -e devnet \
-    -k  ~/.config/solana/devnet.json \
-    -c kart
-```
 
-mint multiple token
-```
-ts-node js/packages/cli/src/candy-machine-v2-cli.ts mint_multiple_tokens \
-    -e devnet \
-    -k ~/.config/solana/devnet.json \
-    -c garage \
-    --number 2
-```
 
-sign your nft
-```
-ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts sign_all \
-    -e testnet \
-    -k ~/.config/solana/devnet.json \
-    -c example
-```
+### setup aws resource 
+  See the details in `aws/README.md`
 
-update config 
-```
-ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts update_candy_machine \
-    -e devnet \
-    -k ~/.config/solana/devnet.json \
-    -cp config.json \
-    -c example \
-    --new-authority 7idYCnwadSG8quKNr2qqtt2WVTGy8xwTF5uFvAuHyY1g
-```
+### setup metaplex candy machine and nft's assets
+  See the details in `scripts/README.md`
 
-show config 
-```
-ts-node --transpile-only js/packages/cli/src/candy-machine-v2-cli.ts show \
-    -e devnet \
-    -k ~/.config/solana/devnet.json \
-    -c example
-```
 
-### game code and deployed game
+### setup and start the backend server
+  See the details in `backend/README.md`
 
-the code and game can be downloaded from the google drive link here:
-https://drive.google.com/drive/folders/16On1ksGkRvLx1HPzvb9onXWU-oL0zL5I?usp=sharing
 
-`WindowsNoEditor.rar` is a fully deployed game, you can extract and run the game on the application file.
+### setup and start the frontend
+  Set the environment variables. Follow `frontend/.env.example` for more details
 
-`GameFile.rar` is an unreal project file that can be opened via Unreal Engine Project File (.uproject)
+  ```
+    yarn dev
+  ```
 
-The project file is built in Unreal Engine 4 version 4.26, containing multiple Unreal Engine Asset Files (.uasset). If you want to fully see all the game component's in detail, please download the engine from the link here:
-https://www.unrealengine.com/en-US/download
 
+## Program Detail 
+The program consist of two main features
+
+1. staking nft (garage)
+- user can stake our nft aka garage to earn SOLR, our governance token. 
+
+- Garage's staker can use their garage to upgrade racing kart of other racers. 
+Garage's staker will also earn upgrading fee no matters the upgrade is success or fail. 
+
+
+2. upgrade (kart)
+
+- racers can upgrade their nft aka kart to enhance their in games attributes e.g. max speed, acceleration etc. 

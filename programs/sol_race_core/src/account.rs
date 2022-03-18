@@ -28,9 +28,7 @@ pub struct PoolAccount {
 #[account]
 #[derive(Default)]
 pub struct StakingAccount {
-  pub staker: Pubkey,
   pub garage_mint: Pubkey,
-  pub garage_token_account: Pubkey,
   pub garage_metadata_account: Pubkey,
   pub garage_master_edition: Pubkey,
   pub is_bond: bool,
@@ -42,10 +40,8 @@ pub struct StakingAccount {
 #[account]
 #[derive(Default)]
 pub struct KartAccount {
-  pub owner: Pubkey,
   pub bump: u8,
   pub kart_mint: Pubkey,
-  pub kart_token_account: Pubkey,
   pub kart_metadata_account: Pubkey,
   pub kart_master_edition: Pubkey,
   pub max_speed: u64,

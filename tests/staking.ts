@@ -52,6 +52,12 @@ describe('Sol Race Core Program', () => {
   let stakingAuthority: PublicKey
   let poolAuthority: PublicKey
 
+  let poolAccount: PublicKey
+  let poolAccountBump: number
+
+  let poolSolr: PublicKey
+  let poolSolrBump: number
+
   it('Is initialized!', async () => {
     solrMintAccount = await createMint(provider)
     solrMint = solrMintAccount.publicKey
@@ -84,24 +90,22 @@ describe('Sol Race Core Program', () => {
   const distributedPerSec = solrAmount.div(time)
 
   console.log(`distribute ${distributedPerSec} solr per sec`)
-  it('initialize pool', async () => {
-    let bumps = new PoolBumps()
 
-    let [
+  before(async () => {
+    ;[
       poolAccount,
       poolAccountBump,
     ] = await anchor.web3.PublicKey.findProgramAddress(
       [Buffer.from(poolName), Buffer.from('pool_account')],
       program.programId,
     )
-
-    let [
-      poolSolr,
-      poolSolrBump,
-    ] = await anchor.web3.PublicKey.findProgramAddress(
+    ;[poolSolr, poolSolrBump] = await anchor.web3.PublicKey.findProgramAddress(
       [Buffer.from(poolName), Buffer.from('pool_solr')],
       program.programId,
     )
+  })
+  it('initialize pool', async () => {
+    let bumps = new PoolBumps()
 
     bumps.poolAccount = poolAccountBump
     bumps.poolSolr = poolSolrBump
@@ -176,6 +180,7 @@ describe('Sol Race Core Program', () => {
   })
 
   const staker = anchor.web3.Keypair.generate()
+
   let garageMintAccount: Token
   let garageTokenAccount: PublicKey
   it('stake user token', async () => {
@@ -204,11 +209,6 @@ describe('Sol Race Core Program', () => {
     const metadataAccount = anchor.web3.Keypair.generate()
     const masterEdition = anchor.web3.Keypair.generate()
 
-    const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
-      [Buffer.from(poolName), Buffer.from('pool_account')],
-      program.programId,
-    )
-
     const [
       stakingAccount,
       stakingAccountBump,
@@ -217,11 +217,11 @@ describe('Sol Race Core Program', () => {
         Buffer.from('staking_account'),
         // TODO: delete poolName
         Buffer.from(poolName),
-        staker.publicKey.toBuffer(),
         garageMintAccount.publicKey.toBuffer(),
       ],
       program.programId,
     )
+
     const instructions = [
       program.instruction.initStake(stakingAccountBump, {
         accounts: {
@@ -244,6 +244,7 @@ describe('Sol Race Core Program', () => {
           poolAccount,
           stakingAccount,
           solrMint,
+          garageTokenAccount,
           systemProgram: anchor.web3.SystemProgram.programId,
         },
         signers: [staker],
@@ -303,11 +304,6 @@ describe('Sol Race Core Program', () => {
     const metadataAccount = anchor.web3.Keypair.generate()
     const masterEdition = anchor.web3.Keypair.generate()
 
-    const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
-      [Buffer.from(poolName), Buffer.from('pool_account')],
-      program.programId,
-    )
-
     const {
       lastDistributed: prevLastDistributed,
     } = await program.account.poolAccount.fetch(poolAccount)
@@ -318,9 +314,7 @@ describe('Sol Race Core Program', () => {
     ] = await anchor.web3.PublicKey.findProgramAddress(
       [
         Buffer.from('staking_account'),
-        // TODO: delete poolName
         Buffer.from(poolName),
-        staker2.publicKey.toBuffer(),
         garage2MintAccount.publicKey.toBuffer(),
       ],
       program.programId,
@@ -347,6 +341,7 @@ describe('Sol Race Core Program', () => {
           user: staker2.publicKey,
           poolAccount,
           stakingAccount,
+          garageTokenAccount: garage2TokenAccount,
           solrMint,
           systemProgram: anchor.web3.SystemProgram.programId,
         },
@@ -409,18 +404,11 @@ describe('Sol Race Core Program', () => {
     const metadataAccount = anchor.web3.Keypair.generate()
     const masterEdition = anchor.web3.Keypair.generate()
 
-    const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
-      [Buffer.from(poolName), Buffer.from('pool_account')],
-      program.programId,
-    )
-
     // use first staker kart
     const [stakingAccount] = await anchor.web3.PublicKey.findProgramAddress(
       [
         Buffer.from('staking_account'),
-        // TODO: delete poolName
         Buffer.from(poolName),
-        staker.publicKey.toBuffer(),
         garageMintAccount.publicKey.toBuffer(),
       ],
       program.programId,
@@ -433,7 +421,7 @@ describe('Sol Race Core Program', () => {
       [
         Buffer.from('kart_account'),
         Buffer.from(poolName),
-        user.publicKey.toBuffer(),
+
         kartMintAccount.publicKey.toBuffer(),
       ],
       program.programId,
@@ -460,6 +448,7 @@ describe('Sol Race Core Program', () => {
           poolAccount,
           kartAccount,
           stakingAccount,
+          kartTokenAccount: kartTokenAccount,
           tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
           systemProgram: anchor.web3.SystemProgram.programId,
         },
@@ -475,13 +464,10 @@ describe('Sol Race Core Program', () => {
 
     const kartInfo = await program.account.kartAccount.fetch(kartAccount)
     expect(kartInfo.bump).to.equals(kartAccountBump)
-    expect(kartInfo.owner.toBase58()).to.equals(user.publicKey.toBase58())
     expect(kartInfo.kartMint.toBase58()).to.equals(
       kartMintAccount.publicKey.toBase58(),
     )
-    expect(kartInfo.kartTokenAccount.toBase58()).to.equals(
-      kartTokenAccount.toBase58(),
-    )
+
     expect(kartInfo.kartMetadataAccount.toBase58()).to.equals(
       metadataAccount.publicKey.toBase58(),
     )
@@ -491,17 +477,12 @@ describe('Sol Race Core Program', () => {
   })
 
   it('allow user to upgrade kart by second  garage', async () => {
-    const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
-      [Buffer.from(poolName), Buffer.from('pool_account')],
-      program.programId,
-    )
     // use second staker kart
     const [stakingAccount] = await anchor.web3.PublicKey.findProgramAddress(
       [
         Buffer.from('staking_account'),
         // TODO: delete poolName
         Buffer.from(poolName),
-        staker2.publicKey.toBuffer(),
         garage2MintAccount.publicKey.toBuffer(),
       ],
       program.programId,
@@ -511,7 +492,6 @@ describe('Sol Race Core Program', () => {
       [
         Buffer.from('kart_account'),
         Buffer.from(poolName),
-        user.publicKey.toBuffer(),
         kartMintAccount.publicKey.toBuffer(),
       ],
       program.programId,
@@ -522,6 +502,7 @@ describe('Sol Race Core Program', () => {
         poolAccount,
         kartAccount,
         stakingAccount,
+        kartTokenAccount,
         tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
         systemProgram: anchor.web3.SystemProgram.programId,
       },
@@ -531,10 +512,10 @@ describe('Sol Race Core Program', () => {
     const kartInfo = await program.account.kartAccount.fetch(kartAccount)
     // TODO: random value
     expect(kartInfo.maxSpeed).to.be.bignumber.equals('2')
-    expect(kartInfo.acceleration).to.be.bignumber.equals('2')
-    expect(kartInfo.driftPowerConsumptionRate).to.be.bignumber.equals('2')
-    expect(kartInfo.driftPowerGenerationRate).to.be.bignumber.equals('2')
-    expect(kartInfo.handling).to.be.bignumber.equals('2')
+    expect(kartInfo.acceleration).to.be.bignumber.equals('50')
+    expect(kartInfo.driftPowerConsumptionRate).equals(0.04)
+    expect(kartInfo.driftPowerGenerationRate).equals(0.04)
+    expect(kartInfo.handling).to.be.bignumber.equals('20')
   })
 
   let staker1PendingReward: anchor.BN
@@ -542,9 +523,7 @@ describe('Sol Race Core Program', () => {
     const [stakingAccount] = await anchor.web3.PublicKey.findProgramAddress(
       [
         Buffer.from('staking_account'),
-        // TODO: delete poolName
         Buffer.from(poolName),
-        staker.publicKey.toBuffer(),
         garageMintAccount.publicKey.toBuffer(),
       ],
       program.programId,
@@ -569,6 +548,7 @@ describe('Sol Race Core Program', () => {
         poolAccount,
         stakingAccount,
         solrMint,
+        garageTokenAccount,
         systemProgram: SystemProgram.programId,
       },
       signers: [staker],
@@ -581,7 +561,7 @@ describe('Sol Race Core Program', () => {
 
     const newReward = poolInfo.globalRewardIndex - prevRewardIndex
 
-    // update pool info
+    // TODO: update pool info
     expect(poolInfo.globalRewardIndex).greaterThan(prevGlobalReward)
     expect(poolInfo.totalStaked).to.be.bignumber.equals(new BN(1))
 
@@ -595,20 +575,42 @@ describe('Sol Race Core Program', () => {
     staker1PendingReward = stakerInfo.pendingReward
   })
 
-  it('allow user to restake', async () => {
+  it('not allow user to staker other user staking account', async () => {
     const [stakingAccount] = await anchor.web3.PublicKey.findProgramAddress(
       [
         Buffer.from('staking_account'),
-        // TODO: delete poolName
         Buffer.from(poolName),
-        staker.publicKey.toBuffer(),
         garageMintAccount.publicKey.toBuffer(),
       ],
       program.programId,
     )
 
-    const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
-      [Buffer.from(poolName), Buffer.from('pool_account')],
+    try {
+      await program.rpc.bond({
+        accounts: {
+          user: staker2.publicKey,
+          poolAccount,
+          stakingAccount,
+          garageTokenAccount: garage2TokenAccount,
+          solrMint,
+          systemProgram: anchor.web3.SystemProgram.programId,
+        },
+        signers: [staker2],
+      })
+
+      expect.fail('should not pass')
+    } catch (e) {
+      expect(e.message).to.eq('6002: Invalid mint')
+    }
+  })
+
+  it('allow user to restake', async () => {
+    const [stakingAccount] = await anchor.web3.PublicKey.findProgramAddress(
+      [
+        Buffer.from('staking_account'),
+        Buffer.from(poolName),
+        garageMintAccount.publicKey.toBuffer(),
+      ],
       program.programId,
     )
 
@@ -618,6 +620,7 @@ describe('Sol Race Core Program', () => {
         poolAccount,
         stakingAccount,
         solrMint,
+        garageTokenAccount,
         systemProgram: anchor.web3.SystemProgram.programId,
       },
       signers: [staker],
@@ -633,17 +636,11 @@ describe('Sol Race Core Program', () => {
     expect(stakerInfo.isBond).to.be.true
   })
 
-  it('withdraw', async () => {
-    const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
-      [Buffer.from(poolName), Buffer.from('pool_account')],
-      program.programId,
-    )
+  it('not allow user to withdraw from other staking account', async () => {
     const [stakingAccount] = await anchor.web3.PublicKey.findProgramAddress(
       [
         Buffer.from('staking_account'),
-        // TODO: delete poolName
         Buffer.from(poolName),
-        staker.publicKey.toBuffer(),
         garageMintAccount.publicKey.toBuffer(),
       ],
       program.programId,
@@ -651,6 +648,40 @@ describe('Sol Race Core Program', () => {
 
     const [poolSolr] = await anchor.web3.PublicKey.findProgramAddress(
       [Buffer.from(poolName), Buffer.from('pool_solr')],
+      program.programId,
+    )
+
+    const staker2TokenAccount = await createTokenAccount(
+      provider,
+      solrMint,
+      staker2.publicKey,
+    )
+
+    try {
+      await program.rpc.withdraw({
+        accounts: {
+          user: staker.publicKey,
+          poolAccount,
+          stakingAccount,
+          poolSolr,
+          garageTokenAccount,
+          solrMint,
+          userSolr: staker2TokenAccount,
+          systemProgram: SystemProgram.programId,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        },
+        signers: [staker],
+      })
+      expect.fail('should not be reach')
+    } catch (e) {}
+  })
+  it('withdraw', async () => {
+    const [stakingAccount] = await anchor.web3.PublicKey.findProgramAddress(
+      [
+        Buffer.from('staking_account'),
+        Buffer.from(poolName),
+        garageMintAccount.publicKey.toBuffer(),
+      ],
       program.programId,
     )
 
@@ -666,6 +697,7 @@ describe('Sol Race Core Program', () => {
         poolAccount,
         stakingAccount,
         poolSolr,
+        garageTokenAccount,
         solrMint,
         userSolr: stakerTokenAccount,
         systemProgram: SystemProgram.programId,
@@ -686,6 +718,75 @@ describe('Sol Race Core Program', () => {
     )
 
     expect(stakingAccountInfo.pendingReward).to.be.bignumber.eq(new BN(0))
+  })
+
+  it('allow transferred nft to be staked', async () => {
+    const [stakingAccount] = await anchor.web3.PublicKey.findProgramAddress(
+      [
+        Buffer.from('staking_account'),
+        Buffer.from(poolName),
+        garageMintAccount.publicKey.toBuffer(),
+      ],
+      program.programId,
+    )
+
+    await program.rpc.unBond({
+      accounts: {
+        user: staker.publicKey,
+        poolAccount,
+        stakingAccount,
+        solrMint,
+        garageTokenAccount,
+        systemProgram: SystemProgram.programId,
+      },
+      signers: [staker],
+    })
+
+    const garageTokenAccountOfStaker2 = await createTokenAccount(
+      provider,
+      garageMintAccount.publicKey,
+      staker2.publicKey,
+    )
+
+    const tx = new Transaction().add(
+      Token.createTransferInstruction(
+        TOKEN_PROGRAM_ID,
+        garageTokenAccount,
+        garageTokenAccountOfStaker2,
+        staker.publicKey,
+        [],
+        1,
+      ),
+    )
+
+    await provider.send(tx, [staker])
+    const { amount: balance1 } = await getTokenAccount(
+      provider,
+      garageTokenAccount,
+    )
+    const { amount: balance2 } = await getTokenAccount(
+      provider,
+      garageTokenAccountOfStaker2,
+    )
+    expect(balance1).to.be.bignumber.eq('0')
+    expect(balance2).to.be.bignumber.eq('1')
+
+    let { isBond } = await program.account.stakingAccount.fetch(stakingAccount)
+    expect(isBond).to.be.false
+
+    await program.rpc.bond({
+      accounts: {
+        user: staker2.publicKey,
+        poolAccount,
+        stakingAccount,
+        solrMint,
+        garageTokenAccount: garageTokenAccountOfStaker2,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      },
+      signers: [staker2],
+    })
+    ;({ isBond } = await program.account.stakingAccount.fetch(stakingAccount))
+    expect(isBond).to.be.true
   })
   const lateStaker = anchor.web3.Keypair.generate()
   it('not distribute reward if distribution period is end', async () => {
@@ -724,9 +825,7 @@ describe('Sol Race Core Program', () => {
     ] = await anchor.web3.PublicKey.findProgramAddress(
       [
         Buffer.from('staking_account'),
-        // TODO: delete poolName
         Buffer.from(poolName),
-        lateStaker.publicKey.toBuffer(),
         lateStakerNftMintAccount.publicKey.toBuffer(),
       ],
       program.programId,
@@ -757,6 +856,7 @@ describe('Sol Race Core Program', () => {
           user: lateStaker.publicKey,
           poolAccount,
           stakingAccount,
+          garageTokenAccount: lateStakerNftTokenAccount,
           solrMint,
           systemProgram: anchor.web3.SystemProgram.programId,
         },
