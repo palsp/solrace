@@ -1,13 +1,13 @@
 [programs.localnet]
-sol_race_core = "4mnaEgh2oejHoHW6dTVNGrAK1ZmMV3SfBQ2mmmaXgFz5"
+sol_race_core = "J15WvsBaKL81rDA5kdjEpmdUGC7Y7dR9iMUbwevDkbdq"
 
 
 [programs.devnet]
-sol_race_core = "4mnaEgh2oejHoHW6dTVNGrAK1ZmMV3SfBQ2mmmaXgFz5"
+sol_race_core = "J15WvsBaKL81rDA5kdjEpmdUGC7Y7dR9iMUbwevDkbdq"
 
 
 [programs.testnet]
-sol_race_staking = "4mnaEgh2oejHoHW6dTVNGrAK1ZmMV3SfBQ2mmmaXgFz5"
+sol_race_core = "J15WvsBaKL81rDA5kdjEpmdUGC7Y7dR9iMUbwevDkbdq"
 
 
 [registry]

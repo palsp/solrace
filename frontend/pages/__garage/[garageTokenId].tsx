@@ -145,6 +145,7 @@ const GarageDetail = () => {
           provider,
           user: wallet.publicKey,
           poolAccount,
+          tokenAccount: garageTokenAccount,
           solrMint: SOLR_MINT_ADDRESS,
           stakingAccount: stakingAccount!,
         });

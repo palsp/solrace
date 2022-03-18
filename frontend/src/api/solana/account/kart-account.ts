@@ -4,9 +4,7 @@ import { Program } from "@project-serum/anchor";
 import { SolRaceCore } from "~/api/solana/types/sol_race_core";
 
 interface KartInfo {
-  owner: PublicKey;
   kartMint: PublicKey;
-  kartTokenAccount: PublicKey;
   kartMetadataAccount: PublicKey;
   kartMasterEdition: PublicKey;
   masSpeed: number;
@@ -30,12 +28,7 @@ export const fetchKartInfo = async ({
   kartMint,
 }: FetchKartInfo): Promise<[PublicKey, number, KartInfo | undefined]> => {
   const [kartAccount, kartAccountBump] = await PublicKey.findProgramAddress(
-    [
-      Buffer.from("kart_account"),
-      Buffer.from(poolName),
-      user.toBuffer(),
-      kartMint.toBuffer(),
-    ],
+    [Buffer.from("kart_account"), Buffer.from(poolName), kartMint.toBuffer()],
     program.programId
   );
 

@@ -1,6 +1,5 @@
 import * as anchor from '@project-serum/anchor'
 import { PublicKey, SystemProgram } from '@solana/web3.js'
-import { SolRaceStaking } from '../../target/types/sol_race_staking'
 
 type Bond = {
   user: anchor.web3.PublicKey

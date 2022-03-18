@@ -1,41 +1,38 @@
-import _ from 'lodash'
-import { Program } from '@project-serum/anchor'
-import { GetProgramAccountsFilter, PublicKey } from '@solana/web3.js'
-import { SolRaceCore } from '~/api/solana/types/sol_race_core'
+import _ from "lodash";
+import { Program } from "@project-serum/anchor";
+import { GetProgramAccountsFilter, PublicKey } from "@solana/web3.js";
+import { SolRaceCore } from "~/api/solana/types/sol_race_core";
 
-import bs58 from 'bs58'
+import bs58 from "bs58";
 
 export interface StakeInfo {
-  staker: PublicKey
-  garageMint: PublicKey
-  garageTokenAccount: PublicKey
-  garageMetadataAccount: PublicKey
-  garageMasterEdition: PublicKey
-  isBond: boolean
-  rewardIndex: number
-  pendingReward: number
+  garageMint: PublicKey;
+  garageMetadataAccount: PublicKey;
+  garageMasterEdition: PublicKey;
+  isBond: boolean;
+  rewardIndex: number;
+  pendingReward: number;
 }
 
 export interface Staker extends StakeInfo {
-  publicAddress: PublicKey
+  publicAddress: PublicKey;
 }
 
 type FetchStakeInfo = {
-  program: Program<SolRaceCore>
-  poolName: string
-  user: PublicKey
-  garageMintAccount: PublicKey
-}
+  program: Program<SolRaceCore>;
+  poolName: string;
+  user: PublicKey;
+  garageMintAccount: PublicKey;
+};
 
 type GetStakers = {
-  program: Program<SolRaceCore>
-  filterOnlyStake?: boolean
-}
+  program: Program<SolRaceCore>;
+  filterOnlyStake?: boolean;
+};
 
 export const fetchStakeInfo = async ({
   program,
   poolName,
-  user,
   garageMintAccount,
 }: FetchStakeInfo): Promise<[PublicKey, number, StakeInfo | undefined]> => {
   const [
@@ -43,19 +40,19 @@ export const fetchStakeInfo = async ({
     stakingAccountBump,
   ] = await PublicKey.findProgramAddress(
     [
-      Buffer.from('staking_account'),
-      // TODO: delete poolName
+      Buffer.from("staking_account"),
       Buffer.from(poolName),
-      user.toBuffer(),
       garageMintAccount.toBuffer(),
     ],
-    program.programId,
-  )
+    program.programId
+  );
 
   try {
-    const stakeInfo = await program.account.stakingAccount.fetch(stakingAccount)
+    const stakeInfo = await program.account.stakingAccount.fetch(
+      stakingAccount
+    );
 
-    const { pendingReward, ...cleanStakeInfo } = stakeInfo
+    const { pendingReward, ...cleanStakeInfo } = stakeInfo;
     return [
       stakingAccount,
       stakingAccountBump,
@@ -63,42 +60,40 @@ export const fetchStakeInfo = async ({
         ...cleanStakeInfo,
         pendingReward: pendingReward.toNumber(),
       },
-    ]
+    ];
   } catch (e) {
-    return [stakingAccount, stakingAccountBump, undefined]
+    return [stakingAccount, stakingAccountBump, undefined];
   }
-}
+};
 
 const getIsStakedFilter = (): GetProgramAccountsFilter => ({
   memcmp: {
     offset:
       8 + // Discriminator
-      32 + // staker
       32 + // garage_mint
-      32 + // garage_token_account
       32 + // garage_metadata_account
       32, //garage_master_edition
     bytes: bs58.encode([1]),
   },
-})
+});
 
 export const getStakers = async ({
   program,
   filterOnlyStake = true,
 }: GetStakers): Promise<Staker[]> => {
   const stakeAccounts = await program.account.stakingAccount.all(
-    filterOnlyStake ? [getIsStakedFilter()] : [],
-  )
+    filterOnlyStake ? [getIsStakedFilter()] : []
+  );
 
   return stakeAccounts.map((stakerInfo) => {
-    const { publicKey, account } = stakerInfo
+    const { publicKey, account } = stakerInfo;
 
-    const { pendingReward, ...cleanStakeInfo } = account
+    const { pendingReward, ...cleanStakeInfo } = account;
 
     return {
       ...cleanStakeInfo,
       pendingReward: pendingReward.toNumber(),
       publicAddress: publicKey,
-    }
-  })
-}
+    };
+  });
+};

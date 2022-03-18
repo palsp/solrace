@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::Transfer;
 
-anchor_lang::declare_id!("4mnaEgh2oejHoHW6dTVNGrAK1ZmMV3SfBQ2mmmaXgFz5");
+anchor_lang::declare_id!("J15WvsBaKL81rDA5kdjEpmdUGC7Y7dR9iMUbwevDkbdq");
 
 mod account;
 mod context;

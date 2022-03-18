@@ -1,23 +1,23 @@
-import * as anchor from '@project-serum/anchor'
-import { Program } from '@project-serum/anchor'
-import { PublicKey, Transaction } from '@solana/web3.js'
+import * as anchor from "@project-serum/anchor";
+import { Program } from "@project-serum/anchor";
+import { PublicKey, Transaction } from "@solana/web3.js";
 import {
   SOL_RACE_CORE_PROGRAM_ID,
   TOKEN_METADATA_PROGRAM_ID,
-} from '~/api/solana/addresses'
-import { IDL, SolRaceCore } from '~/api/solana/types/sol_race_core'
-import { getMetadata, getMasterEdition } from '~/api/solana/utils'
+} from "~/api/solana/addresses";
+import { IDL, SolRaceCore } from "~/api/solana/types/sol_race_core";
+import { getMetadata, getMasterEdition } from "~/api/solana/utils";
 interface UpgradeKart {
-  provider: anchor.Provider
-  poolAccount: PublicKey
-  kartMint: PublicKey
-  kartAccount: PublicKey
-  kartAccountBump: number
-  kartTokenAccount: PublicKey
-  stakingAccount: PublicKey
+  provider: anchor.Provider;
+  poolAccount: PublicKey;
+  kartMint: PublicKey;
+  kartAccount: PublicKey;
+  kartAccountBump: number;
+  kartTokenAccount: PublicKey;
+  stakingAccount: PublicKey;
   // kartMetadataAccount: PublicKey,
   // creatureEdition: PublicKey,
-  isInitialize: boolean
+  isInitialize: boolean;
 }
 
 export const upgradeKart = async ({
@@ -33,13 +33,13 @@ export const upgradeKart = async ({
   const program = new Program<SolRaceCore>(
     IDL,
     SOL_RACE_CORE_PROGRAM_ID,
-    provider,
-  )
-  const transaction = new Transaction()
+    provider
+  );
+  const transaction = new Transaction();
 
   if (!isInitialize) {
-    const kartMetadataAccount = await getMetadata(kartMint)
-    const creatureEdition = await getMasterEdition(kartMint)
+    const kartMetadataAccount = await getMetadata(kartMint);
+    const creatureEdition = await getMasterEdition(kartMint);
     transaction.add(
       program.instruction.initKart(kartAccountBump, {
         accounts: {
@@ -53,8 +53,8 @@ export const upgradeKart = async ({
           tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
           systemProgram: anchor.web3.SystemProgram.programId,
         },
-      }),
-    )
+      })
+    );
   }
 
   transaction.add(
@@ -64,11 +64,12 @@ export const upgradeKart = async ({
         poolAccount,
         kartAccount,
         stakingAccount,
+        kartTokenAccount,
         tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
         systemProgram: anchor.web3.SystemProgram.programId,
       },
-    }),
-  )
+    })
+  );
 
-  return provider.send(transaction)
-}
+  return provider.send(transaction);
+};

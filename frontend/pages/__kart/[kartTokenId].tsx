@@ -5,13 +5,13 @@ import { toast } from "react-toastify";
 import { toastAPIError } from "~/utils";
 import { POOL_NAME } from "~/api/solana/constants";
 import { upgradeKart } from "~/kart/services";
-import ReactLoading from "react-loading";
+
 import { Wind, Star, ChevronsUp, Feather, CloudDrizzle } from "react-feather";
 
 import { useRouter } from "next/router";
 import { useWorkspace } from "~/workspace/hooks";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useAllNFT } from "~/nft/hooks";
+
 import { usePool } from "~/pool/hooks";
 import {
   Model3D,
@@ -24,10 +24,8 @@ import TokenDetailLayout from "~/tokenDetail/TokenDetailLayout";
 import { shortenIfAddress } from "~/wallet/utils";
 import Button from "~/ui/button/Button";
 import { useGarageStaker } from "~/garage-staker/hooks";
-import { NFTAccount } from "~/nft/hooks";
 import { useKartAccount } from "~/hooks/useAccount";
 import useSWR from "swr";
-import { KART_CREATOR } from "~/api/solana/addresses";
 
 const KartDetail = () => {
   const { query, isReady } = useRouter();
@@ -120,7 +118,6 @@ const KartDetail = () => {
 
     setLoading(true);
 
-    console.log(isInitialize, publicAddress?.toBase58());
     try {
       // we can ensure all ! field is exist by checking is loading
       const tx = await upgradeKart({

@@ -38,7 +38,7 @@ export async function loadStakingProgram(
 
   const program = new anchor.Program<SolRaceCore>(
     IDL,
-    process.env.SOL_RACE_STAKING_PROGRAM_ID,
+    process.env.SOL_RACE_CORE_PROGRAM_ID,
     provider,
   )
 
