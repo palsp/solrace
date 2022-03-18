@@ -96,7 +96,6 @@ pub struct InitStake<'info> {
       seeds = [
         b"staking_account",
         pool_account.pool_name.as_ref().trim_ascii_whitespace(),
-        user.key().as_ref(),
         garage_mint.key().as_ref(),
       ],
       bump,
@@ -141,7 +140,6 @@ pub struct InitKart<'info> {
       seeds = [
         b"kart_account",
         pool_account.pool_name.as_ref().trim_ascii_whitespace(),
-        user.key().as_ref(),
         kart_mint.key().as_ref(),
       ],
       bump,
@@ -185,15 +183,22 @@ pub struct Bond<'info> {
       seeds = [
         b"staking_account",
         pool_account.pool_name.as_ref().trim_ascii_whitespace(),
-        user.key().as_ref(),
         staking_account.garage_mint.as_ref()
       ],
       bump = staking_account.bump,
       constraint = staking_account.is_bond == false @ ErrorCode::AlreadyStake
     )]
     pub staking_account: Account<'info, StakingAccount>,
+
+
+    #[account(
+      constraint = garage_token_account.owner == user.key() @ ErrorCode::InvalidOwner,
+      constraint = garage_token_account.mint == staking_account.garage_mint @ ErrorCode::InvalidMint,
+      constraint = garage_token_account.amount == 1 @ ErrorCode::InvalidAmount
+    )]
+    pub garage_token_account: Account<'info, TokenAccount>,
     #[account(constraint = solr_mint.key() == pool_account.solr_mint)]
-    pub solr_mint : Account<'info, Mint>,
+    pub solr_mint : Box<Account<'info, Mint>>,
     pub system_program : Program<'info, System>
 }
 
@@ -212,15 +217,20 @@ pub struct Unbond<'info> {
       seeds = [
         b"staking_account",
         pool_account.pool_name.as_ref().trim_ascii_whitespace(),
-        user.key().as_ref(),
         staking_account.garage_mint.as_ref()
       ],
       bump = staking_account.bump,
       constraint = staking_account.is_bond == true @ ErrorCode::NotStake 
     )]
     pub staking_account: Account<'info, StakingAccount>,
+    #[account(
+      constraint = garage_token_account.owner == user.key() @ ErrorCode::InvalidOwner,
+      constraint = garage_token_account.mint == staking_account.garage_mint @ ErrorCode::InvalidMint,
+      constraint = garage_token_account.amount == 1 @ ErrorCode::InvalidAmount
+    )]
+    pub garage_token_account: Account<'info, TokenAccount>,
     #[account(constraint = solr_mint.key() == pool_account.solr_mint)]
-    pub solr_mint : Account<'info, Mint>,
+    pub solr_mint : Box<Account<'info, Mint>>,
     pub system_program : Program<'info, System>
 }
 
@@ -241,7 +251,6 @@ pub struct Withdraw<'info> {
       seeds = [
         b"staking_account",
         pool_account.pool_name.as_ref().trim_ascii_whitespace(),
-        user.key().as_ref(),
         staking_account.garage_mint.as_ref()
       ],
       bump = staking_account.bump,
@@ -259,6 +268,13 @@ pub struct Withdraw<'info> {
       constraint = user_solr.mint == solr_mint.key()
     )]
     pub user_solr: Account<'info, TokenAccount>,
+    #[account(
+      constraint = garage_token_account.owner == user.key() @ ErrorCode::InvalidOwner,
+      constraint = garage_token_account.mint == staking_account.garage_mint @ ErrorCode::InvalidMint,
+      constraint = garage_token_account.amount == 1 @ ErrorCode::InvalidAmount
+    )]
+    pub garage_token_account: Box<Account<'info, TokenAccount>>,
+    
     #[account(constraint = solr_mint.key() == pool_account.solr_mint)]
     pub solr_mint : Box<Account<'info, Mint>>,
     pub system_program : Program<'info, System>,
@@ -281,7 +297,6 @@ pub struct UpgradeKart<'info> {
       seeds = [
         b"kart_account",
         pool_account.pool_name.as_ref().trim_ascii_whitespace(),
-        user.key().as_ref(),
         kart_account.kart_mint.as_ref(),
       ],
       bump = kart_account.bump
@@ -291,6 +306,12 @@ pub struct UpgradeKart<'info> {
       constraint = staking_account.is_bond == true
     )]
     pub staking_account: Account<'info, StakingAccount>,
+    #[account(
+      constraint = kart_token_account.owner == user.key() @ ErrorCode::InvalidOwner,
+      constraint = kart_token_account.mint == kart_account.kart_mint @ ErrorCode::InvalidMint,
+      constraint = kart_token_account.amount == 1 @ ErrorCode::InvalidAmount
+    )]
+    pub kart_token_account: Account<'info, TokenAccount>,
     #[account(address = mpl_token_metadata::id())]
     pub token_metadata_program: AccountInfo<'info>,
     pub system_program : Program<'info, System>

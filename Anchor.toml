@@ -1,14 +1,14 @@
 [programs.localnet]
 sol_race_core = "4mnaEgh2oejHoHW6dTVNGrAK1ZmMV3SfBQ2mmmaXgFz5"
-staking_gov="DrkYUKUUrdgznKjh6mFmM8dyXaMuhRqgi2F9u9QGxzf5"
+
 
 [programs.devnet]
 sol_race_core = "4mnaEgh2oejHoHW6dTVNGrAK1ZmMV3SfBQ2mmmaXgFz5"
-staking_gov="DrkYUKUUrdgznKjh6mFmM8dyXaMuhRqgi2F9u9QGxzf5"
+
 
 [programs.testnet]
 sol_race_staking = "4mnaEgh2oejHoHW6dTVNGrAK1ZmMV3SfBQ2mmmaXgFz5"
-staking_gov="DrkYUKUUrdgznKjh6mFmM8dyXaMuhRqgi2F9u9QGxzf5"
+
 
 [registry]
 url = "https://anchor.projectserum.com"
