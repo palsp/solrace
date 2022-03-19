@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import styled from "styled-components";
 import { PublicKey } from "@solana/web3.js";
 import { toast } from "react-toastify";
@@ -26,19 +26,21 @@ import Button from "~/ui/button/Button";
 import { useGarageStaker } from "~/garage-staker/hooks";
 import { useKartAccount } from "~/hooks/useAccount";
 import useSWR from "swr";
+import { useMetadata, useNFT } from "~/nft/hooks";
 
 const KartDetail = () => {
-  const { query, isReady } = useRouter();
-  // let kartMint: any, kartTokenAccount: any;
-  // if (router?.query?.nft) {
+  const { query } = useRouter();
+  const { mint, tokenAccountAddress } = query;
 
-  const { data: kart } = useSWR(`/kart/${query.kartTokenId}`);
+  const {
+    initialize,
+    data: kart,
+    mintAccount: kartMint,
+    tokenAccount: kartTokenAccount,
+    revalidateMetadata: revalidateKart,
+  } = useMetadata(mint as string, tokenAccountAddress as string);
+
   const [modelUrl, setModelUrl] = useState<string>();
-
-  const [maxSpeed, setMaxSpeed] = useState(0);
-  const [acceleration, setAcceleration] = useState(0);
-  const [drift, setDrift] = useState(0);
-  const [handling, setHandling] = useState(0);
 
   const fetchModelUrl = useCallback(async () => {
     if (!kart) return;
@@ -50,47 +52,26 @@ const KartDetail = () => {
     setModelUrl(urlParts.join("/"));
   }, [kart]);
 
-  const { mint, tokenAccountAddress } = query;
-
-  const kartMint = useMemo(() => {
-    if (!mint) {
-      return undefined;
-    }
-
-    return new PublicKey(mint);
-  }, [mint]);
-
-  const kartTokenAccount = useMemo(() => {
-    if (!tokenAccountAddress) {
-      return undefined;
-    }
-
-    return new PublicKey(tokenAccountAddress);
-  }, [tokenAccountAddress]);
+  const isAbleToUpgrade = useMemo(() => {
+    return initialize && kart;
+  }, [initialize, kart]);
 
   useEffect(() => {
     fetchModelUrl();
   }, [fetchModelUrl]);
-  // let nft: any = JSON.parse(router.query.nft);
-  // console.log("nft", nft);
-  // ({ mint: kartMint, tokenAccountAddress: kartTokenAccount } = nft);
-
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedGarage, setSelectedGarage] = useState<PublicKey>();
-  // const { mint: kartMint, tokenAccountAddress: kartTokenAccount } = nft;
   const { kartTokenId: tokenId } = query;
-  const { provider, wallet } = useWorkspace();
-  const { connected } = useWallet();
+  const { provider } = useWorkspace();
   const { stakers } = useGarageStaker();
   const { publicAddress: poolAccount } = usePool();
   const {
-    kartInfo,
-    revalidate: revalidateKart,
+    revalidate: revalidateKartAccount,
     publicAddress,
     isInitialize,
     bump,
     isLoading: loadingKart,
-  } = useKartAccount(POOL_NAME, kartMint!);
+  } = useKartAccount(POOL_NAME, kartMint);
 
   const handleGarageChange: React.ChangeEventHandler<HTMLSelectElement> = (
     e
@@ -135,12 +116,7 @@ const KartDetail = () => {
         toastAPIError(resp.value.err, "Fail! please try again");
       } else {
         toast("Congratulation! upgrade succeed", { type: "success" });
-        await revalidateKart();
-        // TODO: fetch state from blockchain
-        setMaxSpeed(1);
-        setAcceleration(25);
-        setDrift(0.02);
-        setHandling(10);
+        await Promise.all([revalidateKart(), revalidateKartAccount()]);
       }
     } catch (e) {
       console.log(e);
@@ -167,9 +143,6 @@ const KartDetail = () => {
           {kart?.name} ( {kart?.attributes[5].value} )
         </Title>
         <ParagraphItalic>ID: {tokenId}</ParagraphItalic>
-        <ParagraphItalic>
-          Owner: BuxRVqu8YndicdXV4KLXBR451GUug63BkgaVEgwpDwYA
-        </ParagraphItalic>
       </TitleDiv>
 
       <AbilityDiv>
@@ -185,13 +158,13 @@ const KartDetail = () => {
               <IconWrapper size="18px">
                 <ChevronsUp />
               </IconWrapper>
-              Max Speed: {kart?.attributes[0].value + maxSpeed || "..."}
+              Max Speed: {kart?.attributes[0].value || "..."}
             </ParagraphItalicBold>
             <ParagraphItalicBold>
               <IconWrapper size="18px">
                 <Wind />
               </IconWrapper>
-              Acceleration: {kart?.attributes[1].value + acceleration || "..."}
+              Acceleration: {kart?.attributes[1].value || "..."}
             </ParagraphItalicBold>
           </StatsDiv1>
           <StatsDiv2>
@@ -199,44 +172,48 @@ const KartDetail = () => {
               <IconWrapper size="18px">
                 <CloudDrizzle />
               </IconWrapper>
-              Drift: {kart?.attributes[2].value + drift || "..."}
+              Drift: {kart?.attributes[2].value || "..."}
             </ParagraphItalicBold>
             <ParagraphItalicBold>
               <IconWrapper size="18px">
                 <Feather />
               </IconWrapper>
-              Handling: {kart?.attributes[4].value + handling || "..."}
+              Handling: {kart?.attributes[4].value || "..."}
             </ParagraphItalicBold>
           </StatsDiv2>
         </StatsDiv>
-        <Select
-          onChange={handleGarageChange}
-          value={selectedGarage?.toString()}
-        >
-          <option key="1234" value="select garage"></option>
-          {stakers.map((staker) => (
-            <option
-              key={staker.publicAddress.toBase58()}
-              value={staker.publicAddress.toBase58()}
+        {isAbleToUpgrade && (
+          <>
+            <Select
+              onChange={handleGarageChange}
+              value={selectedGarage?.toString()}
             >
-              {shortenIfAddress(staker.publicAddress.toBase58())} (
-              {(50 + Math.random() * 20).toFixed(2)} %)
-            </option>
-          ))}
-        </Select>
-        {/* {loading || loadingKart ? (
-          <ReactLoading type="bubbles" color="var(--color-secondary)" />
-        ) : ( */}
-        <Button
-          onClick={handleUpgrade}
-          disabled={loading || loadingKart || !selectedGarage}
-          color="secondary"
-          width="350px"
-          icon="upgrade"
-          padding="0.5rem"
-        >
-          Upgrade
-        </Button>
+              <option key="1234" value="select garage">
+                Select Garage
+              </option>
+              {stakers.map((staker) => (
+                <option
+                  key={staker.publicAddress.toBase58()}
+                  value={staker.publicAddress.toBase58()}
+                >
+                  {shortenIfAddress(staker.publicAddress.toBase58())} (
+                  {(50 + Math.random() * 20).toFixed(2)} %)
+                </option>
+              ))}
+            </Select>
+
+            <Button
+              onClick={handleUpgrade}
+              disabled={loading || loadingKart || !selectedGarage}
+              color="secondary"
+              width="350px"
+              icon="upgrade"
+              padding="0.5rem"
+            >
+              Upgrade
+            </Button>
+          </>
+        )}
       </AbilityDiv>
       {/* )} */}
     </TokenDetailLayout>

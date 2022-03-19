@@ -55,7 +55,7 @@ export const usePoolAccount = (poolName: string) => {
 
 export const useStakeAccount = (
   poolName: string,
-  garageMintAccount: PublicKey
+  garageMintAccount?: PublicKey
 ) => {
   const program = useProgram<SolRaceCore>(IDL, SOL_RACE_CORE_PROGRAM_ID);
   const { wallet } = useWorkspace();
@@ -65,7 +65,7 @@ export const useStakeAccount = (
   const [isInitialize, setIsInitialize] = useState<boolean>();
 
   const fetchInfo = useCallback(async () => {
-    if (!wallet) return undefined;
+    if (!wallet || !garageMintAccount) return undefined;
     const [stakingAccount, stakingAccountBump, info] = await fetchStakeInfo({
       program,
       poolName,
@@ -102,7 +102,7 @@ export const useStakeAccount = (
   };
 };
 
-export const useKartAccount = (poolName: string, kartMint: PublicKey) => {
+export const useKartAccount = (poolName: string, kartMint?: PublicKey) => {
   const program = useProgram<SolRaceCore>(IDL, SOL_RACE_CORE_PROGRAM_ID);
   const { wallet } = useWorkspace();
 
@@ -111,7 +111,8 @@ export const useKartAccount = (poolName: string, kartMint: PublicKey) => {
   const [bump, setBump] = useState<number>();
 
   const fetchInfo = useCallback(async () => {
-    if (!wallet) return undefined;
+    if (!wallet || !kartMint) return undefined;
+
     const [kartAccount, kartAccountBump, info] = await fetchKartInfo({
       program,
       poolName,

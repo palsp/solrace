@@ -149,28 +149,57 @@ export const getKartByTokenId = async (
   }
 }
 
-export const updateKartOwner = async (
-  karts: Kart[],
-  rawKartsByMints: RawKartsByMint,
-  owner: string,
-) => {
-  const kartMintByTokenId = _.entries(rawKartsByMints).reduce((prev, curr) => {
-    const tokenId = curr[1].data.name.split('#')[1]
+export const updateKartOwnerBatch = async (publicAddress: string) => {
+  try {
+    const rawKartsMetadataByMint = await getRawKartMetadataOfOwnerByMint(
+      publicAddress,
+    )
 
-    if (tokenId) {
-      prev[tokenId] = curr[0]
+    const kartNames = _.values(rawKartsMetadataByMint).map(
+      (kart) => kart.data.name,
+    )
+
+    if (kartNames.length === 0) return
+    const karts = await getKartsIn(kartNames)
+
+    const kartByName: { [key: string]: Kart } = {}
+    karts.forEach((kart) => {
+      _.assign(kartByName, { ...kartByName, [kart.token.name]: kart })
+    })
+
+    const kartMintByTokenId = _.entries(rawKartsMetadataByMint).reduce(
+      (prev, curr) => {
+        const tokenId = curr[1].data.name.split('#')[1]
+
+        if (tokenId) {
+          prev[tokenId] = curr[0]
+        }
+        return prev
+      },
+      {},
+    )
+
+    for (const kart of karts) {
+      const mint = kartMintByTokenId[kart.token.id]
+      if (!mint) continue
+      let needUpdate = false
+
+      if (kart.mintTokenAccount !== mint) {
+        needUpdate = true
+        kart.mintTokenAccount = mint
+      }
+
+      if (kart.owner !== publicAddress) {
+        needUpdate = true
+        kart.owner = publicAddress
+      }
+
+      if (needUpdate) {
+        await kart.save()
+      }
     }
-    return prev
-  }, {})
-
-  for (const kart of karts) {
-    const mint = kartMintByTokenId[kart.token.id]
-    if (mint) {
-      kart.mintTokenAccount = mint
-    }
-    kart.owner = owner
-
-    // await kart.save()
+  } catch (e) {
+    console.log(e)
   }
 }
 

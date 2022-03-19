@@ -1,6 +1,7 @@
 import * as anchor from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor";
 import { PublicKey, Transaction } from "@solana/web3.js";
+import { api } from "~/api";
 import {
   SOL_RACE_CORE_PROGRAM_ID,
   TOKEN_METADATA_PROGRAM_ID,
@@ -72,4 +73,10 @@ export const upgradeKart = async ({
   );
 
   return provider.send(transaction);
+};
+
+export const updateKartOwner = async (publicAddress: string) => {
+  const { data } = await api.put(`/kart/refresh/${publicAddress}`);
+
+  return data;
 };

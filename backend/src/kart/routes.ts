@@ -2,7 +2,11 @@ import _ from 'lodash'
 import { Wallet } from 'entity/Wallet'
 import { passportJwtMiddlewareAuth } from 'auth/middleware'
 import express from 'express'
-import { getKartByTokenId, getKartOfOwner } from 'kart/services'
+import {
+  getKartByTokenId,
+  getKartOfOwner,
+  updateKartOwnerBatch,
+} from 'kart/services'
 import { badRequest, notFound } from '@hapi/boom'
 import { Kart } from 'entity/Kart'
 import { NFTMetaData } from 'entity/NFTMetadata'
@@ -17,6 +21,15 @@ router.get('/:tokenId', async (req, res, next) => {
     next(e)
   }
 })
+router.put('/refresh/:publicAddress', async (req, res, next) => {
+  try {
+    await updateKartOwnerBatch(req.params.publicAddress)
+    res.sendStatus(200)
+  } catch (e) {
+    next(e)
+  }
+})
+
 router.use(passportJwtMiddlewareAuth())
 
 router.get('/', async (req, res, next) => {
