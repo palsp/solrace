@@ -9,9 +9,8 @@ import {
   sleep,
 } from './utils'
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
-import { expect } from 'chai'
 import faker from 'faker'
-import chai from 'chai'
+import chai, { expect } from 'chai'
 import CBN from 'chai-bn'
 import CAP from 'chai-as-promised'
 import { SystemProgram, Transaction } from '@solana/web3.js'
