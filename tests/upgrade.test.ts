@@ -5,9 +5,7 @@ import {
   createMint,
   createTokenAccount,
   getTokenAccount,
-  mockCreateAndMintNFT,
   requestAirdrop,
-  sleep,
 } from './utils'
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { expect, util } from 'chai'
@@ -48,8 +46,6 @@ const MAX_MULTIPLIER_UNIT = MAX_MULTIPLIER.div(MULTIPLIER_UNIT)
 const UPGRADE_FEE_PER_MULTIPLIER = new anchor.BN(20_000_000)
 const EXCHANGE_MULTIPLIER_FEE_PER_UNIT = new anchor.BN(500_000_000)
 
-const DURATION = END_TIME.sub(START_TIME)
-
 function PoolBumps() {
   this.poolAccount
   this.poolSolr
@@ -75,21 +71,26 @@ describe('Upgrading Kart', () => {
 
   let solrTreasury: PublicKey
   let solrTreasuryBump: number
+  let solrTreasuryBalance: anchor.BN
 
   const alice = anchor.web3.Keypair.generate()
   const bob = anchor.web3.Keypair.generate()
+  const cat = anchor.web3.Keypair.generate()
+
   let aliceSolrTokenAccount: PublicKey
   let aliceGarageMintAccount: Token
   let aliceGarageTokenAccount: PublicKey
-  let bobSolrTokenAccount: PublicKey
-  let bobKartMintAccount: Token
-  let bobKartTokenAccount: PublicKey
-
   let aliceStakingAccount: PublicKey
   let aliceStakingAccountBump: number
 
+  let bobSolrTokenAccount: PublicKey
+  let bobKartMintAccount: Token
+  let bobKartTokenAccount: PublicKey
   let bobKartAccount: PublicKey
   let bobKartAccountBump: number
+
+  let catSolrTokenAccount: PublicKey
+  let stakingAuthoritySolrTokenAccount: PublicKey
 
   const requestSolr = async (recipient: PublicKey, amount: anchor.BN) => {
     await solrMintAccount.mintTo(
@@ -101,6 +102,7 @@ describe('Upgrading Kart', () => {
   }
 
   before(async () => {
+    stakingAuthority = provider.wallet.publicKey
     solrMintAccount = await createMint(provider)
     solrMint = solrMintAccount.publicKey
 
@@ -123,13 +125,13 @@ describe('Upgrading Kart', () => {
       POOL_NAME,
     )
 
+    // mint garage to alice
     aliceGarageMintAccount = await createMint(provider, 0)
     aliceGarageTokenAccount = await createTokenAccount(
       provider,
       aliceGarageMintAccount.publicKey,
       alice.publicKey,
     )
-
     await aliceGarageMintAccount.mintTo(
       aliceGarageTokenAccount,
       provider.wallet.publicKey,
@@ -137,19 +139,7 @@ describe('Upgrading Kart', () => {
       1,
     )
 
-    // initialize user solr token account
-    aliceSolrTokenAccount = await createTokenAccount(
-      provider,
-      solrMint,
-      alice.publicKey,
-    )
-
-    bobSolrTokenAccount = await createTokenAccount(
-      provider,
-      solrMint,
-      bob.publicKey,
-    )
-
+    // mint kart to bob
     bobKartMintAccount = await createMint(provider, 0)
     bobKartTokenAccount = await createTokenAccount(
       provider,
@@ -162,6 +152,28 @@ describe('Upgrading Kart', () => {
       provider.wallet.publicKey,
       [],
       1,
+    )
+
+    // initialize user solr token account
+    aliceSolrTokenAccount = await createTokenAccount(
+      provider,
+      solrMint,
+      alice.publicKey,
+    )
+    bobSolrTokenAccount = await createTokenAccount(
+      provider,
+      solrMint,
+      bob.publicKey,
+    )
+    catSolrTokenAccount = await createTokenAccount(
+      provider,
+      solrMint,
+      bob.publicKey,
+    )
+    stakingAuthoritySolrTokenAccount = await createTokenAccount(
+      provider,
+      solrMint,
+      provider.wallet.publicKey,
     )
 
     // get program account and bumps
@@ -186,7 +198,7 @@ describe('Upgrading Kart', () => {
 
     bumps.poolAccount = poolAccountBump
     bumps.poolSolr = poolSolrBump
-    bumps.solrTreasury
+    bumps.solrTreasury = solrTreasuryBump
 
     await program.rpc.initialize(
       POOL_NAME,
@@ -200,7 +212,7 @@ describe('Upgrading Kart', () => {
         accounts: {
           signer: provider.wallet.publicKey,
           poolAccount,
-          stakingAuthority: provider.wallet.publicKey,
+          stakingAuthority,
           poolAuthority,
           garageCreator: GARAGE_CREATOR.publicKey,
           kartCreator: KART_CREATOR.publicKey,
@@ -328,6 +340,29 @@ describe('Upgrading Kart', () => {
     expect(kartInfo.handling).to.equals(10)
   })
 
+  it('reverts if user has insufficient solr', async () => {
+    const units = new anchor.BN('5')
+    try {
+      await program.rpc.exchangeForMultiplier(units, {
+        accounts: {
+          user: alice.publicKey,
+          poolAccount,
+          userSolr: aliceSolrTokenAccount,
+          solrTreasury,
+          solrMint,
+          stakingAccount: aliceStakingAccount,
+          garageTokenAccount: aliceGarageTokenAccount,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        },
+        signers: [alice],
+      })
+
+      expect.fail('should not passed')
+    } catch (e) {
+      expect(e.message).to.eq('6014: Insufficient Fund')
+    }
+  })
+
   it('reverts if alice wants units that exceed MAX_MULTIPLIER_UNIT', async () => {
     const units = MAX_MULTIPLIER_UNIT.add(new anchor.BN('1'))
 
@@ -348,31 +383,7 @@ describe('Upgrading Kart', () => {
 
       expect.fail('should not passed')
     } catch (e) {
-      expect(e.message).to.eq('6012: Max Multiplier Reach')
-    }
-  })
-
-  it('reverts if user has insufficient solr', async () => {
-    const units = new anchor.BN('5')
-
-    try {
-      await program.rpc.exchangeForMultiplier(units, {
-        accounts: {
-          user: alice.publicKey,
-          poolAccount,
-          userSolr: aliceSolrTokenAccount,
-          solrTreasury,
-          solrMint,
-          stakingAccount: aliceStakingAccount,
-          garageTokenAccount: aliceGarageTokenAccount,
-          tokenProgram: TOKEN_PROGRAM_ID,
-        },
-        signers: [alice],
-      })
-
-      expect.fail('should not passed')
-    } catch (e) {
-      expect(e.message).to.eq('6013: Insufficient Fund')
+      expect(e.message).to.eq('6013: Max Multiplier Reach')
     }
   })
 
@@ -403,9 +414,11 @@ describe('Upgrading Kart', () => {
       program,
       aliceStakingAccount,
     )
+    const treasuryInfo = await getTokenAccount(provider, solrTreasury)
 
     expect(stakingInfo.multiplier).to.be.bignumber.eq(newMultiplier)
     expect(poolInfo.totalStaked).to.be.bignumber.eq(newMultiplier)
+    expect(treasuryInfo.amount).to.be.bignumber.eq(expectedSolr)
   })
 
   it('increase upgrading fee', async () => {
@@ -428,7 +441,7 @@ describe('Upgrading Kart', () => {
       })
       expect.fail('should not pass')
     } catch (e) {
-      expect(e.message).to.eq('6013: Insufficient Fund')
+      expect(e.message).to.eq('6014: Insufficient Fund')
     }
 
     const multiplier = 6
@@ -471,5 +484,98 @@ describe('Upgrading Kart', () => {
       expectedDriftPowerGenerationRate,
     )
     expect(kartInfo.handling).to.equals(expectedHandling)
+  })
+
+  it('reverts if non staking authority withdraw from treasury', async () => {
+    const treasuryInfo = await getTokenAccount(provider, solrTreasury)
+    solrTreasuryBalance = treasuryInfo.amount
+    const firstWithdraw = solrTreasuryBalance.div(new anchor.BN('2'))
+    expect(firstWithdraw).to.be.bignumber.greaterThan('0')
+    try {
+      await program.rpc.withdrawFromTreasury(firstWithdraw, {
+        accounts: {
+          user: alice.publicKey,
+          poolAccount,
+          recipientSolr: aliceSolrTokenAccount,
+          solrTreasury,
+          solrMint,
+          systemProgram: SystemProgram.programId,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        },
+        signers: [alice],
+      })
+      expect.fail('should not pass')
+    } catch (e) {
+      expect(e.message).to.eq('6002: Invalid StakingAuthority')
+    }
+  })
+
+  it('reverts if withdraw amount exceed treasury balance', async () => {
+    const firstWithdraw = solrTreasuryBalance.mul(new anchor.BN('2'))
+    expect(firstWithdraw).to.be.bignumber.greaterThan('0')
+    try {
+      await program.rpc.withdrawFromTreasury(firstWithdraw, {
+        accounts: {
+          user: provider.wallet.publicKey,
+          poolAccount,
+          recipientSolr: aliceSolrTokenAccount,
+          solrTreasury,
+          solrMint,
+          systemProgram: SystemProgram.programId,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        },
+      })
+      expect.fail('should not pass')
+    } catch (e) {
+      expect(e.message).to.eq('6015: Balance Exceed')
+    }
+  })
+
+  it('withdraw from treasury', async () => {
+    const firstWithdraw = solrTreasuryBalance.div(new anchor.BN('2'))
+    expect(firstWithdraw).to.be.bignumber.greaterThan('0')
+    await program.rpc.withdrawFromTreasury(firstWithdraw, {
+      accounts: {
+        user: provider.wallet.publicKey,
+        poolAccount,
+        recipientSolr: stakingAuthoritySolrTokenAccount,
+        solrTreasury,
+        solrMint,
+        systemProgram: SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      },
+    })
+    const solrInfo = await getTokenAccount(
+      provider,
+      stakingAuthoritySolrTokenAccount,
+    )
+    const treasuryInfo = await getTokenAccount(provider, solrTreasury)
+
+    expect(solrInfo.amount).to.be.bignumber.eq(firstWithdraw)
+    expect(treasuryInfo.amount).to.be.bignumber.eq(
+      solrTreasuryBalance.sub(firstWithdraw),
+    )
+    solrTreasuryBalance = solrTreasuryBalance.sub(firstWithdraw)
+  })
+
+  it('withdraw from treasury to target recipient', async () => {
+    const secondWithdraw = solrTreasuryBalance
+    expect(secondWithdraw).to.be.bignumber.greaterThan('0')
+    await program.rpc.withdrawFromTreasury(secondWithdraw, {
+      accounts: {
+        user: provider.wallet.publicKey,
+        poolAccount,
+        recipientSolr: catSolrTokenAccount,
+        solrTreasury,
+        solrMint,
+        systemProgram: SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      },
+    })
+    const solrInfo = await getTokenAccount(provider, catSolrTokenAccount)
+    const treasuryInfo = await getTokenAccount(provider, solrTreasury)
+
+    expect(solrInfo.amount).to.be.bignumber.eq(secondWithdraw)
+    expect(treasuryInfo.amount).to.be.bignumber.eq('0')
   })
 })

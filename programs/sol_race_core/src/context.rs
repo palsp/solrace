@@ -84,8 +84,6 @@ pub struct VerifyNFT<'info> {
     pub pool_account: Account<'info, PoolAccount>
 }
 
-
-
 #[derive(Accounts)]
 #[instruction(bump: u8)]
 pub struct InitStake<'info> {
@@ -287,6 +285,39 @@ pub struct Withdraw<'info> {
     pub system_program : Program<'info, System>,
     pub token_program: Program<'info, Token>
 }
+
+#[derive(Accounts)]
+pub struct WithdrawFromTreasury<'info> {
+    #[account(mut,
+      constraint = user.key() == pool_account.staking_authority @ ErrorCode::InvalidStakingAuthority
+    )]
+    pub user: Signer<'info>,
+    #[account(mut,
+      seeds = [
+        pool_account.pool_name.as_ref().trim_ascii_whitespace(),  
+        "pool_account".as_ref()
+      ],
+      bump = pool_account.bumps.pool_account,
+      has_one = solr_mint
+    )]
+    pub pool_account: Account<'info, PoolAccount>,
+
+    #[account(mut,
+      constraint = recipient_solr.mint == solr_mint.key()
+    )]
+    pub recipient_solr: Account<'info, TokenAccount>,
+    #[account(mut,
+      seeds = [pool_account.pool_name.as_ref().trim_ascii_whitespace(), b"solr_treasury"],
+      bump = pool_account.bumps.solr_treasury,
+    )]
+    pub solr_treasury : Account<'info, TokenAccount>,
+      
+    #[account(constraint = solr_mint.key() == pool_account.solr_mint)]
+    pub solr_mint : Box<Account<'info, Mint>>,
+    pub system_program : Program<'info, System>,
+    pub token_program: Program<'info, Token>
+}
+
 
 #[derive(Accounts)]
 pub struct UpgradeKart<'info> {

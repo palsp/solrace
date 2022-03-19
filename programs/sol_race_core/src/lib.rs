@@ -157,6 +157,7 @@ pub mod sol_race_core {
         let pool_account = &mut ctx.accounts.pool_account;
         let staking_account = &mut ctx.accounts.staking_account;
 
+        // Compute global reward & staker reward
         compute_reward(pool_account, current_time);
         compute_staker_reward(staking_account, pool_account);
         let amount = staking_account.pending_reward;
@@ -169,7 +170,7 @@ pub mod sol_race_core {
             &[pool_account.bumps.pool_account],
         ];
         let signer = &[&seeds[..]];
-        // Compute global reward & staker reward
+
         let cpi_accounts = Transfer {
             from: ctx.accounts.pool_solr.to_account_info(),
             to: ctx.accounts.user_solr.to_account_info(),
@@ -178,6 +179,32 @@ pub mod sol_race_core {
         let cpi_program = ctx.accounts.token_program.to_account_info();
         let cpi_ctx = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer);
         anchor_spl::token::transfer(cpi_ctx, amount as u64)?;
+        Ok(())
+    }
+
+    pub fn withdraw_from_treasury(ctx: Context<WithdrawFromTreasury>, amount: u64) -> Result<()> {
+        msg!("Withdraw From Treasury");
+        require!(
+            amount <= ctx.accounts.solr_treasury.amount,
+            ErrorCode::BalanceExceed
+        );
+
+        let pool_account = &ctx.accounts.pool_account;
+        let pool_name = pool_account.pool_name.as_ref();
+        let seeds = &[
+            pool_name.trim_ascii_whitespace(),
+            b"pool_account",
+            &[pool_account.bumps.pool_account],
+        ];
+        let signer = &[&seeds[..]];
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.solr_treasury.to_account_info(),
+            to: ctx.accounts.recipient_solr.to_account_info(),
+            authority: pool_account.to_account_info(),
+        };
+        let cpi_program = ctx.accounts.token_program.to_account_info();
+        let cpi_ctx = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer);
+        anchor_spl::token::transfer(cpi_ctx, amount)?;
         Ok(())
     }
 
@@ -276,6 +303,8 @@ pub enum ErrorCode {
     NotInitialize,
     #[msg("Invalid owner")]
     InvalidOwner,
+    #[msg("Invalid StakingAuthority")]
+    InvalidStakingAuthority,
     #[msg("Invalid mint")]
     InvalidMint,
     #[msg("Invalid token amount")]
@@ -300,4 +329,6 @@ pub enum ErrorCode {
     MaxMultiplierReach,
     #[msg("Insufficient Fund")]
     InsufficientFund,
+    #[msg("Balance Exceed")]
+    BalanceExceed,
 }

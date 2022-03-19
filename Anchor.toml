@@ -18,7 +18,7 @@ cluster = "localnet"
 wallet = "/Users/supasinliulaks/.config/solana/devnet.json"
 
 [scripts]
-test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.test.ts"
 copy_idl = "rm -rf frontend/src/api/idl && mkdir -p frontend/src/api/idl && cp -r target/idl/ frontend/src/api/idl"
 copy_types_frontend = "rm -rf frontend/src/api/solana/types && mkdir -p frontend/src/api/solana/types && cp -r target/types/ frontend/src/api/solana/types"
 copy_types_backend = "rm -rf backend//src/idl && mkdir -p backend/src/idl && cp -r target/types/ backend/src/idl/"

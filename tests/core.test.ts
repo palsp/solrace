@@ -5,7 +5,6 @@ import {
   createMint,
   createTokenAccount,
   getTokenAccount,
-  mockCreateAndMintNFT,
   requestAirdrop,
   sleep,
 } from './utils'
@@ -52,10 +51,8 @@ const DISTRIBUTION_PER_SEC = TOTAL_DISTRIBUTION.div(DURATION)
 
 const MAX_MULTIPLIER = new BN('1000')
 const MULTIPLIER_UNIT = new BN('100')
-const MAX_MULTIPLIER_UNIT = MAX_MULTIPLIER.div(MULTIPLIER_UNIT)
 
 const UPGRADE_FEE_PER_MULTIPLIER = new anchor.BN(20_000_000)
-const EXCHANGE_MULTIPLIER_FEE_PER_UNIT = new anchor.BN(500_000_000)
 
 function PoolBumps() {
   this.poolAccount
@@ -611,7 +608,7 @@ describe('Sol Race Core Program', () => {
       })
       expect.fail('should not pass')
     } catch (e) {
-      expect(e.message).to.eq('6002: Invalid mint')
+      expect(e.message).to.eq('6003: Invalid mint')
     }
   })
 
