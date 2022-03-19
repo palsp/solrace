@@ -37,6 +37,13 @@ pub struct Initialize<'info> {
         bump,
         payer = staking_authority)]
     pub pool_solr : Account<'info, TokenAccount>,
+    #[account(init,
+      token::mint = solr_mint,
+      token::authority = pool_account,
+      seeds = [pool_name.as_bytes(), b"solr_treasury"],
+      bump,
+      payer = staking_authority)]
+    pub solr_treasury : Account<'info, TokenAccount>,
     pub system_program : Program<'info, System>,
     pub token_program: Program<'info, Token>,
     pub rent: Sysvar<'info, Rent>,
@@ -328,4 +335,57 @@ pub struct UpgradeKart<'info> {
     pub token_metadata_program: AccountInfo<'info>,
     pub system_program : Program<'info, System>,
     pub token_program: Program<'info, Token>
+}
+
+
+#[derive(Accounts)]
+pub struct ExchangeForMultiplier<'info> {
+  pub user: Signer<'info>,
+
+  #[account(mut,
+    seeds = [
+      pool_account.pool_name.as_ref().trim_ascii_whitespace(),  
+      "pool_account".as_ref()
+    ],
+    bump = pool_account.bumps.pool_account,
+    has_one = solr_mint
+  )]
+  pub pool_account: Account<'info, PoolAccount>,
+
+
+  #[account(mut,
+    constraint = user_solr.owner == user.key(),
+    constraint = user_solr.mint == solr_mint.key()
+  )]
+  pub user_solr: Account<'info, TokenAccount>,
+
+  #[account(mut,
+      seeds = [pool_account.pool_name.as_ref().trim_ascii_whitespace(), b"solr_treasury"],
+      bump,
+    )]
+  pub solr_treasury : Account<'info, TokenAccount>,
+
+  #[account(constraint = solr_mint.key() == pool_account.solr_mint)]
+  pub solr_mint : Box<Account<'info, Mint>>,
+
+
+  #[account(mut,
+    seeds = [
+      b"staking_account",
+      pool_account.pool_name.as_ref().trim_ascii_whitespace(),
+      staking_account.garage_mint.as_ref()
+    ],
+    bump = staking_account.bump,
+    constraint = staking_account.is_bond == true @ ErrorCode::NotStake 
+  )]
+  pub staking_account: Account<'info, StakingAccount>,
+
+  #[account(
+    constraint = garage_token_account.owner == user.key() @ ErrorCode::InvalidOwner,
+    constraint = garage_token_account.mint == staking_account.garage_mint @ ErrorCode::InvalidMint,
+    constraint = garage_token_account.amount == 1 @ ErrorCode::InvalidAmount
+  )]
+  pub garage_token_account: Box<Account<'info, TokenAccount>>,
+
+  pub token_program: Program<'info, Token>
 }

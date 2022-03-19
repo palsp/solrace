@@ -112,13 +112,23 @@ pub fn compute_staker_reward(staking_account: &mut StakingAccount, pool_account:
   staking_account.pending_reward += pending_reward;
 }
 
+pub fn calculate_multiplier(staking_account: &StakingAccount, pool_account: &PoolAccount) -> f64 {
+  let max_multiplier = pool_account.max_multiplier as f64;
+  let multiplier_unit = pool_account.multiplier_unit as f64;
+  let multiplier = staking_account.multiplier as f64;
+
+  let max_multiplier_unit = max_multiplier / multiplier_unit;
+
+  (max_multiplier_unit * multiplier) / max_multiplier
+}
+
 pub fn increase_bond_amount(staking_account: &mut StakingAccount, pool_account: &mut PoolAccount) {
-  pool_account.total_staked += 1;
+  pool_account.total_staked += staking_account.multiplier;
   staking_account.is_bond = true;
 }
 
 pub fn decrease_bond_amount(staking_account: &mut StakingAccount, pool_account: &mut PoolAccount) {
-  pool_account.total_staked -= 1;
+  pool_account.total_staked -= staking_account.multiplier;
   staking_account.is_bond = false;
 }
 

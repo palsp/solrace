@@ -17,6 +17,16 @@ export const getPoolSolrAccount = (program: Program<any>, poolName: string) => {
   )
 }
 
+export const getSolrTreasuryAccount = (
+  program: Program<any>,
+  poolName: String,
+) => {
+  return PublicKey.findProgramAddress(
+    [Buffer.from(poolName), Buffer.from('solr_treasury')],
+    program.programId,
+  )
+}
+
 export const getStakingAccount = async (
   program: Program<any>,
   poolName: string,
