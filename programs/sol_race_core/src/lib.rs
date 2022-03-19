@@ -175,6 +175,24 @@ pub mod sol_race_core {
 
     pub fn upgrade_kart(ctx: Context<UpgradeKart>) -> Result<()> {
         let kart_account = &mut ctx.accounts.kart_account;
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.user_solr.to_account_info(),
+            to: ctx.accounts.pool_solr.to_account_info(),
+            authority: ctx.accounts.user.to_account_info(),
+        };
+        let cpi_program = ctx.accounts.token_program.to_account_info();
+        let cpi_ctx = CpiContext::new(cpi_program, cpi_accounts);
+        // 2 per upgrade
+        // TODO: dynamic fee
+        anchor_spl::token::transfer(cpi_ctx, 2000000)?;
+        // TODO: distribute to staker only some 2% and burn or collect the rest
+        ctx.accounts.pool_account.total_distribution = ctx
+            .accounts
+            .pool_account
+            .total_distribution
+            .checked_add(2000000)
+            .unwrap();
+
         // TODO: random
         kart_account.max_speed += 1;
         kart_account.acceleration += 25;

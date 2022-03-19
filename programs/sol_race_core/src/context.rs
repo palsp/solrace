@@ -312,7 +312,20 @@ pub struct UpgradeKart<'info> {
       constraint = kart_token_account.amount == 1 @ ErrorCode::InvalidAmount
     )]
     pub kart_token_account: Account<'info, TokenAccount>,
+    #[account(mut,
+      seeds = [pool_account.pool_name.as_ref().trim_ascii_whitespace(), b"pool_solr"],
+      bump,
+      )]
+    pub pool_solr : Box<Account<'info, TokenAccount>>,
+    #[account(mut,
+      constraint = user_solr.owner == user.key(),
+      constraint = user_solr.mint == solr_mint.key()
+    )]
+    pub user_solr: Box<Account<'info, TokenAccount>>,
+    #[account(constraint = solr_mint.key() == pool_account.solr_mint)]
+    pub solr_mint : Box<Account<'info, Mint>>,
     #[account(address = mpl_token_metadata::id())]
     pub token_metadata_program: AccountInfo<'info>,
-    pub system_program : Program<'info, System>
+    pub system_program : Program<'info, System>,
+    pub token_program: Program<'info, Token>
 }
