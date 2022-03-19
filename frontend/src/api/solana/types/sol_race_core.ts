@@ -46,6 +46,11 @@ export type SolRaceCore = {
           "isSigner": false
         },
         {
+          "name": "solrTreasury",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -83,6 +88,14 @@ export type SolRaceCore = {
         {
           "name": "endTime",
           "type": "i64"
+        },
+        {
+          "name": "multiplierUnit",
+          "type": "u128"
+        },
+        {
+          "name": "maxMultiplier",
+          "type": "u128"
         }
       ]
     },
@@ -368,6 +381,52 @@ export type SolRaceCore = {
       "args": []
     },
     {
+      "name": "withdrawFromTreasury",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "poolAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recipientSolr",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "solrTreasury",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "solrMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
       "name": "upgradeKart",
       "accounts": [
         {
@@ -396,6 +455,21 @@ export type SolRaceCore = {
           "isSigner": false
         },
         {
+          "name": "poolSolr",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userSolr",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "solrMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "tokenMetadataProgram",
           "isMut": false,
           "isSigner": false
@@ -404,9 +478,65 @@ export type SolRaceCore = {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": []
+    },
+    {
+      "name": "exchangeForMultiplier",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "poolAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userSolr",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "solrTreasury",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "solrMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "stakingAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "garageTokenAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "unit",
+          "type": "u128"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -477,6 +607,14 @@ export type SolRaceCore = {
           {
             "name": "globalRewardIndex",
             "type": "f64"
+          },
+          {
+            "name": "multiplierUnit",
+            "type": "u128"
+          },
+          {
+            "name": "maxMultiplier",
+            "type": "u128"
           }
         ]
       }
@@ -513,6 +651,10 @@ export type SolRaceCore = {
           {
             "name": "pendingReward",
             "type": "u128"
+          },
+          {
+            "name": "multiplier",
+            "type": "u128"
           }
         ]
       }
@@ -540,11 +682,11 @@ export type SolRaceCore = {
           },
           {
             "name": "maxSpeed",
-            "type": "u64"
+            "type": "f64"
           },
           {
             "name": "acceleration",
-            "type": "u64"
+            "type": "f64"
           },
           {
             "name": "driftPowerGenerationRate",
@@ -556,7 +698,7 @@ export type SolRaceCore = {
           },
           {
             "name": "handling",
-            "type": "u64"
+            "type": "f64"
           }
         ]
       }
@@ -574,6 +716,10 @@ export type SolRaceCore = {
           },
           {
             "name": "poolSolr",
+            "type": "u8"
+          },
+          {
+            "name": "solrTreasury",
             "type": "u8"
           }
         ]
@@ -593,53 +739,73 @@ export type SolRaceCore = {
     },
     {
       "code": 6002,
+      "name": "InvalidStakingAuthority",
+      "msg": "Invalid StakingAuthority"
+    },
+    {
+      "code": 6003,
       "name": "InvalidMint",
       "msg": "Invalid mint"
     },
     {
-      "code": 6003,
+      "code": 6004,
       "name": "InvalidAmount",
       "msg": "Invalid token amount"
     },
     {
-      "code": 6004,
+      "code": 6005,
       "name": "EmptyMetadata",
       "msg": "Empty Metadata"
     },
     {
-      "code": 6005,
+      "code": 6006,
       "name": "NotVerified",
       "msg": "Creator not verified"
     },
     {
-      "code": 6006,
+      "code": 6007,
       "name": "InvalidTime",
       "msg": "Invalid time"
     },
     {
-      "code": 6007,
+      "code": 6008,
       "name": "AlreadyStake",
       "msg": "Already stake"
     },
     {
-      "code": 6008,
+      "code": 6009,
       "name": "NotStake",
       "msg": "Not stake"
     },
     {
-      "code": 6009,
+      "code": 6010,
       "name": "NotMasterEdition",
       "msg": "Not master edition"
     },
     {
-      "code": 6010,
+      "code": 6011,
       "name": "InvalidCreator",
       "msg": "Invalid Creator"
     },
     {
-      "code": 6011,
+      "code": 6012,
       "name": "InvalidMetadata",
       "msg": "Invalid Metadata"
+    },
+    {
+      "code": 6013,
+      "name": "MaxMultiplierReach",
+      "msg": "Max Multiplier Reach"
+    },
+    {
+      "code": 6014,
+      "name": "InsufficientFund",
+      "msg": "Insufficient Fund"
+    },
+    {
+      "code": 6015,
+      "name": "BalanceExceed",
+      "msg": "Balance Exceed"
     }
   ]
 };
@@ -692,6 +858,11 @@ export const IDL: SolRaceCore = {
           "isSigner": false
         },
         {
+          "name": "solrTreasury",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -729,6 +900,14 @@ export const IDL: SolRaceCore = {
         {
           "name": "endTime",
           "type": "i64"
+        },
+        {
+          "name": "multiplierUnit",
+          "type": "u128"
+        },
+        {
+          "name": "maxMultiplier",
+          "type": "u128"
         }
       ]
     },
@@ -1014,6 +1193,52 @@ export const IDL: SolRaceCore = {
       "args": []
     },
     {
+      "name": "withdrawFromTreasury",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "poolAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recipientSolr",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "solrTreasury",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "solrMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
       "name": "upgradeKart",
       "accounts": [
         {
@@ -1042,6 +1267,21 @@ export const IDL: SolRaceCore = {
           "isSigner": false
         },
         {
+          "name": "poolSolr",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userSolr",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "solrMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "tokenMetadataProgram",
           "isMut": false,
           "isSigner": false
@@ -1050,9 +1290,65 @@ export const IDL: SolRaceCore = {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": []
+    },
+    {
+      "name": "exchangeForMultiplier",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "poolAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userSolr",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "solrTreasury",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "solrMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "stakingAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "garageTokenAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "unit",
+          "type": "u128"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -1123,6 +1419,14 @@ export const IDL: SolRaceCore = {
           {
             "name": "globalRewardIndex",
             "type": "f64"
+          },
+          {
+            "name": "multiplierUnit",
+            "type": "u128"
+          },
+          {
+            "name": "maxMultiplier",
+            "type": "u128"
           }
         ]
       }
@@ -1159,6 +1463,10 @@ export const IDL: SolRaceCore = {
           {
             "name": "pendingReward",
             "type": "u128"
+          },
+          {
+            "name": "multiplier",
+            "type": "u128"
           }
         ]
       }
@@ -1186,11 +1494,11 @@ export const IDL: SolRaceCore = {
           },
           {
             "name": "maxSpeed",
-            "type": "u64"
+            "type": "f64"
           },
           {
             "name": "acceleration",
-            "type": "u64"
+            "type": "f64"
           },
           {
             "name": "driftPowerGenerationRate",
@@ -1202,7 +1510,7 @@ export const IDL: SolRaceCore = {
           },
           {
             "name": "handling",
-            "type": "u64"
+            "type": "f64"
           }
         ]
       }
@@ -1220,6 +1528,10 @@ export const IDL: SolRaceCore = {
           },
           {
             "name": "poolSolr",
+            "type": "u8"
+          },
+          {
+            "name": "solrTreasury",
             "type": "u8"
           }
         ]
@@ -1239,53 +1551,73 @@ export const IDL: SolRaceCore = {
     },
     {
       "code": 6002,
+      "name": "InvalidStakingAuthority",
+      "msg": "Invalid StakingAuthority"
+    },
+    {
+      "code": 6003,
       "name": "InvalidMint",
       "msg": "Invalid mint"
     },
     {
-      "code": 6003,
+      "code": 6004,
       "name": "InvalidAmount",
       "msg": "Invalid token amount"
     },
     {
-      "code": 6004,
+      "code": 6005,
       "name": "EmptyMetadata",
       "msg": "Empty Metadata"
     },
     {
-      "code": 6005,
+      "code": 6006,
       "name": "NotVerified",
       "msg": "Creator not verified"
     },
     {
-      "code": 6006,
+      "code": 6007,
       "name": "InvalidTime",
       "msg": "Invalid time"
     },
     {
-      "code": 6007,
+      "code": 6008,
       "name": "AlreadyStake",
       "msg": "Already stake"
     },
     {
-      "code": 6008,
+      "code": 6009,
       "name": "NotStake",
       "msg": "Not stake"
     },
     {
-      "code": 6009,
+      "code": 6010,
       "name": "NotMasterEdition",
       "msg": "Not master edition"
     },
     {
-      "code": 6010,
+      "code": 6011,
       "name": "InvalidCreator",
       "msg": "Invalid Creator"
     },
     {
-      "code": 6011,
+      "code": 6012,
       "name": "InvalidMetadata",
       "msg": "Invalid Metadata"
+    },
+    {
+      "code": 6013,
+      "name": "MaxMultiplierReach",
+      "msg": "Max Multiplier Reach"
+    },
+    {
+      "code": 6014,
+      "name": "InsufficientFund",
+      "msg": "Insufficient Fund"
+    },
+    {
+      "code": 6015,
+      "name": "BalanceExceed",
+      "msg": "Balance Exceed"
     }
   ]
 };
