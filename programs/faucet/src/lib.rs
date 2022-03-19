@@ -26,7 +26,7 @@ pub mod faucet {
         Ok(())
     }
 
-    pub fn mint(ctx: Context<FaucetMint>) -> Result<()> {
+    pub fn mint(ctx: Context<FaucetMint>, amount: u64) -> Result<()> {
         msg!("MINT");
         let faucet_account = &ctx.accounts.faucet_account;
         let token_name = faucet_account.token_name.as_ref();
@@ -43,8 +43,7 @@ pub mod faucet {
         };
         let cpi_program = ctx.accounts.token_program.to_account_info();
         let cpi_ctx = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer);
-        let decimals = ctx.accounts.token_mint.decimals;
-        anchor_spl::token::mint_to(cpi_ctx, 1000000 * (10 as i32).pow(decimals as u32) as u64)?;
+        anchor_spl::token::mint_to(cpi_ctx, amount)?;
         Ok(())
     }
 }

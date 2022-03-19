@@ -1,8 +1,3 @@
-import { utils } from '@project-serum/anchor'
-import * as anchor from '@project-serum/anchor'
-import { Message } from '@solana/web3.js'
-
-import * as bip32 from 'bip32'
 import nacl from 'tweetnacl'
 import { TextEncoder } from 'util'
 

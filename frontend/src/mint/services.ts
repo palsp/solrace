@@ -12,6 +12,7 @@ import {
 import {
   CIVIC,
   SOL_RACE_CORE_PROGRAM_ID,
+  SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
   TOKEN_METADATA_PROGRAM_ID,
 } from "~/api/solana/addresses";
 import {
@@ -20,12 +21,12 @@ import {
 } from "~/api/solana/candy-machine";
 
 import {
-  createAssociatedTokenAccountInstruction,
   getAtaForMint,
   getNetworkExpire,
   getNetworkToken,
   getMasterEdition,
   getMetadata,
+  createAssociatedTokenAccountInstruction,
 } from "~/api/solana/utils";
 
 import { POOL_NAME } from "~/api/solana/constants";

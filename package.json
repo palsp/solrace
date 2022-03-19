@@ -7,7 +7,9 @@
         "build": "anchor build -p sol_race_core --skip-lint && anchor run copy_types_frontend && anchor run copy_types_backend && anchor run copy_types_cli",
         "deploy": "anchor deploy -p faucet",
         "build:faucet": "anchor build -p faucet --skip-lint && anchor run copy_types_frontend && anchor run copy_types_backend && anchor run copy_types_cli",
-        "deploy:faucet": "anchor deploy -p faucet"
+        "deploy:faucet": "anchor deploy -p faucet",
+        "init-faucet" : "ts-node scripts/deploy/faucet.ts",
+        "init-pool" : "ts-node scripts/deploy/core.ts"
     },
     "dependencies": {
         "@project-serum/anchor": "^0.22.1"
