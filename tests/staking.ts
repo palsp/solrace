@@ -147,13 +147,26 @@ describe('Sol Race Core Program', () => {
     expect(poolAccountInfo.startTime).to.be.bignumber.equals(startTime)
     expect(poolAccountInfo.endTime).to.be.bignumber.equals(endTime)
 
-    expect(poolAccountInfo.poolAuthority.equals(poolAuthority)).to.be.true
-    // TODO: check nft creator
-    expect(poolAccountInfo.stakingAuthority.equals(provider.wallet.publicKey))
-      .to.be.true
+    // check public key
+    expect(poolAccountInfo.poolAuthority.toBase58()).to.eq(
+      poolAuthority.toBase58(),
+    )
+    expect(poolAccountInfo.stakingAuthority.toBase58()).to.eq(
+      provider.wallet.publicKey.toBase58(),
+    )
+    expect(poolAccountInfo.poolSolr.toBase58()).to.eq(poolSolr.toBase58())
 
-    expect(poolAccountInfo.solrMint.equals(solrMint)).to.be.true
-    expect(poolAccountInfo.poolSolr.equals(poolSolr)).to.be.true
+    expect(poolAccountInfo.garageCreator.toBase58()).to.eq(
+      garageCreator.publicKey.toBase58(),
+    )
+
+    expect(poolAccountInfo.kartCreator.toBase58()).to.eq(
+      kartCreator.publicKey.toBase58(),
+    )
+
+    expect(poolAccountInfo.solrMint.toBase58()).to.eq(solrMint.toBase58())
+
+    // check number
     expect(poolAccountInfo.lastDistributed).to.be.a.bignumber.equal(
       new anchor.BN(0),
     )
@@ -168,13 +181,6 @@ describe('Sol Race Core Program', () => {
 
     expect(poolAccountInfo.startTime).to.be.a.bignumber.equal(startTime)
     expect(poolAccountInfo.endTime).to.be.a.bignumber.equal(endTime)
-
-    expect(poolAccountInfo.garageCreator.equals(garageCreator.publicKey)).to.be
-      .true
-
-    expect(poolAccountInfo.kartCreator.equals(kartCreator.publicKey)).to.be.true
-
-    expect(poolAccountInfo.solrMint.equals(solrMint)).to.be.true
 
     const poolAuthorityTokenAccountInfo = await getTokenAccount(
       provider,
