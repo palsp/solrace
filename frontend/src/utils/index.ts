@@ -1,31 +1,32 @@
-import { toast } from 'react-toastify'
-import { AxiosError } from 'axios'
-import { IDL } from '~/api/solana/types/sol_race_core'
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
+import { IDL } from "~/api/solana/types/sol_race_core";
 
 export const toastAPIError = (
   e: any,
-  defaultMessage = 'Something went wrong. Please try again.',
+  defaultMessage = "Something went wrong. Please try again."
 ) => {
-  let message = defaultMessage
+  let message = defaultMessage;
 
   if ((e as any).isAxiosError) {
-    const axiosError = e as AxiosError
+    const axiosError = e as AxiosError;
     message =
       axiosError.response?.data?.message ||
       axiosError.response?.statusText ||
-      message
+      message;
   }
 
-  const messages = e.message?.split(':')
+  const messages = e.message?.split(":");
+
   if (messages && messages.length >= 1) {
-    const code = +messages[0]
-    if (!isNaN(code)) {
-      const error = IDL['errors'].find((err) => err.code === code)
+    const code = messages[messages.length - 1];
+    if (!isNaN(+code)) {
+      const error = IDL["errors"].find((err) => err.code === +code);
       if (error) {
-        message = `${defaultMessage}: ${error.msg}`
+        message = `${error.msg}`;
       }
     }
   }
 
-  toast(message, { type: 'error' })
-}
+  toast(message, { type: "error" });
+};
