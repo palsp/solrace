@@ -91,7 +91,6 @@ pub struct FaucetMint<'info> {
     pub token_mint: Box<Account<'info, Mint>>,
 
     #[account(mut,
-        constraint = user_token_account.owner == user_authority.key(),
         constraint = user_token_account.mint == token_mint.key())]
     pub user_token_account: Account<'info, TokenAccount>,
 

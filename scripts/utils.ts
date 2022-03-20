@@ -43,8 +43,8 @@ export const createATAAccount = async (
   const ata = await getAtaForMint(mint, owner)
   let isInitialize = false
   try {
-    await getTokenAccount(provider, ata)
-    isInitialize = true
+    const tokenInfo = await getTokenAccount(provider, ata)
+    isInitialize = tokenInfo.isInitialized
   } catch (e) {
     isInitialize = false
   }

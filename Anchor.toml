@@ -17,7 +17,7 @@ faucet = "GCNWK7b12pN6i11yNRKnwZ8TYFFLTbTXMZuSJ98qqFEY"
 url = "https://anchor.projectserum.com"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "/Users/supasinliulaks/.config/solana/devnet.json"
 
 [scripts]
