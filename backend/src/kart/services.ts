@@ -20,11 +20,11 @@ interface RawKartsByMint {
 }
 
 interface UpgradedKart {
-  maxSpeed: BN
-  acceleration: BN
+  maxSpeed: number
+  acceleration: number
   driftPowerGenerationRate: number
   driftPowerConsumptionRate: number
-  handling: BN
+  handling: number
 }
 
 const getRawKartMetadataOfOwnerByMint = async (
@@ -97,15 +97,15 @@ const getKartsIn = async (names: string[]) => {
 
 const combineKart = (kart: Kart, upgradedKart: UpgradedKart) => {
   const temp = _.cloneDeep(kart)
-  temp.maxSpeed += upgradedKart.maxSpeed.toNumber()
-  temp.acceleration += upgradedKart.acceleration.toNumber()
+  temp.maxSpeed += upgradedKart.maxSpeed
+  temp.acceleration += upgradedKart.acceleration
   temp.driftPowerGenerationRate += upgradedKart.driftPowerGenerationRate
 
   temp.driftPowerConsumptionRate -= upgradedKart.driftPowerConsumptionRate
   if (temp.driftPowerConsumptionRate < 0.2) {
     temp.driftPowerConsumptionRate = 0.2
   }
-  temp.handling += upgradedKart.handling.toNumber()
+  temp.handling += upgradedKart.handling
 
   return temp
 }
