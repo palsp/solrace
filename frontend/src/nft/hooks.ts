@@ -62,13 +62,11 @@ export const useMetadata = (
 
       const metadataData = MetadataData.deserialize(metadataAccountInfo.data);
       const { uri } = metadataData.data;
-      console.log(
-        uri.replace("https://api.solrace.xyz", "http://localhost:8080")
-      );
+      // console.log(
+      //   uri.replace("https://api.solrace.xyz", "http://localhost:8080")
+      // );
       // const { data: _data } = await axios.get(uri);
-      const { data: _data } = await axios.get(
-        uri.replace("https://api.solrace.xyz", "http://localhost:8080")
-      );
+      const { data: _data } = await axios.get(uri);
       setAccountInfo(metadataData);
       setData(_data);
     } catch (e) {

@@ -7,7 +7,7 @@ interface KartInfo {
   kartMint: PublicKey;
   kartMetadataAccount: PublicKey;
   kartMasterEdition: PublicKey;
-  masSpeed: number;
+  maxSpeed: number;
   acceleration: number;
   driftPowerGenerationRate: number;
   driftPowerConsumptionRate: number;
@@ -17,14 +17,12 @@ interface KartInfo {
 type FetchKartInfo = {
   program: Program<SolRaceCore>;
   poolName: string;
-  user: PublicKey;
   kartMint: PublicKey;
 };
 
 export const fetchKartInfo = async ({
   program,
   poolName,
-  user,
   kartMint,
 }: FetchKartInfo): Promise<[PublicKey, number, KartInfo | undefined]> => {
   const [kartAccount, kartAccountBump] = await PublicKey.findProgramAddress(
@@ -35,27 +33,7 @@ export const fetchKartInfo = async ({
   try {
     const accountInfo = await program.account.kartAccount.fetch(kartAccount);
 
-    const {
-      maxSpeed,
-      acceleration,
-      driftPowerConsumptionRate,
-      driftPowerGenerationRate,
-      handling,
-      ...cleanKartInfo
-    } = accountInfo;
-
-    return [
-      kartAccount,
-      kartAccountBump,
-      {
-        ...cleanKartInfo,
-        masSpeed: maxSpeed.toNumber(),
-        acceleration: acceleration.toNumber(),
-        driftPowerConsumptionRate: driftPowerConsumptionRate,
-        driftPowerGenerationRate: driftPowerGenerationRate,
-        handling: handling.toNumber(),
-      },
-    ];
+    return [kartAccount, kartAccountBump, accountInfo];
   } catch (e) {
     return [kartAccount, kartAccountBump, undefined];
   }

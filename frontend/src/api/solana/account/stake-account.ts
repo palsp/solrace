@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { Program } from "@project-serum/anchor";
+import { BN, Program } from "@project-serum/anchor";
 import { GetProgramAccountsFilter, PublicKey } from "@solana/web3.js";
 import { SolRaceCore } from "~/api/solana/types/sol_race_core";
 
@@ -12,6 +12,7 @@ export interface StakeInfo {
   isBond: boolean;
   rewardIndex: number;
   pendingReward: number;
+  multiplier: BN;
 }
 
 export interface Staker extends StakeInfo {

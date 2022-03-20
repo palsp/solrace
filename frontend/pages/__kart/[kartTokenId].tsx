@@ -27,11 +27,14 @@ import { useGarageStaker } from "~/garage-staker/hooks";
 import { useKartAccount } from "~/hooks/useAccount";
 import useSWR from "swr";
 import { useMetadata, useNFT } from "~/nft/hooks";
+import { Staker } from "~/api/solana/account/stake-account";
+import { BN } from "@project-serum/anchor";
 
 const KartDetail = () => {
   const { query } = useRouter();
   const { mint, tokenAccountAddress } = query;
 
+  const { poolInfo, revalidate: revalidatePool } = usePool();
   const {
     initialize,
     data: kart,
@@ -92,7 +95,13 @@ const KartDetail = () => {
       return;
     }
 
-    if (loadingKart || !poolAccount || !kartMint || !kartTokenAccount) {
+    if (
+      loadingKart ||
+      !poolAccount ||
+      !kartMint ||
+      !kartTokenAccount ||
+      !poolInfo
+    ) {
       // not finish loading
       return;
     }
@@ -107,6 +116,8 @@ const KartDetail = () => {
         kartMint,
         kartAccount: publicAddress!,
         kartAccountBump: bump!,
+        poolSolr: poolInfo.poolSolr,
+        solrMint: poolInfo.solrMint,
         kartTokenAccount,
         stakingAccount: selectedGarage,
         isInitialize: isInitialize!,
@@ -116,7 +127,11 @@ const KartDetail = () => {
         toastAPIError(resp.value.err, "Fail! please try again");
       } else {
         toast("Congratulation! upgrade succeed", { type: "success" });
-        await Promise.all([revalidateKart(), revalidateKartAccount()]);
+        await Promise.all([
+          revalidateKart(),
+          revalidateKartAccount(),
+          revalidatePool(),
+        ]);
       }
     } catch (e) {
       console.log(e);
@@ -124,6 +139,24 @@ const KartDetail = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const getMultiplier = (staker: Staker) => {
+    if (!poolInfo) {
+      return "";
+    }
+
+    if (!staker.multiplier || staker.multiplier.eq(new BN("0"))) {
+      return "( deprecated )";
+    }
+
+    const maxMultiplierUnit = poolInfo.maxMultiplier.div(
+      poolInfo.multiplierUnit
+    );
+    return `( x${staker.multiplier
+      .mul(maxMultiplierUnit)
+      .div(poolInfo.maxMultiplier)
+      .toString()} )`;
   };
 
   return (
@@ -196,8 +229,8 @@ const KartDetail = () => {
                   key={staker.publicAddress.toBase58()}
                   value={staker.publicAddress.toBase58()}
                 >
-                  {shortenIfAddress(staker.publicAddress.toBase58())} (
-                  {(50 + Math.random() * 20).toFixed(2)} %)
+                  {shortenIfAddress(staker.publicAddress.toBase58())}{" "}
+                  {getMultiplier(staker)}
                 </option>
               ))}
             </Select>

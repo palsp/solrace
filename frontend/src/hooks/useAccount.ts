@@ -117,7 +117,6 @@ export const useKartAccount = (poolName: string, kartMint?: PublicKey) => {
       program,
       poolName,
       kartMint,
-      user: wallet.publicKey,
     });
 
     setPublicAddress(kartAccount);
