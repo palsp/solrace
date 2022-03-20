@@ -35,7 +35,7 @@ const getAtaForMint = async (
   )
 }
 
-export const createATAAccount = async (
+export const getOrCreateATAAccount = async (
   provider: anchor.Provider,
   mint: PublicKey,
   owner: PublicKey,
@@ -49,7 +49,7 @@ export const createATAAccount = async (
     isInitialize = false
   }
   if (!isInitialize) {
-    console.log('not initialize')
+    console.log('not initialize: creating ata account')
     const tx = new web3.Transaction()
     const createATAIX = Token.createAssociatedTokenAccountInstruction(
       ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -63,7 +63,7 @@ export const createATAAccount = async (
     tx.add(createATAIX)
     await provider.send(tx)
   } else {
-    console.log('skip: already initialized')
+    console.log('ata is already initialized')
   }
 
   return ata

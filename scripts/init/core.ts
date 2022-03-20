@@ -15,16 +15,12 @@ import {
 } from '../../tests/utils/account'
 import { createTokenAccount } from '@project-serum/common'
 
-const clusterUrl = clusterApiUrl('devnet')
-// const clusterUrl = 'http://localhost:8899'
-
 function PoolBumps() {
   this.poolAccount
   this.poolSolr
   this.solrTreasury
 }
 
-const POOL_NAME = 'solrace'
 // 1000000 SOLR distribute in one year
 const TOTAL_DISTRIBUTION = new anchor.BN(1_000_000_000_000_000)
 // distribute for one year
@@ -45,40 +41,13 @@ const kartCreator = new PublicKey(
   '7uGWKJKxKvxE1Hx5G4L9WMoUJyXcYjoqtpRg27kErVZk',
 )
 
-export const deployCore = async () => {
-  const args = process.argv.slice(2)
-
-  let poolName: string
-  let poolAuthority: PublicKey
-  let solrMint: PublicKey
-  for (let i = 0; i < args.length; i += 2) {
-    const opt = args[i]
-    const val = args[i + 1]
-
-    switch (opt) {
-      case '--solr-mint':
-        solrMint = new PublicKey(val)
-        break
-      case '--pool-name':
-        poolName = val
-        break
-      case '--pool-authority':
-        poolAuthority = new PublicKey(val)
-        break
-    }
-  }
-
-  if (!solrMint) {
-    throw new Error('--solr-mint is required')
-  }
-
-  if (!poolAuthority) {
-    throw new Error('--pool-authority is required')
-  }
-
-  if (!poolName || poolName === '') {
-    throw new Error('--pool-name is required')
-  }
+export const deployCore = async (
+  poolName: string,
+  poolAuthority: PublicKey,
+  solrMint: PublicKey,
+  clusterUrl: string,
+) => {
+  console.log(`Initialize ${poolName} pool`)
 
   const keypair = loadedKeypair(
     '/Users/supasinliulaks/.config/solana/devnet.json',
@@ -95,14 +64,11 @@ export const deployCore = async () => {
   })
   const program = new anchor.Program<SolRaceCore>(IDL, programId, provider)
 
-  const [poolAccount, poolAccountBump] = await getPoolAccount(
-    program,
-    POOL_NAME,
-  )
-  const [poolSolr, poolSolrBump] = await getPoolSolrAccount(program, POOL_NAME)
+  const [poolAccount, poolAccountBump] = await getPoolAccount(program, poolName)
+  const [poolSolr, poolSolrBump] = await getPoolSolrAccount(program, poolName)
   const [solrTreasury, solrTreasuryBump] = await getSolrTreasuryAccount(
     program,
-    POOL_NAME,
+    poolName,
   )
 
   const bumps = new PoolBumps()
@@ -112,7 +78,7 @@ export const deployCore = async () => {
   bumps.solrTreasury = solrTreasuryBump
 
   await program.rpc.initialize(
-    POOL_NAME,
+    poolName,
     bumps,
     TOTAL_DISTRIBUTION,
     START_TIME,
@@ -146,4 +112,58 @@ export const deployCore = async () => {
   console.log('deploy success')
 }
 
-deployCore()
+async function main() {
+  const args = process.argv.slice(2)
+
+  let poolName: string
+  let poolAuthority: PublicKey
+  let solrMint: PublicKey
+  let network = 'devnet'
+  let clusterUrl: string
+  for (let i = 0; i < args.length; i += 2) {
+    const opt = args[i]
+    const val = args[i + 1]
+
+    switch (opt) {
+      case '--solr-mint':
+        solrMint = new PublicKey(val)
+        break
+      case '--pool-name':
+        poolName = val
+        break
+      case '--pool-authority':
+        poolAuthority = new PublicKey(val)
+        break
+      case '--network':
+        network = val
+        break
+    }
+  }
+
+  if (!solrMint) {
+    throw new Error('--solr-mint is required')
+  }
+
+  if (!poolAuthority) {
+    throw new Error('--pool-authority is required')
+  }
+
+  if (!poolName || poolName === '') {
+    throw new Error('--pool-name is required')
+  }
+
+  if (!['devnet', 'testnet', 'localnet'].includes(network)) {
+    throw new Error('--network must be one of `devnet`,`testnet` or `localnet`')
+  }
+
+  if (network === 'localnet') {
+    clusterUrl = 'http://localhost:8899'
+  } else {
+    clusterUrl = clusterApiUrl(network as anchor.web3.Cluster)
+  }
+
+  console.log(`Deploy on ${network} (${clusterUrl})`)
+  await deployCore(poolName, poolAuthority, solrMint, clusterUrl)
+}
+
+main()

@@ -1,4 +1,3 @@
-import fs from 'fs'
 import * as anchor from '@project-serum/anchor'
 import {
   clusterApiUrl,
@@ -7,48 +6,20 @@ import {
   SYSVAR_RENT_PUBKEY,
 } from '@solana/web3.js'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
-import { createATAAccount, loadedKeypair } from '../utils'
+import { getOrCreateATAAccount, loadedKeypair } from '../utils'
 import { Faucet, IDL } from '../../target/types/faucet'
 import { getTokenAccount } from '@project-serum/common'
-
-const clusterUrl = clusterApiUrl('devnet')
-// const clusterUrl = 'http://localhost:8899'
 
 function Bumps() {
   this.faucetAccount
   this.tokenMint
 }
 
-export const deployFaucet = async () => {
-  const args = process.argv.slice(2)
-  let tokenName: string
-  let decimals: string
-  for (let i = 0; i < args.length; i += 2) {
-    const opt = args[i]
-    const val = args[i + 1]
-
-    switch (opt) {
-      case '--name':
-        tokenName = val
-        break
-      case '--decimals':
-        decimals = val
-        break
-    }
-  }
-
-  if (!tokenName) {
-    throw new Error('--name is required')
-  }
-
-  if (!decimals) {
-    throw new Error('--decimals is required')
-  }
-
-  if (isNaN(+decimals)) {
-    throw new Error('--decimals must be a number')
-  }
-
+export const deployFaucet = async (
+  tokenName: string,
+  decimals: string,
+  clusterUrl: string,
+) => {
   const keypair = loadedKeypair(
     '/Users/supasinliulaks/.config/solana/devnet.json',
   )
@@ -101,7 +72,7 @@ export const deployFaucet = async () => {
   console.log(`${tokenName} mint: ${tokenMint.toBase58()}`)
   console.log(`faucet account: ${faucetAccount.toBase58()}`)
 
-  const poolAuthority = await createATAAccount(
+  const poolAuthority = await getOrCreateATAAccount(
     provider,
     tokenMint,
     provider.wallet.publicKey,
@@ -127,4 +98,52 @@ export const deployFaucet = async () => {
   )
 }
 
-deployFaucet()
+async function main() {
+  const args = process.argv.slice(2)
+  let tokenName: string
+  let decimals: string
+  let network = 'devnet'
+  let clusterUrl: string
+  for (let i = 0; i < args.length; i += 2) {
+    const opt = args[i]
+    const val = args[i + 1]
+
+    switch (opt) {
+      case '--name':
+        tokenName = val
+        break
+      case '--decimals':
+        decimals = val
+        break
+      case '--network':
+        network = val
+        break
+    }
+  }
+
+  if (!tokenName) {
+    throw new Error('--name is required')
+  }
+
+  if (!decimals) {
+    throw new Error('--decimals is required')
+  }
+
+  if (isNaN(+decimals)) {
+    throw new Error('--decimals must be a number')
+  }
+
+  if (!['devnet', 'testnet', 'localnet'].includes(network)) {
+    throw new Error('--network must be one of `devnet`,`testnet` or `localnet`')
+  }
+
+  if (network === 'localnet') {
+    clusterUrl = 'http://localhost:8899'
+  } else {
+    clusterUrl = clusterApiUrl(network as anchor.web3.Cluster)
+  }
+  console.log(`Deploy on ${network} (${clusterUrl})`)
+  await deployFaucet(tokenName, decimals, clusterUrl)
+}
+
+main()
