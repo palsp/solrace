@@ -24,6 +24,7 @@ const Button = ({
   outline,
   padding,
   onClick,
+  ...buttonProps
 }: Props) => {
   let Icon;
   if (icon) {
@@ -35,6 +36,7 @@ const Button = ({
       ></AppImage>
     );
   }
+
   return (
     <WrapperButton
       width={width}
@@ -42,6 +44,7 @@ const Button = ({
       outline={outline}
       padding={padding}
       onClick={onClick}
+      disabled={buttonProps.disabled}
     >
       <Span>
         {Icon}

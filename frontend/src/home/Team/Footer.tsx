@@ -25,14 +25,18 @@ const Footer = () => {
           >
             Litepaper
           </AppLink>
-          <AppLink href="/marketplace">Marketplace</AppLink>
+          {/* <AppLink href="/marketplace">Marketplace</AppLink> */}
           <AppLink href="/Roadmap">Roadmap</AppLink>
           <AppLink href="/Team">Team</AppLink>
         </FooterNav>
         <FooterCommunity>
           <p>Community</p>
           <SocialDiv>
-            <a href="https://twitter.com/projectsolrace" target="_blank">
+            <a
+              href="https://twitter.com/projectsolrace"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
               <AppImage src="/twitter-black.png" width="34px" height="34px" />
             </a>
             <AppImage src="/discord-black.png" width="34px" height="34px" />

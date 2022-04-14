@@ -25,37 +25,37 @@ import { toEtherString } from "~/api/solana/utils/parse-ether";
 const MintPage = () => {
   const { connected } = useWallet();
 
-  const { provider } = useWorkspace();
-  const { requestGatewayToken, gatewayStatus } = useGateway();
+  // const { provider } = useWorkspace();
+  // const { requestGatewayToken, gatewayStatus } = useGateway();
   const [clicked, setClicked] = useState(false);
   const [isMintingGarage, setIsMintingGarage] = useState(false);
   const [isMintingKart, setIsMintingKart] = useState(false);
 
-  const { getNFTOfCollection, revalidateNFTs } = useNFT();
+  // const { getNFTOfCollection, revalidateNFTs } = useNFT();
 
-  const garages = useMemo(() => {
-    return getNFTOfCollection(GARAGE_COLLECTION_NAME);
-  }, [getNFTOfCollection]);
+  // const garages = useMemo(() => {
+  //   return getNFTOfCollection(GARAGE_COLLECTION_NAME);
+  // }, [getNFTOfCollection]);
 
-  const karts = useMemo(() => {
-    return getNFTOfCollection(KART_COLLECTION_NAME);
-  }, [getNFTOfCollection]);
+  // const karts = useMemo(() => {
+  //   return getNFTOfCollection(KART_COLLECTION_NAME);
+  // }, [getNFTOfCollection]);
 
-  const {
-    candyMachine: kartCM,
-    itemsRemaining: kartRemaining,
-    revalidateCandyMachine: revalidateKartCM,
-  } = useCandyMachine({
-    candyMachineId: KART_CM_ID,
-  });
+  // const {
+  //   candyMachine: kartCM,
+  //   itemsRemaining: kartRemaining,
+  //   revalidateCandyMachine: revalidateKartCM,
+  // } = useCandyMachine({
+  //   candyMachineId: KART_CM_ID,
+  // });
 
-  const {
-    candyMachine: garageCM,
-    itemsRemaining: garageRemaining,
-    revalidateCandyMachine: revalidateGarageCM,
-  } = useCandyMachine({
-    candyMachineId: GARAGE_CM_ID,
-  });
+  // const {
+  //   candyMachine: garageCM,
+  //   itemsRemaining: garageRemaining,
+  //   revalidateCandyMachine: revalidateGarageCM,
+  // } = useCandyMachine({
+  //   candyMachineId: GARAGE_CM_ID,
+  // });
 
   // const validateUserBalance = useCallback(async () => {
   //   if (!anchorWallet || !candyMachine || !provider) {
@@ -75,148 +75,145 @@ const MintPage = () => {
   //   validateUserBalance()
   // }, [validateUserBalance])
 
-  const handleMintKart = async () => {
-    // if (!sufficientFund) {
-    //   toast('Insufficient Balance', { type: 'error' })
-    //   return
-    // }
+  // const handleMintKart = async () => {
+  //   // if (!sufficientFund) {
+  //   //   toast('Insufficient Balance', { type: 'error' })
+  //   //   return
+  //   // }
 
-    if (!provider || !kartCM?.program) {
-      toast("Please connect wallet", { type: "warning" });
-      return;
-    }
+  //   if (!provider || !kartCM?.program) {
+  //     toast("Please connect wallet", { type: "warning" });
+  //     return;
+  //   }
 
-    setClicked(true);
-    if (kartCM?.state.isActive && kartCM?.state.gatekeeper) {
-      if (gatewayStatus === GatewayStatus.ACTIVE) {
-        setClicked(true);
-      } else {
-        await requestGatewayToken();
-      }
-    } else {
-      try {
-        setIsMintingKart(true);
-        const [mintTxId] = await mint({ provider, candyMachine: kartCM });
-        const resp = await provider.connection.confirmTransaction(mintTxId);
-        if (resp.value.err) {
-          toast("Mint Failed", { type: "error" });
-        } else {
-          await Promise.all([revalidateNFTs(), revalidateKartCM()]);
-          toast("Congratulation! You have Minted new kart", {
-            type: "success",
-          });
-        }
-      } catch (e) {
-        toast("Mint Failed", { type: "error" });
-      } finally {
-        setIsMintingKart(false);
-        setClicked(false);
-      }
-    }
-  };
+  //   setClicked(true);
+  //   if (kartCM?.state.isActive && kartCM?.state.gatekeeper) {
+  //     if (gatewayStatus === GatewayStatus.ACTIVE) {
+  //       setClicked(true);
+  //     } else {
+  //       await requestGatewayToken();
+  //     }
+  //   } else {
+  //     try {
+  //       setIsMintingKart(true);
+  //       const [mintTxId] = await mint({ provider, candyMachine: kartCM });
+  //       const resp = await provider.connection.confirmTransaction(mintTxId);
+  //       if (resp.value.err) {
+  //         toast("Mint Failed", { type: "error" });
+  //       } else {
+  //         await Promise.all([revalidateNFTs(), revalidateKartCM()]);
+  //         toast("Congratulation! You have Minted new kart", {
+  //           type: "success",
+  //         });
+  //       }
+  //     } catch (e) {
+  //       toast("Mint Failed", { type: "error" });
+  //     } finally {
+  //       setIsMintingKart(false);
+  //       setClicked(false);
+  //     }
+  //   }
+  // };
 
-  const handleMintGarage = async () => {
-    // if (!sufficientFund) {
-    //   toast("Insufficient Balance", { type: "error" });
-    //   return;
-    // }
+  // const handleMintGarage = async () => {
+  //   // if (!sufficientFund) {
+  //   //   toast("Insufficient Balance", { type: "error" });
+  //   //   return;
+  //   // }
 
-    if (garageCM?.state.isActive && garageCM?.state.gatekeeper) {
-      if (gatewayStatus === GatewayStatus.ACTIVE) {
-        setClicked(true);
-      } else {
-        await requestGatewayToken();
-      }
-    } else {
-      try {
-        setIsMintingGarage(true);
-        if (!provider || !garageCM?.program) {
-          toast("Please connect wallet", { type: "warning" });
-          return;
-        }
+  //   if (garageCM?.state.isActive && garageCM?.state.gatekeeper) {
+  //     if (gatewayStatus === GatewayStatus.ACTIVE) {
+  //       setClicked(true);
+  //     } else {
+  //       await requestGatewayToken();
+  //     }
+  //   } else {
+  //     try {
+  //       setIsMintingGarage(true);
+  //       if (!provider || !garageCM?.program) {
+  //         toast("Please connect wallet", { type: "warning" });
+  //         return;
+  //       }
 
-        const [mintTxId] = await mint({
-          provider,
-          candyMachine: garageCM,
-        });
-        const resp = await provider.connection.confirmTransaction(mintTxId);
-        if (resp.value.err) {
-          toastAPIError(resp.value.err, "Mint Failed");
-        } else {
-          await Promise.all([revalidateGarageCM(), revalidateNFTs()]);
-          toast("Congratulation! You have Minted new garage.", {
-            type: "success",
-          });
-        }
-      } catch (e) {
-        const message = handleMintError(e);
-        toast(message, { type: "error" });
-      } finally {
-        setIsMintingGarage(false);
-        setClicked(false);
-      }
-    }
-  };
+  //       const [mintTxId] = await mint({
+  //         provider,
+  //         candyMachine: garageCM,
+  //       });
+  //       const resp = await provider.connection.confirmTransaction(mintTxId);
+  //       if (resp.value.err) {
+  //         toastAPIError(resp.value.err, "Mint Failed");
+  //       } else {
+  //         await Promise.all([revalidateGarageCM(), revalidateNFTs()]);
+  //         toast("Congratulation! You have Minted new garage.", {
+  //           type: "success",
+  //         });
+  //       }
+  //     } catch (e) {
+  //       const message = handleMintError(e);
+  //       toast(message, { type: "error" });
+  //     } finally {
+  //       setIsMintingGarage(false);
+  //       setClicked(false);
+  //     }
+  //   }
+  // };
 
-  const mintKartButtonContent = useMemo(() => {
-    if (kartCM?.state.isSoldOut) {
-      return "SOLD OUT";
-    } else if (isMintingKart) {
-      return (
-        <ReactLoading
-          type="bubbles"
-          color="#512da8"
-          height="50px"
-          width="50px"
-        />
-      );
-    } else if (kartCM?.state.isPresale || kartCM?.state.isWhitelistOnly) {
-      return "WHITELIST MINT";
-    } else if (clicked && kartCM?.state.gatekeeper) {
-      return (
-        <ReactLoading
-          type="bubbles"
-          color="#512da8"
-          height="50px"
-          width="50px"
-        />
-      );
-    }
+  // const mintKartButtonContent = useMemo(() => {
+  //   if (kartCM?.state.isSoldOut) {
+  //     return "SOLD OUT";
+  //   } else if (isMintingKart) {
+  //     return (
+  //       <ReactLoading
+  //         type="bubbles"
+  //         color="#512da8"
+  //         height="50px"
+  //         width="50px"
+  //       />
+  //     );
+  //   } else if (kartCM?.state.isPresale || kartCM?.state.isWhitelistOnly) {
+  //     return "WHITELIST MINT";
+  //   } else if (clicked && kartCM?.state.gatekeeper) {
+  //     return (
+  //       <ReactLoading
+  //         type="bubbles"
+  //         color="#512da8"
+  //         height="50px"
+  //         width="50px"
+  //       />
+  //     );
+  //   }
 
-    return "MINT KART";
-  }, [clicked, isMintingKart, kartCM]);
+  //   return "MINT KART";
+  // }, [clicked, isMintingKart, kartCM]);
 
-  const mintGarageButtonContent = useMemo(() => {
-    if (garageCM?.state.isSoldOut) {
-      return "SOLD OUT";
-    } else if (isMintingGarage) {
-      return (
-        <ReactLoading
-          type="bubbles"
-          color="#512da8"
-          height="50px"
-          width="50px"
-        />
-      );
-    } else if (garageCM?.state.isPresale || garageCM?.state.isWhitelistOnly) {
-      return "WHITELIST MINT";
-    } else if (clicked && garageCM?.state.gatekeeper) {
-      return (
-        <ReactLoading
-          type="bubbles"
-          color="#512da8"
-          height="50px"
-          width="50px"
-        />
-      );
-    }
+  // const mintGarageButtonContent = useMemo(() => {
+  //   if (garageCM?.state.isSoldOut) {
+  //     return "SOLD OUT";
+  //   } else if (isMintingGarage) {
+  //     return (
+  //       <ReactLoading
+  //         type="bubbles"
+  //         color="#512da8"
+  //         height="50px"
+  //         width="50px"
+  //       />
+  //     );
+  //   } else if (garageCM?.state.isPresale || garageCM?.state.isWhitelistOnly) {
+  //     return "WHITELIST MINT";
+  //   } else if (clicked && garageCM?.state.gatekeeper) {
+  //     return (
+  //       <ReactLoading
+  //         type="bubbles"
+  //         color="#512da8"
+  //         height="50px"
+  //         width="50px"
+  //       />
+  //     );
+  //   }
 
-    return "MINT GARAGE";
-  }, [clicked, isMintingGarage, garageCM]);
+  //   return "MINT GARAGE";
+  // }, [clicked, isMintingGarage, garageCM]);
 
-  const handleClick = () => {
-    console.log("click...");
-  };
   return (
     <>
       <AppNav />
@@ -227,35 +224,32 @@ const MintPage = () => {
         <TitleDiv>
           <h3>MINT SolRace NFTs</h3>
         </TitleDiv>
-        {!connected ? (
-          <Paragraph>Please Connect Your Wallet</Paragraph>
-        ) : (
-          <WrapperContent>
-            <WrapperMintKart>
-              <Button color="primary" onClick={handleMintKart} width="50%">
+        <WrapperContent>
+          <WrapperMintKart>
+            {/* <Button color="primary" onClick={handleMintKart} width="50%">
                 {mintKartButtonContent}
-              </Button>
-              <h4>
-                A 8,888 Genesis Solakarts represent a heart of the game. Each
-                model comes with unique rarity and attributes
-              </h4>
-              {kartCM && (
+              </Button> */}
+            <h4>
+              A 8,888 Genesis Solakarts represent a heart of the game. Each
+              model comes with unique rarity and attributes
+            </h4>
+            {/* {kartCM && (
                 <>
                   <h1>{kartRemaining + 7000} / 8888</h1>
                   <h3>Price: {toEtherString(kartCM.state.price)} SOL</h3>
                 </>
-              )}
-              <AppImage src="/kart-nft.png" width="60%" height="225px" />
-            </WrapperMintKart>
-            <WrapperMintGarage>
-              <AppImage src="/land-nft.png" width="60%" height="310px" />
+              )} */}
+            <AppImage src="/kart-nft.png" width="60%" height="225px" />
+          </WrapperMintKart>
+          <WrapperMintGarage>
+            <AppImage src="/land-nft.png" width="60%" height="310px" />
 
-              <h4>
-                An exclusive 888 plots of garage where Kart performance upgrade
-                takes place. Garage owners could earn passive income via a fair
-                share of upgrading fee
-              </h4>
-              {garageCM && (
+            <h4>
+              An exclusive 888 plots of garage where Kart performance upgrade
+              takes place. Garage owners could earn passive income via a fair
+              share of upgrading fee
+            </h4>
+            {/* {garageCM && (
                 <>
                   <h1>{garageRemaining + 700} / 888</h1>
                   <h3>Price: {toEtherString(garageCM.state.price)} SOL</h3>
@@ -264,10 +258,9 @@ const MintPage = () => {
 
               <Button color="secondary" onClick={handleMintGarage} width="50%">
                 {mintGarageButtonContent}
-              </Button>
-            </WrapperMintGarage>
-          </WrapperContent>
-        )}
+              </Button> */}
+          </WrapperMintGarage>
+        </WrapperContent>
       </WrapperMint>
     </>
   );

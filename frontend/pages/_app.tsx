@@ -61,7 +61,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
 
       <ToastContainer />
-      <ConnectionProvider endpoint={DEFAULT_ENDPOINT.url}>
+      {/* <ConnectionProvider endpoint={DEFAULT_ENDPOINT.url}>
         <WalletProvider wallets={wallets} autoConnect>
           <SWRConfig value={swrOption}>
             <WorkspaceProvider>
@@ -78,6 +78,19 @@ function MyApp({ Component, pageProps }: AppProps) {
                     </NFTProvider>
                   </GarageStakerProvider>
                 </PoolProvider>
+              </WalletModalProvider>
+            </WorkspaceProvider>
+          </SWRConfig>
+        </WalletProvider>
+      </ConnectionProvider> */}
+
+      <ConnectionProvider endpoint={DEFAULT_ENDPOINT.url}>
+        <WalletProvider wallets={wallets} autoConnect>
+          <SWRConfig value={swrOption}>
+            <WorkspaceProvider>
+              <WalletModalProvider>
+                <GlobalStyles />
+                <Component {...pageProps} />
               </WalletModalProvider>
             </WorkspaceProvider>
           </SWRConfig>
