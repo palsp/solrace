@@ -4,6 +4,7 @@ use anchor_lang::prelude::*;
 pub struct PoolBumps {
   pub pool_account: u8,
   pub pool_solr: u8,
+  pub solr_treasury: u8,
 }
 
 #[account]
@@ -23,6 +24,8 @@ pub struct PoolAccount {
   pub end_time: i64,
   pub last_distributed: i64,
   pub global_reward_index: f64,
+  pub multiplier_unit: u128,
+  pub max_multiplier: u128, // percent
 }
 
 #[account]
@@ -35,6 +38,7 @@ pub struct StakingAccount {
   pub bump: u8,
   pub reward_index: f64,
   pub pending_reward: u128,
+  pub multiplier: u128,
 }
 
 #[account]
@@ -44,9 +48,9 @@ pub struct KartAccount {
   pub kart_mint: Pubkey,
   pub kart_metadata_account: Pubkey,
   pub kart_master_edition: Pubkey,
-  pub max_speed: u64,
-  pub acceleration: u64,
+  pub max_speed: f64,
+  pub acceleration: f64,
   pub drift_power_generation_rate: f64,
   pub drift_power_consumption_rate: f64,
-  pub handling: u64,
+  pub handling: f64,
 }

@@ -25,7 +25,7 @@ The project file is built in Unreal Engine 4 version 4.26, containing multiple U
 
 
 
-#### Deploy
+#### Deploy 
 
   if you want use our devnet program, please skip this section.
 
@@ -48,14 +48,21 @@ anchor run copy_types_backend
 anchor run copy_types_cli
 ```
 
-initialize pool. In the cli directory, run
+The following command will do the following. 
+  1. create mint account of <TOKEN_NAME> if not exist.
+  2. create associate token account for deployer if not exist.
+  3. mint token to ata
 ```
-  yarn init-pool
+yarn init-faucet --name <TOKEN_NAME> --decimals
 ```
-it will prompt some questions in the cli.
+
+The initialize pool by run the following
+```
+yarn init-pool --pool-name <POOL_NAME> --solr-mint <MINT_ADDRESS> --pool-authority <POOL_AUTHORITY_ADDRESS>
+```
 
 
-Update the addresses in `backend/src/solana/addresses.to` and `frontend/src/api/solana/addresses`. Theses is what you needed
+Update the addresses in `backend/src/solana/addresses.ts` and `frontend/src/api/solana/addresses.ts`. Theses is what you needed
 1. SOLR_MINT_ADDRESS
 2. GARAGE_CREATOR
 3. GARAGE_CM_ID

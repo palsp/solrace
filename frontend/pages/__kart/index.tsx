@@ -1,26 +1,34 @@
-import { useNFT } from "~/nft/hooks";
+import { useEffect, useMemo } from "react";
+import Link from "next/link";
 import styled from "styled-components";
 
+import { useNFT } from "~/nft/hooks";
 import { Paragraph, Row } from "~/ui";
 import KartCard from "~/kart/KartCard";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { usePool } from "~/pool/hooks";
-import Link from "next/link";
 import InventoryLayout from "~/inventory";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { CardSkeleton } from "~/ui/card";
-import { useMemo } from "react";
 import { KART_COLLECTION_NAME } from "~/kart/constants";
+import { useAnchorWallet } from "~/wallet/hooks";
+import { updateKartOwner } from "~/kart/services";
 
 const KartPage = () => {
   const { connected } = useWallet();
+  const wallet = useAnchorWallet();
 
-  // const { nfts, revalidate: revalidateNFTs } = useAllNFT(wallet?.publicKey);
-  const { getNFTOfCollection, revalidateNFTs } = useNFT();
+  const { getNFTOfCollection } = useNFT();
+
   const karts = useMemo(() => {
     return getNFTOfCollection(KART_COLLECTION_NAME);
   }, [getNFTOfCollection]);
+
+  useEffect(() => {
+    if (!wallet) return;
+    updateKartOwner(wallet.publicKey.toBase58());
+  }, [wallet]);
 
   const { poolInfo } = usePool();
   let cards = poolInfo ? (

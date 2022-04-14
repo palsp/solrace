@@ -1,7 +1,5 @@
 import express, { ErrorRequestHandler } from 'express'
 import cors from 'cors'
-
-import metadata from 'metadata/routes'
 import auth from 'auth/routes'
 import user from 'user/routes'
 import wallet from 'wallet/routes'
@@ -27,7 +25,6 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
 routes.use('/health', health)
-routes.use('/meta-data', metadata)
 routes.use('/auth', auth)
 routes.use('/user', user)
 routes.use('/wallet', wallet)

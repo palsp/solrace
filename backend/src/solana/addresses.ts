@@ -1,7 +1,7 @@
 import { PublicKey } from '@solana/web3.js'
 
 export const SOL_RACE_CORE_PROGRAM_ID = new PublicKey(
-  '4mnaEgh2oejHoHW6dTVNGrAK1ZmMV3SfBQ2mmmaXgFz5',
+  'J15WvsBaKL81rDA5kdjEpmdUGC7Y7dR9iMUbwevDkbdq',
 )
 
 export const GARAGE_CREATOR = new PublicKey(

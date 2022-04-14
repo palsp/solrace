@@ -1,32 +1,34 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
-const AUTO_REFRESH_TIME = 10 * 1000
+const AUTO_REFRESH_TIME = 10 * 1000;
 
 export const useCountdown = (
-  fn: () => void,
-  refreshTime = AUTO_REFRESH_TIME,
+  fn?: () => void,
+  refreshTime = AUTO_REFRESH_TIME
 ) => {
-  const [countdown, setCountdown] = useState(refreshTime)
+  const [countdown, setCountdown] = useState(refreshTime);
 
   useEffect(() => {
+    if (!fn) return;
+
     const interval = setInterval(() => {
       setCountdown((prevState) => {
-        const newCountdown = prevState - 1000
+        const newCountdown = prevState - 1000;
         if (newCountdown === 0) {
-          fn()
-          return refreshTime
+          fn();
+          return refreshTime;
         } else {
-          return newCountdown
+          return newCountdown;
         }
-      })
-    }, 1000)
+      });
+    }, 10000);
 
     return () => {
-      clearInterval(interval)
-    }
-  }, [fn])
+      clearInterval(interval);
+    };
+  }, [fn]);
 
-  const resetCountdown = () => setCountdown(refreshTime)
+  const resetCountdown = () => setCountdown(refreshTime);
 
-  return { countdown, resetCountdown }
-}
+  return { countdown, resetCountdown };
+};

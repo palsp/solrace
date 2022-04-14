@@ -145,6 +145,7 @@ const GarageCard: React.FC<Props> = ({ garage }) => {
           provider,
           user: wallet.publicKey,
           poolAccount,
+          tokenAccount,
           solrMint: SOLR_MINT_ADDRESS,
           stakingAccount: stakingAccount!,
         });

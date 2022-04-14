@@ -1,1 +1,1 @@
-export const POOL_NAME = "solrace";
+export const POOL_NAME = "solr";

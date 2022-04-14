@@ -1,23 +1,18 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { useRouter } from "next/router";
-import AppLayout from "~/app/AppLayout";
 import TokenDetailLayout from "~/tokenDetail/TokenDetailLayout";
 import {
   AppImage,
   Button,
-  Model3D,
   ParagraphItalic,
   ParagraphItalicBold,
-  Select,
   Title,
 } from "~/ui";
 import { usePool } from "~/pool/hooks";
 import { Star, Award, DollarSign, Shield, Activity } from "react-feather";
-import useSWR from "swr";
 import Skeleton from "react-loading-skeleton";
 import { CardSkeleton } from "~/ui/card";
-import { PublicKey } from "@solana/web3.js";
 import { POOL_NAME } from "~/api/solana/constants";
 import { useStakeAccount } from "~/hooks/useAccount";
 import { useGarageStaker } from "~/garage-staker/hooks";
@@ -25,14 +20,17 @@ import { useMintInfo } from "~/hooks/useMintInfo";
 import { calculateReward } from "~/pool/utils";
 import { useCountdown } from "~/hooks/useCountdown";
 import { toast } from "react-toastify";
-import { GARAGE_CREATOR, SOLR_MINT_ADDRESS } from "~/api/solana/addresses";
+import { SOLR_MINT_ADDRESS } from "~/api/solana/addresses";
 import { bond, unBond } from "~/garage/services";
 import { toastAPIError } from "~/utils";
 import { useWorkspace } from "~/workspace/hooks";
 import ReactLoading from "react-loading";
+import { useMetadata } from "~/nft/hooks";
 
 const GarageDetail = () => {
-  const { query, isReady } = useRouter();
+  const { query } = useRouter();
+  const { mint, tokenAccountAddress } = query;
+
   const { provider, wallet } = useWorkspace();
   const { garageTokenId: tokenId } = query;
   const {
@@ -42,35 +40,25 @@ const GarageDetail = () => {
     revalidate: revalidatePool,
   } = usePool();
 
-  const { data: garage } = useSWR(`/garage/${query.garageTokenId}`);
-  const { mint, tokenAccountAddress } = query;
   const mintInfo = useMintInfo(poolInfo?.solrMint);
   const [reward, setReward] = useState<string>();
-
-  const garageMint = useMemo(() => {
-    if (!mint && typeof mint !== "string") {
-      return undefined;
-    }
-
-    return new PublicKey(mint as string);
-  }, [mint]);
-
-  const garageTokenAccount = useMemo(() => {
-    if (!tokenAccountAddress || typeof tokenAccountAddress !== "string") {
-      return undefined;
-    }
-    return new PublicKey(tokenAccountAddress as string);
-  }, [tokenAccountAddress]);
+  const {
+    initialize,
+    data: garage,
+    mintAccount: garageMint,
+    tokenAccount: garageTokenAccount,
+  } = useMetadata(mint as string, tokenAccountAddress as string);
 
   const {
     stakeInfo,
     isStaked,
-    isInitialize,
+    isInitialize: initializedStaker,
     isLoading: loadingStaker,
     publicAddress: stakingAccount,
     bump: stakingAccountBump,
     revalidate: revalidateStakeAccount,
-  } = useStakeAccount(POOL_NAME, garageMint || GARAGE_CREATOR);
+  } = useStakeAccount(POOL_NAME, garageMint);
+
   const { revalidate: revalidateStaker } = useGarageStaker();
   const [loading, setLoading] = useState(false);
 
@@ -82,7 +70,9 @@ const GarageDetail = () => {
     }
   }, [poolInfo, stakeInfo, mintInfo]);
 
-  const { countdown, resetCountdown } = useCountdown(calcReward);
+  const { resetCountdown } = useCountdown(
+    poolInfo && stakeInfo && mintInfo ? calcReward : undefined
+  );
 
   const disabled = useMemo(() => {
     return (
@@ -124,7 +114,7 @@ const GarageDetail = () => {
           nftTokenAccount: garageTokenAccount,
           stakingAccount: stakingAccount!,
           stakingAccountBump: stakingAccountBump!,
-          isInitialized: isInitialize!,
+          isInitialized: initializedStaker!,
         });
 
         const resp = await provider.connection.confirmTransaction(tx);
@@ -145,6 +135,7 @@ const GarageDetail = () => {
           provider,
           user: wallet.publicKey,
           poolAccount,
+          tokenAccount: garageTokenAccount,
           solrMint: SOLR_MINT_ADDRESS,
           stakingAccount: stakingAccount!,
         });
@@ -196,6 +187,14 @@ const GarageDetail = () => {
     }
   }, [isStaked, loading]);
 
+  const canStake = useMemo(() => {
+    return garageMint && garageTokenAccount;
+  }, [garageMint, garageTokenAccount]);
+
+  const isNotFound = useMemo(() => {
+    return initialize && !garage;
+  }, [initialize, garage]);
+
   return (
     <TokenDetailLayout
       direction="row-reverse"
@@ -209,62 +208,70 @@ const GarageDetail = () => {
         )
       }
     >
-      <TitleDiv>
-        <Title fontStyle="italic">{garage?.name}</Title>
-        <h3>APR - {apr}% </h3>
-        {reward !== undefined && <h4>Pending Reward: {reward} SOLR</h4>}
-        <ParagraphItalic>ID: {tokenId}</ParagraphItalic>
-        <ParagraphItalic>
-          Owner: BuxRVqu8YndicdXV4KLXBR451GUug63BkgaVEgwpDwYA
-        </ParagraphItalic>
-      </TitleDiv>
+      {isNotFound ? (
+        <h1>Not Found</h1>
+      ) : (
+        <>
+          <TitleDiv>
+            <Title fontStyle="italic">{garage?.name}</Title>
+            <h3>APR - {apr}% </h3>
+            {reward !== undefined && <h4>Pending Reward: {reward} SOLR</h4>}
+            <ParagraphItalic>ID: {tokenId}</ParagraphItalic>
+            <ParagraphItalic>
+              Owner: BuxRVqu8YndicdXV4KLXBR451GUug63BkgaVEgwpDwYA
+            </ParagraphItalic>
+          </TitleDiv>
 
-      <AbilityDiv>
-        <StatsDiv>
-          <StatsDiv1>
-            <ParagraphItalicBold>
-              <IconWrapper size="18px">
-                <Star />
-              </IconWrapper>
-              Rarity: SS
-            </ParagraphItalicBold>
-            <ParagraphItalicBold>
-              <IconWrapper size="18px">
-                <Award />
-              </IconWrapper>
-              Success: 88%
-            </ParagraphItalicBold>
-            <ParagraphItalicBold>
-              <IconWrapper size="18px">
-                <DollarSign />
-              </IconWrapper>
-              Price: 86
-            </ParagraphItalicBold>
-          </StatsDiv1>
-          <StatsDiv2>
-            <ParagraphItalicBold>
-              <IconWrapper size="18px">
-                <Shield />
-              </IconWrapper>
-              Fame: 7
-            </ParagraphItalicBold>
-            <ParagraphItalicBold>
-              <IconWrapper size="18px">
-                <Activity />
-              </IconWrapper>
-              Reputation: 6
-            </ParagraphItalicBold>
-          </StatsDiv2>
-        </StatsDiv>
-        <Button
-          color="primary"
-          width="350px"
-          disabled={disabled}
-          onClick={toggleStake}
-        >
-          {buttonContent}
-        </Button>
-      </AbilityDiv>
+          <AbilityDiv>
+            <StatsDiv>
+              <StatsDiv1>
+                <ParagraphItalicBold>
+                  <IconWrapper size="18px">
+                    <Star />
+                  </IconWrapper>
+                  Rarity: SS
+                </ParagraphItalicBold>
+                <ParagraphItalicBold>
+                  <IconWrapper size="18px">
+                    <Award />
+                  </IconWrapper>
+                  Success: 88%
+                </ParagraphItalicBold>
+                <ParagraphItalicBold>
+                  <IconWrapper size="18px">
+                    <DollarSign />
+                  </IconWrapper>
+                  Price: 86
+                </ParagraphItalicBold>
+              </StatsDiv1>
+              <StatsDiv2>
+                <ParagraphItalicBold>
+                  <IconWrapper size="18px">
+                    <Shield />
+                  </IconWrapper>
+                  Fame: 7
+                </ParagraphItalicBold>
+                <ParagraphItalicBold>
+                  <IconWrapper size="18px">
+                    <Activity />
+                  </IconWrapper>
+                  Reputation: 6
+                </ParagraphItalicBold>
+              </StatsDiv2>
+            </StatsDiv>
+            {canStake && (
+              <Button
+                color="primary"
+                width="350px"
+                disabled={disabled}
+                onClick={toggleStake}
+              >
+                {buttonContent}
+              </Button>
+            )}
+          </AbilityDiv>
+        </>
+      )}
     </TokenDetailLayout>
   );
 };

@@ -1,24 +1,35 @@
 import { PublicKey } from '@solana/web3.js'
 import { NFTCollection } from 'entity/NFTCollection'
-import { NFT_COLLECTIONS } from 'nft/constants'
 import { getMetadata, getParsedNFTAccountByOwner } from 'nft/services'
 import { connection, solraceProgram } from 'solana'
 import { KART_CM_ID } from 'solana/addresses'
 import { programs } from '@metaplex/js'
+import { POOL_NAME } from 'solana/constants'
+import { BN } from '@project-serum/anchor'
+import { Kart } from 'entity/Kart'
+import _ from 'lodash'
+import { badRequest, notFound } from '@hapi/boom/lib'
+import { NFTMetaData } from 'entity/NFTMetadata'
 
 const {
   metadata: { MetadataData },
 } = programs
 
-interface Karts {
-  [tokenAccount: string]: any
+interface RawKartsByMint {
+  [mint: string]: any
 }
 
-export type KartFromProgram = ReturnType<
-  typeof solraceProgram.account.kartAccount.fetch
->
+interface UpgradedKart {
+  maxSpeed: number
+  acceleration: number
+  driftPowerGenerationRate: number
+  driftPowerConsumptionRate: number
+  handling: number
+}
 
-export const getKartOfOwner = async (owner: string): Promise<Karts> => {
+const getRawKartMetadataOfOwnerByMint = async (
+  owner: string,
+): Promise<RawKartsByMint> => {
   const ownerPubkey = new PublicKey(owner)
 
   const collection = await NFTCollection.findOne({
@@ -29,10 +40,10 @@ export const getKartOfOwner = async (owner: string): Promise<Karts> => {
     return {}
   }
 
-  const karts: Karts = {}
+  const karts: RawKartsByMint = {}
 
   const nftAccounts = await getParsedNFTAccountByOwner(ownerPubkey)
-  for (const { mint, tokenAccountAddress } of nftAccounts) {
+  for (const { mint } of nftAccounts) {
     const metadataPubkey = await getMetadata(mint)
 
     const rawMetadata = await connection.getAccountInfo(metadataPubkey)
@@ -50,20 +61,177 @@ export const getKartOfOwner = async (owner: string): Promise<Karts> => {
 
       if (!hasCreator) continue
 
-      karts[tokenAccountAddress.toBase58()] = metadata
+      karts[mint.toBase58()] = metadata
     }
   }
 
   return karts
 }
 
-export const getUpgradedKartOfOwner = (ownerPublicAddress: string) => {
-  return solraceProgram.account.kartAccount.all([
-    // {
-    //   memcmp: {
-    //     offset: 8, // DISCRIMINATOR
-    //     bytes: ownerPublicAddress,
-    //   },
-    // },
-  ])
+const getUpgradedKart = async (mint: string) => {
+  try {
+    const [kartAccount] = await PublicKey.findProgramAddress(
+      [
+        Buffer.from('kart_account'),
+        Buffer.from(POOL_NAME),
+        new PublicKey(mint).toBuffer(),
+      ],
+      solraceProgram.programId,
+    )
+
+    const upgradedKart = await solraceProgram.account.kartAccount.fetch(
+      kartAccount,
+    )
+    return upgradedKart
+  } catch (e) {
+    return undefined
+  }
+}
+
+const getKartsIn = async (names: string[]) => {
+  return Kart.createQueryBuilder('kart')
+    .leftJoinAndSelect('kart.token', 'token')
+    .where('"token"."name" IN (:...names)', { names })
+    .getMany()
+}
+
+const combineKart = (kart: Kart, upgradedKart: UpgradedKart) => {
+  const temp = _.cloneDeep(kart)
+  temp.maxSpeed += upgradedKart.maxSpeed
+  temp.acceleration += upgradedKart.acceleration
+  temp.driftPowerGenerationRate += upgradedKart.driftPowerGenerationRate
+
+  temp.driftPowerConsumptionRate -= upgradedKart.driftPowerConsumptionRate
+  if (temp.driftPowerConsumptionRate < 0.2) {
+    temp.driftPowerConsumptionRate = 0.2
+  }
+  temp.handling += upgradedKart.handling
+
+  return temp
+}
+
+export const getKartByTokenId = async (
+  tokenId: string,
+): Promise<MetadataResponse> => {
+  let kart = await Kart.createQueryBuilder('kart')
+    .leftJoinAndSelect('kart.token', 'token')
+    .where('"token"."id" = :tokenId', { tokenId })
+    .getOne()
+
+  if (!kart) throw notFound()
+
+  const metadata = await NFTMetaData.createQueryBuilder('metadata')
+    .leftJoinAndSelect('metadata.collection', 'collection')
+    .where('metadata.name = :name', { name: kart.token.name })
+    .getOne()
+
+  if (!metadata) throw badRequest()
+
+  const { mintTokenAccount: mint } = kart
+  if (mint) {
+    const upgradedKart = await getUpgradedKart(mint)
+    if (upgradedKart) {
+      kart = combineKart(kart, upgradedKart)
+    }
+  }
+
+  const {
+    collection: { name, family, symbol },
+  } = metadata
+
+  return {
+    ...kart.json(),
+    symbol,
+    collection: {
+      name,
+      family,
+    },
+  }
+}
+
+export const updateKartOwnerBatch = async (publicAddress: string) => {
+  try {
+    const rawKartsMetadataByMint = await getRawKartMetadataOfOwnerByMint(
+      publicAddress,
+    )
+
+    const kartNames = _.values(rawKartsMetadataByMint).map(
+      (kart) => kart.data.name,
+    )
+
+    if (kartNames.length === 0) return
+    const karts = await getKartsIn(kartNames)
+
+    const kartByName: { [key: string]: Kart } = {}
+    karts.forEach((kart) => {
+      _.assign(kartByName, { ...kartByName, [kart.token.name]: kart })
+    })
+
+    const kartMintByTokenId = _.entries(rawKartsMetadataByMint).reduce(
+      (prev, curr) => {
+        const tokenId = curr[1].data.name.split('#')[1]
+
+        if (tokenId) {
+          prev[tokenId] = curr[0]
+        }
+        return prev
+      },
+      {},
+    )
+
+    for (const kart of karts) {
+      const mint = kartMintByTokenId[kart.token.id]
+      if (!mint) continue
+      let needUpdate = false
+
+      if (kart.mintTokenAccount !== mint) {
+        needUpdate = true
+        kart.mintTokenAccount = mint
+      }
+
+      if (kart.owner !== publicAddress) {
+        needUpdate = true
+        kart.owner = publicAddress
+      }
+
+      if (needUpdate) {
+        await kart.save()
+      }
+    }
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+export const getKartOfOwner = async (
+  publicAddress: string,
+): Promise<MetadataResponse[]> => {
+  const rawKartsMetadataByMint = await getRawKartMetadataOfOwnerByMint(
+    publicAddress,
+  )
+
+  const kartNames = _.values(rawKartsMetadataByMint).map(
+    (kart) => kart.data.name,
+  )
+
+  if (kartNames.length === 0) return []
+
+  const karts = await getKartsIn(kartNames)
+
+  const kartByName: { [key: string]: Kart } = {}
+  karts.forEach((kart) => {
+    _.assign(kartByName, { ...kartByName, [kart.token.name]: kart })
+  })
+
+  const results: MetadataResponse[] = []
+  for (const mint in rawKartsMetadataByMint) {
+    const rawKart = rawKartsMetadataByMint[mint]
+    let kart = kartByName[rawKart.data.name]
+    const upgradedKart = await getUpgradedKart(mint)
+
+    if (upgradedKart) kart = combineKart(kart, upgradedKart)
+    results.push(kart.json())
+  }
+
+  return results
 }
