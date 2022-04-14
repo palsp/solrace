@@ -25,7 +25,7 @@ const Footer = () => {
           >
             Litepaper
           </AppLink>
-          <AppLink href="/marketplace">Marketplace</AppLink>
+          {/* <AppLink href="/marketplace">Marketplace</AppLink> */}
           <AppLink href="/Roadmap">Roadmap</AppLink>
           <AppLink href="/Team">Team</AppLink>
         </FooterNav>

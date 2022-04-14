@@ -21,12 +21,12 @@ const AppNav = () => {
             style={{ cursor: "pointer", marginBottom: "0.5rem" }}
           />
         </Link>
-        <AppLink href="/mint">MINT</AppLink>
-        <AppLink href="/garage">GARAGE</AppLink>
-        <AppLink href="/kart">KART</AppLink>
-        <AppLink href="/marketplace">MARKETPLACE</AppLink>
 
-        {!user ? (
+        {/* <AppLink href="/garage">GARAGE</AppLink> */}
+        {/* <AppLink href="/kart">KART</AppLink> */}
+        {/* <AppLink href="/marketplace">MARKETPLACE</AppLink> */}
+
+        {/* {!user ? (
           <div>
             <>
               <AppLink href="/login">LOGIN</AppLink>
@@ -38,12 +38,16 @@ const AppNav = () => {
           <div>
             <AppLink href="/account">ACCOUNT</AppLink>
           </div>
-        )}
-        <WrapperConnectWalletButton>
-          <ConnectWalletButton>
-            {!connected ? "Connect Wallet" : "Disconnect"}
-          </ConnectWalletButton>
-        </WrapperConnectWalletButton>
+        )} */}
+
+        <NavSection>
+          <AppLink href="/mint">Browse Collection</AppLink>
+          <WrapperConnectWalletButton>
+            <ConnectWalletButton>
+              {!connected ? "Connect Wallet" : "Disconnect"}
+            </ConnectWalletButton>
+          </WrapperConnectWalletButton>
+        </NavSection>
       </UserSection>
     </NavContainer>
   );
@@ -51,13 +55,19 @@ const AppNav = () => {
 
 const WrapperConnectWalletButton = styled.div`
   align-self: end;
+  margin-left: 1rem;
 `;
 
 const UserSection = styled(Row)`
   width: 100%;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
   gap: 3rem;
+`;
+
+const NavSection = styled(Row)`
+  margin-right: 1rem;
+  justify-content: space-between;
 `;
 
 const NavContainer = styled.div`

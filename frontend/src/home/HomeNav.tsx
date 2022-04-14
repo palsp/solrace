@@ -7,7 +7,6 @@ import { AppImage } from "~/ui";
 import { useWallet } from "@solana/wallet-adapter-react";
 
 const HomeNav = () => {
-  const { user } = useAuth();
   const { connected } = useWallet();
   return (
     <NavContainer>
@@ -20,28 +19,31 @@ const HomeNav = () => {
             style={{ cursor: "pointer", marginBottom: "0.5rem" }}
           />
         </Link>
-        <AppLink href="/" textColor="white">
-          Home
-        </AppLink>
-        <AppLink
-          href="https://drive.google.com/file/d/10FxikBiqguOP5KLIWHHQmvIPby_8Bt5m/view"
-          textColor="white"
-          target="_blank"
-        >
-          Litepaper
-        </AppLink>
-        <AppLink href="/marketplace" textColor="white">
+
+        <NavSection>
+          <AppLink href="/" textColor="white">
+            Home
+          </AppLink>
+          <AppLink
+            href="https://drive.google.com/file/d/10FxikBiqguOP5KLIWHHQmvIPby_8Bt5m/view"
+            textColor="white"
+            target="_blank"
+          >
+            Litepaper
+          </AppLink>
+          {/* <AppLink href="/marketplace" textColor="white">
           Marketplace
         </AppLink>
         <AppLink href="/mint" textColor="white">
           Buy GARAGE
-        </AppLink>
+        </AppLink> */}
 
-        <WrapperConnectWalletButton>
-          <ConnectWalletButton>
-            {!connected ? "Connect Wallet" : "Disconnect"}
-          </ConnectWalletButton>
-        </WrapperConnectWalletButton>
+          <WrapperConnectWalletButton>
+            <ConnectWalletButton>
+              {!connected ? "Connect Wallet" : "Disconnect"}
+            </ConnectWalletButton>
+          </WrapperConnectWalletButton>
+        </NavSection>
       </UserSection>
     </NavContainer>
   );
@@ -52,9 +54,15 @@ const WrapperConnectWalletButton = styled.div`
 
 const UserSection = styled(Row)`
   width: 100%;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
   gap: 5rem;
+`;
+
+const NavSection = styled(Row)`
+  margin-right: 1rem;
+  justify-content: space-between;
+  width: 40%;
 `;
 
 const NavContainer = styled.div`

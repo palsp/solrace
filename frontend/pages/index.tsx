@@ -1,6 +1,5 @@
 import React from "react";
 import HorizontalScroll from "react-scroll-horizontal";
-import styled from "styled-components";
 import {
   Trailer,
   GameDetail,

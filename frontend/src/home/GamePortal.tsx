@@ -20,7 +20,7 @@ const GamePortal = () => {
                 these garages to earn passive income via a fair share of upgrade
                 fee
               </CardDescription>
-              <Link href="/garage">
+              <Link href="/mint">
                 <a>
                   <Button color="primary" width="100%">
                     View Garage
@@ -39,7 +39,7 @@ const GamePortal = () => {
                 matters; but the design. A unique 8,888 Genesis Solakarts are
                 ready to onboard all solracers for an immersive race
               </CardDescription>
-              <Link href="/kart">
+              <Link href="/mint">
                 <a>
                   <Button color="primary" width="100%">
                     Browse Solakart
@@ -57,14 +57,18 @@ const GamePortal = () => {
                 the enjoyment from the ride, solracers and garage owners could
                 boost their benefits and earn governace rights via $SOLR staking
               </CardDescription>
-              <Link href="/garage">
+              {/* <Link href="/garage">
                 <a>
                   <Button color="primary" width="100%">
                     {" "}
                     $SOLR Staking
                   </Button>
                 </a>
-              </Link>
+              </Link> */}
+              <Button color="primary" width="100%" disabled={true}>
+                {" "}
+                $SOLR Staking
+              </Button>
             </ThirdCardContent>
           </WrapperItem>
         </WrapperItems>
