@@ -35,7 +35,7 @@ const Footer = () => {
             <a
               href="https://twitter.com/projectsolrace"
               target="_blank"
-              rel="noreferrer"
+              rel="noreferrer noopener"
             >
               <AppImage src="/twitter-black.png" width="34px" height="34px" />
             </a>
