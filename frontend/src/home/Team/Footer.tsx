@@ -32,7 +32,11 @@ const Footer = () => {
         <FooterCommunity>
           <p>Community</p>
           <SocialDiv>
-            <a href="https://twitter.com/projectsolrace" target="_blank">
+            <a
+              href="https://twitter.com/projectsolrace"
+              target="_blank"
+              rel="noreferrer"
+            >
               <AppImage src="/twitter-black.png" width="34px" height="34px" />
             </a>
             <AppImage src="/discord-black.png" width="34px" height="34px" />
