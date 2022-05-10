@@ -9,35 +9,30 @@ interface Props {
 
 const carModel = {
   Cassini: {
-    url: "0/Cassini.gltf",
+    url: "/Cassini.gltf",
     position: [-6, -0.75, 0],
   },
-  Venera: {
-    url: "1/Venera.gltf",
-    position: [12, -0.75, 8],
-  },
-  Ariel: {
-    url: "2/Ariel.gltf",
-    position: [6, -0.75, 0],
-  },
+  // Venera: {
+  //   url: "/Venera.gltf",
+  //   position: [12, -0.75, 8],
+  // },
+  // Ariel: {
+  //   url: "/Ariel.gltf",
+  //   position: [6, -0.75, 0],
+  // },
   Voyager: {
-    url: "3/Voyager.gltf",
+    url: "/Voyager.gltf",
     position: [12, -0.75, -12],
   },
-  Apollo: {
-    url: "4/Apollo.gltf",
-    position: [0, -0.75, 0],
-  },
+  // Apollo: {
+  //   url: "/Apollo.gltf",
+  //   position: [0, -0.75, 0],
+  // },
 };
 
 const CarModel3D: React.FC<Props> = ({ model, modelUrl }) => {
   const car = carModel[model as keyof typeof carModel];
-  const modelGLTF = useLoader(
-    GLTFLoader,
-    modelUrl
-      ? modelUrl
-      : `https://sol-race.s3.ap-southeast-1.amazonaws.com/kart/${car?.url}`
-  );
+  const modelGLTF = useLoader(GLTFLoader, car?.url);
   return (
     <mesh>
       <primitive

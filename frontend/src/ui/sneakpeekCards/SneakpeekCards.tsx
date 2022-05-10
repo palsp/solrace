@@ -55,20 +55,20 @@ const SneakpeekCards: React.FC<Props> = ({ type }) => {
               <ModelH5>ZGNF-X42F Takahashi</ModelH5>
             </ModelDiv>
             <ModelDiv>
-              <Model3D model="Apollo" height="425px" />
+              <Model3D model="Cassini" height="425px" />
               <ModelH5>ARB-01 Nakajima</ModelH5>
             </ModelDiv>
 
             <ModelDiv>
-              <Model3D model="Ariel" height="425px" />
+              <Model3D model="Cassini" height="425px" />
               <ModelH5>RX-39 Suzuki</ModelH5>
             </ModelDiv>
             <ModelDiv>
-              <Model3D model="Voyager" height="425px" />
+              <Model3D model="Cassini" height="425px" />
               <ModelH5>GMW-00X Sato</ModelH5>
             </ModelDiv>
             <ModelDiv>
-              <Model3D model="Venera" height="425px" />
+              <Model3D model="Cassini" height="425px" />
               <ModelH5>ASW-K-78F Hasemi</ModelH5>
             </ModelDiv>
 
