@@ -1,4 +1,4 @@
-# @solana-hack-nft/backend
+# @solrace/backend
 
 
 create `.env` and set the environment variables. Follow the `.env.example` for more details
